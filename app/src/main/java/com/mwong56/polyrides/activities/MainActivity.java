@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.adapters.TabAdapter;
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
   TabLayout tabLayout;
 
   private static final String TAG = "MainActivity";
+  private GoogleApiClient apiClient;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     viewPager.setAdapter(adapter);
 
     tabLayout.setupWithViewPager(viewPager);
+
+    apiClient = new GoogleApiClient.Builder(getBaseContext())
+        .enableAutoManage(this, 0, this)
+        .addApi(Places.GEO_DATA_API)
+        .build();
   }
 
 
@@ -53,5 +60,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     Toast.makeText(getBaseContext(),
         "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
         Toast.LENGTH_SHORT).show();
+  }
+
+  public GoogleApiClient getGoogleApiClient() {
+    return this.apiClient;
   }
 }

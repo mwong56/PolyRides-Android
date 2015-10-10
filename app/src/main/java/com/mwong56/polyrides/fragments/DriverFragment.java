@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceSingleton;
@@ -26,6 +28,8 @@ public class DriverFragment extends RxFragment {
   @Bind(R.id.start_from_layout)
   StartEndLayout startEndLayout;
 
+  MainActivity activity;
+
   private LocationService locationService = LocationServiceSingleton.instance();
 
   public static DriverFragment newInstance() {
@@ -35,8 +39,20 @@ public class DriverFragment extends RxFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    startEndLayout.setGoogleApiClient(activity.getGoogleApiClient());
 
+  }
 
+  @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    this.activity = (MainActivity) activity;
+  }
+
+  @Override
+  public void onDetach() {
+    this.activity = null;
+    super.onDetach();
   }
 
   @Nullable

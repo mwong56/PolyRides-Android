@@ -7,9 +7,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceSingleton;
 
@@ -53,16 +51,14 @@ public class StartEndLayout extends LinearLayout {
     return new Place[]{startEditText.getPlace(), endEditText.getPlace()};
   }
 
+  public void setGoogleApiClient(GoogleApiClient client) {
+    this.apiClient = client;
+  }
+
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-
-    // TODO: Think we need to make this a singleton.
-    apiClient = new GoogleApiClient.Builder(getContext())
-        .enableAutoManage((MainActivity) getContext(), 0, (MainActivity) getContext())
-        .addApi(Places.GEO_DATA_API)
-        .build();
 
     startEditText.setup(apiClient);
     endEditText.setup(apiClient);
