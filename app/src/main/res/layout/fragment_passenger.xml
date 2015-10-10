@@ -7,7 +7,11 @@
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin">
 
-  <include layout="@layout/view_start_end"></include>
+  <include
+      android:id="@+id/start_from_layout"
+      layout="@layout/view_start_from"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 
   <Button
       android:id="@+id/find_ride_button"

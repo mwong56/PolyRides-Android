@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.views.PlacesAutoComplete;
+import com.mwong56.polyrides.views.StartEndLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,11 +20,8 @@ import butterknife.OnClick;
  */
 public class PassengerFragment extends Fragment {
 
-  @Bind(R.id.from)
-  PlacesAutoComplete fromEditText;
-
-  @Bind(R.id.start)
-  PlacesAutoComplete startEditText;
+  @Bind(R.id.start_from_layout)
+  StartEndLayout startEndLayout;
 
   public static PassengerFragment newInstance() {
     return new PassengerFragment();

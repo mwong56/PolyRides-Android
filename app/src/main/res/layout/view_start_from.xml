@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<com.mwong56.polyrides.views.StartEndLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -13,8 +17,8 @@
         android:layout_marginTop="12dp"
         android:layout_weight="1">
 
-      <com.mwong56.polyrides.utils.PlacesAutoComplete
-          android:id="@+id/from"
+      <com.mwong56.polyrides.views.PlacesAutoComplete
+          android:id="@+id/start"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="From where?"
@@ -23,7 +27,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/from_location"
+        android:id="@+id/start_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -41,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-      <com.mwong56.polyrides.utils.PlacesAutoComplete
-          android:id="@+id/start"
+      <com.mwong56.polyrides.views.PlacesAutoComplete
+          android:id="@+id/end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="To where?"
@@ -51,10 +55,10 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/start_location"
+        android:id="@+id/end_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:text="L"/>
   </LinearLayout>
-</merge>
+</com.mwong56.polyrides.views.StartEndLayout>
