@@ -19,7 +19,7 @@
       android:weightSum="1">
 
     <ImageButton
-        android:id="@+id/date"
+        android:id="@+id/dateButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
@@ -31,7 +31,7 @@
         android:src="@drawable/date_button"/>
 
     <ImageButton
-        android:id="@+id/time"
+        android:id="@+id/timeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
