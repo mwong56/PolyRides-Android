@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-  @Bind(R.id.main_toolbar)
+  @Bind(R.id.toolbar)
   Toolbar toolbar;
 
   @Bind(R.id.view_pager)

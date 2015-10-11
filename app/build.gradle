@@ -44,10 +44,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.android.support:design:23.0.0'
 
-
-    compile 'com.nshmura:recyclertablayout:0.1.2'
+    //Misc
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.wdullaer:materialdatetimepicker:1.5.3'
 
     //Location
     compile 'pl.charmas.android:android-reactive-location:0.8@aar'

@@ -1,7 +1,19 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/fragment"
-          android:name="com.mwong56.polyrides.fragments.FindRideActivityFragment"
-          tools:layout="@layout/fragment_find_ride"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+  <include
+      android:id="@+id/toolbar"
+      layout="@layout/toolbar"/>
+
+  <FrameLayout
+      android:id="@+id/frame_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+</LinearLayout>

@@ -1,18 +1,39 @@
 package com.mwong56.polyrides.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.fragments.DateTimeFragment;
+import com.mwong56.polyrides.models.Date;
+import com.mwong56.polyrides.models.Time;
 
-public class NewRideActivity extends AppCompatActivity {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class NewRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener{
+
+  @Bind(R.id.toolbar)
+  Toolbar toolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_new_ride);
+    ButterKnife.bind(this);
+
+    setSupportActionBar(toolbar);
+    setTitle("New Ride");
+
+    if (savedInstanceState == null) {
+      FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance());
+      fragmentTransaction.commit();
+    }
   }
 
 
@@ -36,5 +57,10 @@ public class NewRideActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onDateTimeSet(Date date, Time time) {
+
   }
 }
