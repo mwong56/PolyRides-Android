@@ -7,6 +7,8 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by micha on 10/10/2015.
@@ -25,6 +27,8 @@ public class LocationServiceSingleton implements LocationService {
   public Observable<Place> getCurrentLocation(Context context) {
     ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
     return locationProvider.getCurrentPlace(null)
+        .observeOn(Schedulers.newThread())
+        .subscribeOn(AndroidSchedulers.mainThread())
         .flatMap(buffer -> {
           PlaceLikelihood placeLikelihood = buffer.get(0);
           if (placeLikelihood != null) {

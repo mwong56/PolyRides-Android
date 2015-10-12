@@ -4,21 +4,32 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
+import com.mwong56.polyrides.fragments.NotesFragment;
+import com.mwong56.polyrides.fragments.SeatsFragment;
+import com.mwong56.polyrides.fragments.SubmitRideFragment;
 import com.mwong56.polyrides.models.Date;
+import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Time;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NewRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener{
+public class NewRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener,
+    SeatsFragment.SeatsListener, NotesFragment.NotesListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
+
+  private Location start;
+  private Location end;
+  private Date date;
+  private Time time;
+  private int cost;
+  private int seats;
+  private String note;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,36 +42,46 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
 
     if (savedInstanceState == null) {
       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-      fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance());
+      fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
       fragmentTransaction.commit();
     }
-  }
 
+    this.start = (Location) getIntent().getExtras().get("start");
+    this.end = (Location) getIntent().getExtras().get("end");
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_new_ride, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @Override
   public void onDateTimeSet(Date date, Time time) {
+    this.date = date;
+    this.time = time;
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.frame_layout, SeatsFragment.newInstance(), "SeatsFragment")
+        .addToBackStack("SeatsFragment")
+        .commit();
+  }
 
+  @Override
+  public void onSeatsSet(int cost, int seats) {
+    this.cost = cost;
+    this.seats = seats;
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.frame_layout, NotesFragment.newInstance(), "NotesFragment")
+        .addToBackStack("NotesFragment")
+        .commit();
+  }
+
+  @Override
+  public void onNotesSet(String string) {
+    this.note = string;
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.frame_layout,
+            SubmitRideFragment.newInstance(start, end, date, time, cost, seats, note),
+            "SubmitRideFragment")
+        .addToBackStack("SubmitRideFragment")
+        .commit();
   }
 }

@@ -44,11 +44,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.android.support:design:23.0.0'
 
-    //Misc
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.jakewharton.timber:timber:4.0.1'
-    compile 'com.wdullaer:materialdatetimepicker:1.5.3'
-
     //Location
     compile 'pl.charmas.android:android-reactive-location:0.8@aar'
     compile 'com.google.android.gms:play-services-location:8.1.0'
@@ -59,4 +54,10 @@ dependencies {
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
     compile 'com.infstory:rxparse:1.0.3'
+
+    //Misc
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton.timber:timber:4.0.1'
+    compile 'com.wdullaer:materialdatetimepicker:1.5.3'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

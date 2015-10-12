@@ -36,7 +36,6 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   private Time time;
   private Date date;
 
-
   public interface DateTimeListener {
     void onDateTimeSet(Date date, Time time);
   }
@@ -48,6 +47,13 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+
+    if (this.date != null) {
+      dateTextView.setText(this.date.toString());
+    }
+    if (this.time != null) {
+      timeTextView.setText(this.time.toString());
+    }
   }
 
   @Override
@@ -99,15 +105,46 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   }
 
   @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable("date", this.date);
+    outState.putParcelable("time", this.time);
+  }
+
+
+  @Override
+  public void onViewStateRestored(Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null) {
+      this.date = (Date) savedInstanceState.get("date");
+      this.time = (Time) savedInstanceState.get("time");
+      if (this.date != null) {
+        dateTextView.setText(this.date.toString());
+      }
+      if (this.time != null) {
+        timeTextView.setText(this.time.toString());
+      }
+    }
+  }
+
+  @OnClick(R.id.next_button)
+  void onNextClicked() {
+    listener.onDateTimeSet(this.date, this.time);
+  }
+
+  @Override
   public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+    //TODO: Validate date.
     this.date = new Date(year, monthOfYear, dayOfMonth);
     dateTextView.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
   }
 
   @Override
   public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+    //TODO: Validate date.
     this.time = new Time(hourOfDay, minute);
     timeTextView.setText(hourOfDay + ":" + minute);
   }
+
 
 }

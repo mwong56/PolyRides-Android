@@ -15,7 +15,7 @@
       android:paddingLeft="20dp"
       android:paddingRight="20dp"
       android:paddingStart="20dp"
-      android:paddingTop="15dp"
+      android:paddingTop="60dp"
       android:weightSum="1">
 
     <ImageButton
@@ -78,4 +78,11 @@
         android:textColor="@color/PrimaryColor"
         android:textSize="25dp"/>
   </LinearLayout>
+
+  <Button
+      android:id="@+id/next_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Next"
+      android:background="@android:color/transparent"/>
 </LinearLayout>
