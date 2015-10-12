@@ -72,12 +72,13 @@ public class SubmitRideFragment extends Fragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    if (savedInstanceState != null) {
-      this.date = (Date) savedInstanceState.get("date");
-      this.time = (Time) savedInstanceState.get("time");
-      this.cost = savedInstanceState.getInt("cost");
-      this.seats = savedInstanceState.getInt("seats");
-      this.note = savedInstanceState.getString("note");
+    Bundle args = getArguments();
+    if (args != null) {
+      this.date = (Date) args.get("date");
+      this.time = (Time) args.get("time");
+      this.cost = args.getInt("cost");
+      this.seats = args.getInt("seats");
+      this.note = args.getString("note");
     }
 
     initializeView();

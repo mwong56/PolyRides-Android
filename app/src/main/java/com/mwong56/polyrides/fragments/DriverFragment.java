@@ -38,7 +38,6 @@ public class DriverFragment extends RxFragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     startEndLayout.setGoogleApiClient(activity.getGoogleApiClient());
-
   }
 
   @Override
