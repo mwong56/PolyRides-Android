@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.location.places.Place;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
@@ -28,7 +27,7 @@ public class DriverFragment extends RxFragment {
   @Bind(R.id.start_from_layout)
   StartEndLayout startEndLayout;
 
-  MainActivity activity;
+  private MainActivity activity;
 
   public static DriverFragment newInstance() {
     return new DriverFragment();
@@ -38,6 +37,24 @@ public class DriverFragment extends RxFragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     startEndLayout.setGoogleApiClient(activity.getGoogleApiClient());
+
+    if (savedInstanceState != null) {
+      Location[] locations = (Location[]) savedInstanceState.getParcelableArray("locations");
+      if (locations[0] != null) {
+        startEndLayout.setStartLocation(locations[0]);
+      }
+
+      if (locations[1] != null) {
+        startEndLayout.setEndLocation(locations[1]);
+      }
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Location[] locations = startEndLayout.getPlaces();
+    outState.putParcelableArray("locations", locations);
   }
 
   @Override
@@ -63,11 +80,11 @@ public class DriverFragment extends RxFragment {
 
   @OnClick(R.id.new_ride_button)
   void newRide() {
-    Place[] places = startEndLayout.getPlaces();
-    if (places[0] != null && places[1] != null) {
+    Location[] locations = startEndLayout.getPlaces();
+    if (locations[0] != null && locations[1] != null) {
       Intent i = new Intent(getActivity(), NewRideActivity.class);
-      i.putExtra("start", new Location(places[0]));
-      i.putExtra("end", new Location(places[1]));
+      i.putExtra("start", locations[0]);
+      i.putExtra("end", locations[1]);
       startActivity(i);
     }
 

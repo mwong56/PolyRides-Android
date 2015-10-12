@@ -1,6 +1,8 @@
 package com.mwong56.polyrides.activities;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,7 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 
+  private Fragment fragment;
   private Location start;
   private Location end;
   private Date date;
@@ -40,15 +43,23 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
     setSupportActionBar(toolbar);
     setTitle("New Ride");
 
-    if (savedInstanceState == null) {
-      FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-      fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
-      fragmentTransaction.commit();
-    }
-
     this.start = (Location) getIntent().getExtras().get("start");
     this.end = (Location) getIntent().getExtras().get("end");
 
+
+    if (savedInstanceState != null) {
+      fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
+    }
+
+    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
+    fragmentTransaction.commit();
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+    super.onSaveInstanceState(outState, outPersistentState);
+    getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
   @Override
@@ -66,9 +77,10 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   public void onSeatsSet(int cost, int seats) {
     this.cost = cost;
     this.seats = seats;
+    fragment = NotesFragment.newInstance();
     getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.frame_layout, NotesFragment.newInstance(), "NotesFragment")
+        .replace(R.id.frame_layout, fragment, "NotesFragment")
         .addToBackStack("NotesFragment")
         .commit();
   }
@@ -76,10 +88,11 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Override
   public void onNotesSet(String string) {
     this.note = string;
+    fragment = SubmitRideFragment.newInstance(start, end, date, time, cost, seats, note);
     getSupportFragmentManager()
         .beginTransaction()
         .replace(R.id.frame_layout,
-            SubmitRideFragment.newInstance(start, end, date, time, cost, seats, note),
+            fragment,
             "SubmitRideFragment")
         .addToBackStack("SubmitRideFragment")
         .commit();

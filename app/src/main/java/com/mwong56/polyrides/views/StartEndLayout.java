@@ -6,8 +6,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceSingleton;
 
@@ -47,21 +47,28 @@ public class StartEndLayout extends LinearLayout {
    * Returns an array containing the start and end place.
    * @return An array containing start and end place. Index 1 is start, Index 2 is end.
    */
-  public Place[] getPlaces() {
-    return new Place[]{startEditText.getPlace(), endEditText.getPlace()};
+  public Location[] getPlaces() {
+    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
+  }
+
+  public void setStartLocation(Location location) {
+    this.startEditText.setLocation(location);
+  }
+
+  public void setEndLocation(Location location) {
+    this.endEditText.setLocation(location);
   }
 
   public void setGoogleApiClient(GoogleApiClient client) {
     this.apiClient = client;
+    startEditText.setup(apiClient);
+    endEditText.setup(apiClient);
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-
-    startEditText.setup(apiClient);
-    endEditText.setup(apiClient);
   }
 
   @OnClick(R.id.start_location)
@@ -69,7 +76,7 @@ public class StartEndLayout extends LinearLayout {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
-              startEditText.setPlace(place);
+              startEditText.setLocation(new Location(place));
             }, error -> showToast("Could not find location")));
   }
 
@@ -78,7 +85,7 @@ public class StartEndLayout extends LinearLayout {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
-              endEditText.setPlace(place);
+              endEditText.setLocation(new Location(place));
             }, error -> showToast("Could not find location")));
   }
 

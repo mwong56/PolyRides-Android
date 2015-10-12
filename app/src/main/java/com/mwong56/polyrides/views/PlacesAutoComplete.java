@@ -15,6 +15,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.mwong56.polyrides.adapters.PlacesAutoCompleteAdapter;
+import com.mwong56.polyrides.models.Location;
 
 /**
  * Created by micha on 10/9/2015.
@@ -24,7 +25,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   private static final String TAG = PlacesAutoComplete.class.getSimpleName();
   private GoogleApiClient client;
   private PlacesAutoCompleteAdapter adapter;
-  private Place place;
+  private Location location;
 
   private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
       new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
@@ -61,7 +62,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
         }
         final Place place1 = places.get(0);
         Log.i(TAG, "Place details received: " + place1.getName());
-        PlacesAutoComplete.this.place = place1;
+        PlacesAutoComplete.this.location = new Location(place1);
         places.release();
       });
 
@@ -70,8 +71,8 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
       Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
     });
     this.setOnKeyListener((v, keyCode, event) -> {
-      if (PlacesAutoComplete.this.place != null) {
-        PlacesAutoComplete.this.place = null;
+      if (PlacesAutoComplete.this.location != null) {
+        PlacesAutoComplete.this.location = null;
         Toast.makeText(getContext(), "Resetted place",
             Toast.LENGTH_SHORT).show();
       }
@@ -79,12 +80,12 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     });
   }
 
-  public Place getPlace() {
-    return this.place;
+  public Location getLocation() {
+    return this.location;
   }
 
-  public void setPlace(Place place) {
-    this.place = place;
-    setText(place.getAddress());
+  public void setLocation(Location location) {
+    this.location = location;
+    setText(location.getAddress());
   }
 }

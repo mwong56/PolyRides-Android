@@ -28,6 +28,8 @@ public class SeatsFragment extends Fragment {
   NumberPicker seatsPicker;
 
   private SeatsListener listener;
+  private int cost;
+  private int seats;
 
   public interface SeatsListener {
     void onSeatsSet(int cost, int seats);
@@ -43,6 +45,26 @@ public class SeatsFragment extends Fragment {
     seatsPicker.setMinValue(1);
     seatsPicker.setMaxValue(100);
     seatsPicker.setWrapSelectorWheel(false);
+
+    if (savedInstanceState != null) {
+      cost = savedInstanceState.getInt("cost");
+      seats = savedInstanceState.getInt("seats");
+      costEditText.setText(cost + "");
+      seatsPicker.setValue(seats);
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    try {
+      cost = Integer.parseInt(costEditText.getText().toString());
+    } catch (Exception e) {
+      cost = 0;
+    }
+    int seats = seatsPicker.getValue();
+    outState.putInt("cost", cost);
+    outState.putInt("seats", seats);
   }
 
   @Override
@@ -72,7 +94,6 @@ public class SeatsFragment extends Fragment {
 
   @OnClick(R.id.next_button)
   void onNextClicked() {
-    int cost;
     try {
       cost = Integer.parseInt(costEditText.getText().toString());
     } catch (Exception e) {
