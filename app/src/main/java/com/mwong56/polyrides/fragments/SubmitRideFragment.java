@@ -88,7 +88,7 @@ public class SubmitRideFragment extends Fragment {
     dateTextView.setText(date.toString());
     timeTextView.setText(time.toString());
     costTextView.setText("$" + cost + " per seat");
-    seatTextView.setText(seats + " available");
+    seatTextView.setText(seats + " seat/s available");
     noteTextView.setText(note);
   }
 
