@@ -1,6 +1,8 @@
 package com.mwong56.polyrides.views;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +19,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.mwong56.polyrides.adapters.PlacesAutoCompleteAdapter;
 import com.mwong56.polyrides.models.Location;
 
+import java.util.Locale;
+
 /**
  * Created by micha on 10/9/2015.
  */
@@ -26,6 +30,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   private GoogleApiClient client;
   private PlacesAutoCompleteAdapter adapter;
   private Location location;
+  private Geocoder geocoder;
 
   private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
       new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
@@ -46,6 +51,10 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     this.client = client;
     //TODO: grab user location instead of passing predefined.
     adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_GREATER_SYDNEY, null);
+    if (Geocoder.isPresent()) {
+      geocoder = new Geocoder(getContext(), Locale.ENGLISH);
+    }
+
     this.setAdapter(adapter);
     this.setOnItemClickListener((parent, view, position, id) -> {
       final AutocompletePrediction item = adapter.getItem(position);
@@ -62,7 +71,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
         }
         final Place place1 = places.get(0);
         Log.i(TAG, "Place details received: " + place1.getName());
-        PlacesAutoComplete.this.location = new Location(place1);
+        setLocation(new Location(place1));
         places.release();
       });
 
@@ -85,6 +94,23 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setLocation(Location location) {
+    if (geocoder != null) {
+      LatLng temp = location.getLatLng();
+      Address address;
+      try {
+        address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
+        String addressLine = address.getAddressLine(1);
+        if (addressLine != null && addressLine.length() > 0) {
+          location.setAddress(addressLine);
+        }
+
+        if (address.getLocality() != null && address.getLocality().length() > 0) {
+          location.setCity(address.getLocality());
+        }
+      } catch (Exception e) {
+        // do nothing.
+      }
+    }
     this.location = location;
     this.post(() -> setText(location.getAddress()));
   }

@@ -13,6 +13,7 @@ public class Location implements Parcelable {
   private LatLng latLng;
   private CharSequence address;
   private CharSequence name;
+  private CharSequence city;
 
   public Location(Place place) {
     this.latLng = place.getLatLng();
@@ -24,12 +25,24 @@ public class Location implements Parcelable {
     return latLng;
   }
 
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
   public CharSequence getAddress() {
     return address;
   }
 
   public CharSequence getName() {
     return name;
+  }
+
+  public CharSequence getCity() {
+    return city;
   }
 
   public static Creator<Location> getCREATOR() {
