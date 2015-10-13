@@ -17,7 +17,7 @@
         android:layout_marginTop="12dp"
         android:layout_weight="1">
 
-      <EditText
+      <com.mwong56.polyrides.views.PlacesAutoComplete
           android:id="@+id/start"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-      <EditText
+      <com.mwong56.polyrides.views.PlacesAutoComplete
           android:id="@+id/end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

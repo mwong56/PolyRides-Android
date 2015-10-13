@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -35,13 +34,11 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
   private static final String TAG = "StartEndLayout";
 
   @Bind(R.id.start)
-  EditText startEditText;
+  PlacesAutoComplete startEditText;
 
   @Bind(R.id.end)
-  EditText endEditText;
+  PlacesAutoComplete endEditText;
 
-  private Location start;
-  private Location end;
   private Fragment fragment;
   private GoogleApiClient apiClient;
   private LocationService locationService = LocationServiceSingleton.instance();
@@ -59,29 +56,28 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
     super(context, attrs, defStyleAttr);
   }
 
+  public void setStartLocation(Location location) {
+    this.startEditText.setLocation(location);
+  }
+
+  public void setEndLocation(Location location) {
+    this.endEditText.setLocation(location);
+  }
+
   /**
    * Returns an array containing the start and end place.
    *
    * @return An array containing start and end place. Index 1 is start, Index 2 is end.
    */
   public Location[] getPlaces() {
-    return new Location[]{start, end};
-  }
-
-  public void setStartLocation(Location location) {
-    this.start = location;
-    this.startEditText.post(() -> startEditText.setText(start.getAddress()));
-  }
-
-  public void setEndLocation(Location location) {
-    this.end = location;
-    this.endEditText.post(() -> endEditText.setText(start.getAddress()));
+    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
   }
 
   public void setup(GoogleApiClient client, Fragment fragment) {
     this.apiClient = client;
     this.fragment = fragment;
-
+    this.startEditText.setup(client);
+    this.endEditText.setup(client);
   }
 
   @OnLongClick(R.id.start)
@@ -159,6 +155,5 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
     } else if (requestCode == END_RESULT) {
       setEndLocation(location);
     }
-
   }
 }
