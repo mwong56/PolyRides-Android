@@ -53,7 +53,11 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
-    compile 'com.infstory:rxparse:1.0.3'
+
+    //Parse
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.10.3'
+
 
     //Misc
     compile 'com.jakewharton:butterknife:7.0.1'
