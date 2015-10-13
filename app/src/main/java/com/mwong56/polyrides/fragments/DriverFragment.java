@@ -12,6 +12,7 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.utils.OnActivityResultListener;
 import com.mwong56.polyrides.views.StartEndLayout;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -36,7 +37,7 @@ public class DriverFragment extends RxFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    startEndLayout.setGoogleApiClient(activity.getGoogleApiClient());
+    startEndLayout.setup(activity.getGoogleApiClient(), this);
 
     if (savedInstanceState != null) {
       Location[] locations = (Location[]) savedInstanceState.getParcelableArray("locations");
@@ -87,7 +88,14 @@ public class DriverFragment extends RxFragment {
       i.putExtra("end", locations[1]);
       startActivity(i);
     }
-
   }
 
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode == Activity.RESULT_OK) {
+      ((OnActivityResultListener)startEndLayout).onActivityResultCalled(requestCode, data);
+    }
+
+  }
 }

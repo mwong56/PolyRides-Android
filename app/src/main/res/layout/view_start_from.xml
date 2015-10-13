@@ -17,11 +17,13 @@
         android:layout_marginTop="12dp"
         android:layout_weight="1">
 
-      <com.mwong56.polyrides.views.PlacesAutoComplete
+      <EditText
           android:id="@+id/start"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:editable="false"
           android:hint="From where?"
+          android:inputType="none"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -45,11 +47,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-      <com.mwong56.polyrides.views.PlacesAutoComplete
+      <EditText
           android:id="@+id/end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:editable="false"
           android:hint="To where?"
+          android:inputType="none"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
