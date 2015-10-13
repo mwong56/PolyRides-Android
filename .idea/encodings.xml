@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/mwong56/polyrides/views/SendButton.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/cycle_2.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/shake_error.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/slide_in_done.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/slide_in_send.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/slide_out_done.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim/slide_out_send.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/view_send_button.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
