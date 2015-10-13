@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import com.mwong56.polyrides.utils.OnActivityResultListener;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -82,20 +82,18 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
     this.apiClient = client;
     this.fragment = fragment;
 
-    startEditText.setOnClickListener(view -> showPickerDialog(START_RESULT));
-    endEditText.setOnClickListener(view -> showPickerDialog(END_RESULT));
+  }
 
-    startEditText.setOnFocusChangeListener((View v, boolean hasFocus) -> {
-      if (hasFocus) {
-        showPickerDialog(START_RESULT);
-      }
-    });
+  @OnLongClick(R.id.start)
+  boolean onStartLongClick() {
+    showPickerDialog(START_RESULT);
+    return true;
+  }
 
-    endEditText.setOnFocusChangeListener((View v, boolean hasFocus) -> {
-      if (hasFocus) {
-        showPickerDialog(END_RESULT);
-      }
-    });
+  @OnLongClick(R.id.end)
+  boolean onEndLongClick() {
+    showPickerDialog(END_RESULT);
+    return true;
   }
 
   @Override

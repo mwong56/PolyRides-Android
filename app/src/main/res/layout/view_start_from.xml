@@ -21,9 +21,7 @@
           android:id="@+id/start"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:editable="false"
           android:hint="From where?"
-          android:inputType="none"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -51,9 +49,7 @@
           android:id="@+id/end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:editable="false"
           android:hint="To where?"
-          android:inputType="none"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
