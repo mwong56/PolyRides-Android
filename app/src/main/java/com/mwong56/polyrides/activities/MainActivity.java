@@ -50,6 +50,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         .build();
   }
 
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if (apiClient != null) {
+      apiClient.connect();
+    }
+  }
+
+  @Override
+  protected void onStop() {
+    if (apiClient != null && apiClient.isConnected()) {
+      apiClient.disconnect();
+    }
+    super.onStop();
+  }
 
   @Override
   public void onConnectionFailed(ConnectionResult connectionResult) {
