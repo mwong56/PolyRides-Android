@@ -13,13 +13,13 @@ import rx.schedulers.Schedulers;
 /**
  * Created by micha on 10/10/2015.
  */
-public class LocationServiceSingleton implements LocationService {
+public class LocationServiceImpl implements LocationService {
 
   private static class SingletonHolder {
-    private static LocationServiceSingleton INSTANCE = new LocationServiceSingleton();
+    private static LocationServiceImpl INSTANCE = new LocationServiceImpl();
   }
 
-  public static LocationServiceSingleton instance() {
+  public static LocationServiceImpl instance() {
     return SingletonHolder.INSTANCE;
   }
 

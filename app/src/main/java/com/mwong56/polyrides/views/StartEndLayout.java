@@ -15,7 +15,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.services.LocationService;
-import com.mwong56.polyrides.services.LocationServiceSingleton;
+import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.OnActivityResultListener;
 
 import butterknife.Bind;
@@ -41,7 +41,7 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
 
   private Fragment fragment;
   private GoogleApiClient apiClient;
-  private LocationService locationService = LocationServiceSingleton.instance();
+  private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
   public StartEndLayout(Context context) {

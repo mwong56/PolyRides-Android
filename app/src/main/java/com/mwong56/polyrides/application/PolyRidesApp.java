@@ -3,6 +3,7 @@ package com.mwong56.polyrides.application;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 
 /**
@@ -19,6 +20,6 @@ public class PolyRidesApp extends Application {
 
     Parse.initialize(this, "c6e3kc0AWh95MO0sBssnh00v4KKPkoZh1cQc4aBa", "SZ6GYt8TIixLjdpgKKT1NAqQqoc57zT9WNx0lyj7");
     ParseInstallation.getCurrentInstallation().saveInBackground();
-
+    ParseFacebookUtils.initialize(this);
   }
 }

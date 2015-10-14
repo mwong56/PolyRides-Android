@@ -55,9 +55,10 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.3.0'
 
     //Parse
-    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse.bolts:bolts-android:1.1.4'
     compile 'com.parse:parse-android:1.10.3'
-
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
 
     //Misc
     compile 'com.jakewharton:butterknife:7.0.1'
