@@ -14,6 +14,7 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.models.Date;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.Time;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.services.PolyRidesService;
@@ -56,25 +57,13 @@ public class SubmitRideFragment extends Fragment {
   @Bind(R.id.note)
   TextView noteTextView;
 
-  private Location start;
-  private Location end;
-  private Date date;
-  private Time time;
-  private int cost;
-  private int seats;
-  private String note;
+  private Ride ride;
   private ProgressDialog dialog;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
-  public static SubmitRideFragment newInstance(Location start, Location end, Date date, Time time, int cost, int seats, String note) {
+  public static SubmitRideFragment newInstance(Ride ride) {
     Bundle bundle = new Bundle();
-    bundle.putParcelable("start", start);
-    bundle.putParcelable("end", end);
-    bundle.putParcelable("date", date);
-    bundle.putParcelable("time", time);
-    bundle.putInt("cost", cost);
-    bundle.putInt("seats", seats);
-    bundle.putString("note", note);
+    bundle.putParcelable("ride", ride);
     SubmitRideFragment fragment = new SubmitRideFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -86,25 +75,19 @@ public class SubmitRideFragment extends Fragment {
 
     Bundle args = getArguments();
     if (args != null) {
-      this.start = (Location) args.get("start");
-      this.end = (Location) args.get("end");
-      this.date = (Date) args.get("date");
-      this.time = (Time) args.get("time");
-      this.cost = args.getInt("cost");
-      this.seats = args.getInt("seats");
-      this.note = args.getString("note");
+      this.ride = args.getParcelable("ride");
     }
 
     initializeView();
   }
 
   private void initializeView() {
-    locationTextView.setText(start.getCity() + " -> " + end.getCity());
-    dateTextView.setText(date.toString());
-    timeTextView.setText(time.toString());
-    costTextView.setText("$" + cost + " per seat");
-    seatTextView.setText(seats + " seat/s available");
-    noteTextView.setText(note);
+    locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
+    dateTextView.setText(ride.getDate().toString());
+    timeTextView.setText(ride.getTime().toString());
+    costTextView.setText("$" + ride.getCost() + " per seat");
+    seatTextView.setText(ride.getSeats() + " seat/s available");
+    noteTextView.setText(ride.getNote());
   }
 
   @Override
@@ -119,7 +102,7 @@ public class SubmitRideFragment extends Fragment {
   @OnClick(R.id.submit_button)
   void onSubmitClicked() {
     dialog = ProgressDialog.show(getContext(), "Please wait", "Saving...");
-    polyRidesService.saveNewRide(start, end, date, time, cost, seats, note, User.getUserId())
+    polyRidesService.saveNewRide(ride)
         .subscribe(onNext -> {
               dialog.dismiss();
               Intent i = new Intent(getActivity(), MainActivity.class);

@@ -14,7 +14,9 @@ import com.mwong56.polyrides.fragments.SeatsFragment;
 import com.mwong56.polyrides.fragments.SubmitRideFragment;
 import com.mwong56.polyrides.models.Date;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.Time;
+import com.mwong56.polyrides.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,7 +90,8 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Override
   public void onNotesSet(String string) {
     this.note = string;
-    fragment = SubmitRideFragment.newInstance(start, end, date, time, cost, seats, note);
+    Ride ride = new Ride(start, end, date, time, cost, seats, note, User.getUserId());
+    fragment = SubmitRideFragment.newInstance(ride);
     getSupportFragmentManager()
         .beginTransaction()
         .replace(R.id.frame_layout,

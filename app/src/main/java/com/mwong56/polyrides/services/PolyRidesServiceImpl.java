@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.mwong56.polyrides.models.Date;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.Time;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -60,23 +61,23 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> saveNewRide(Location start, Location end, Date date, Time time, int cost, int seats,
-                                      String note, String userId) {
+  public Observable<Void> saveNewRide(Ride ride) {
     return Observable.create(subscriber -> {
           ParseObject newRide = new ParseObject("Ride");
-          newRide.put("startLat", start.getLatLng().latitude);
-          newRide.put("startLong", start.getLatLng().longitude);
-          newRide.put("endLat", end.getLatLng().latitude);
-          newRide.put("endLong", end.getLatLng().longitude);
-          newRide.put("startCity", start.getCity());
-          newRide.put("endCity", end.getCity());
+          newRide.put("startLat", ride.getStart().getLatLng().latitude);
+          newRide.put("startLong", ride.getStart().getLatLng().longitude);
+          newRide.put("endLat", ride.getEnd().getLatLng().latitude);
+          newRide.put("endLong", ride.getEnd().getLatLng().longitude);
+          newRide.put("startCity", ride.getStart().getCity());
+          newRide.put("endCity", ride.getEnd().getCity());
           Calendar cal = Calendar.getInstance();
-          cal.set(date.getYear(), date.getMonth(), date.getDay(), time.getHour(), time.getMinute());
+          cal.set(ride.getDate().getYear(), ride.getDate().getMonth(), ride.getDate().getDay(),
+              ride.getTime().getHour(), ride.getTime().getMinute());
           newRide.put("dateTime", cal.getTime());
-          newRide.put("cost", cost);
-          newRide.put("seats", seats);
-          newRide.put("notes", note);
-          newRide.put("userId", userId);
+          newRide.put("cost", ride.getCost());
+          newRide.put("seats", ride.getSeats());
+          newRide.put("notes", ride.getCost());
+          newRide.put("userId", ride.getUserId());
           newRide.saveInBackground(e -> {
             if (e != null) {
               subscriber.onError(e);

@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.mwong56.polyrides.models.Date;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.Time;
 import com.parse.ParseUser;
 
@@ -20,6 +21,5 @@ public interface PolyRidesService {
 
   void saveUserId(String userId);
 
-  Observable<Void> saveNewRide(Location start, Location end, Date date, Time time, int cost, int seats,
-                   String note, String userId);
+  Observable<Void> saveNewRide(Ride ride);
 }
