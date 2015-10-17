@@ -76,7 +76,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("dateTime", cal.getTime());
           newRide.put("cost", ride.getCost());
           newRide.put("seats", ride.getSeats());
-          newRide.put("notes", ride.getCost());
+          newRide.put("notes", ride.getNote());
           newRide.put("userId", ride.getUserId());
           newRide.saveInBackground(e -> {
             if (e != null) {
