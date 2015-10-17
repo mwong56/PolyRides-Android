@@ -52,4 +52,26 @@ public class FacebookServiceImpl implements FacebookService {
           }
         }).executeAsync());
   }
+
+  @Override
+  public Observable<String> getUserName(final AccessToken token) {
+    return Observable.create(subscriber ->
+        GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
+          if (jsonObject == null) {
+            subscriber.onError(new Exception("Error: " + graphResponse.toString()));
+          } else {
+            if (!subscriber.isUnsubscribed()) {
+              String userName = null;
+              try {
+                userName = jsonObject.getString("name");
+              } catch (JSONException e) {
+                subscriber.onError(e);
+              }
+
+              subscriber.onNext(userName);
+              subscriber.onCompleted();
+            }
+          }
+        }).executeAsync());
+  }
 }

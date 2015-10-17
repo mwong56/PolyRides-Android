@@ -2,6 +2,9 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
+import com.mwong56.polyrides.models.Date;
+import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Time;
 import com.parse.ParseUser;
 
 import java.util.Collection;
@@ -15,5 +18,8 @@ public interface PolyRidesService {
 
   Observable<ParseUser> facebookLogin(Activity activity, Collection<String> permissions);
 
-  void saveParseuserInfo(String userId);
+  void saveUserId(String userId);
+
+  Observable<Void> saveNewRide(Location start, Location end, Date date, Time time, int cost, int seats,
+                   String note, String userId);
 }

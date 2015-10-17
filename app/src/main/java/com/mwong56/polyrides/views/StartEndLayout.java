@@ -102,7 +102,7 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
   void setStart() {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
-            .subscribe(place -> setStartLocation(new Location(place)),
+            .subscribe(place -> setStartLocation(new Location(place, getContext())),
                 error -> showToast("Could not find location")));
   }
 
@@ -110,7 +110,7 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
   void setEnd() {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
-            .subscribe(place -> setEndLocation(new Location(place)),
+            .subscribe(place -> setEndLocation(new Location(place, getContext())),
                 error -> showToast("Could not find location")));
   }
 
@@ -149,7 +149,7 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
 
   @Override
   public void onActivityResultCalled(int requestCode, Intent data) {
-    Location location = new Location(PlacePicker.getPlace(data, getContext()));
+    Location location = new Location(PlacePicker.getPlace(data, getContext()), getContext());
     if (requestCode == START_RESULT) {
       setStartLocation(location);
     } else if (requestCode == END_RESULT) {

@@ -71,7 +71,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
         }
         final Place place1 = places.get(0);
         Log.i(TAG, "Place details received: " + place1.getName());
-        setLocation(new Location(place1));
+        setLocation(new Location(place1, getContext()));
         places.release();
       });
 
@@ -94,23 +94,6 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setLocation(Location location) {
-    if (geocoder != null) {
-      LatLng temp = location.getLatLng();
-      Address address;
-      try {
-        address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
-        String addressLine = address.getAddressLine(1);
-        if (addressLine != null && addressLine.length() > 0) {
-          location.setAddress(addressLine);
-        }
-
-        if (address.getLocality() != null && address.getLocality().length() > 0) {
-          location.setCity(address.getLocality());
-        }
-      } catch (Exception e) {
-        // do nothing.
-      }
-    }
     this.location = location;
     this.post(() -> setText(location.getAddress()));
   }

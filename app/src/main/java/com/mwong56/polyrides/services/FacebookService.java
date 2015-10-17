@@ -11,4 +11,6 @@ import rx.Observable;
  */
 public interface FacebookService {
   Observable<String> getUserId(AccessToken token);
+
+  Observable<String> getUserName(AccessToken token);
 }

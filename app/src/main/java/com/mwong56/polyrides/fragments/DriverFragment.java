@@ -94,7 +94,7 @@ public class DriverFragment extends RxFragment {
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK) {
-      ((OnActivityResultListener)startEndLayout).onActivityResultCalled(requestCode, data);
+      startEndLayout.onActivityResultCalled(requestCode, data);
     }
 
   }

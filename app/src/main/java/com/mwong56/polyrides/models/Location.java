@@ -1,61 +1,84 @@
 package com.mwong56.polyrides.models;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Locale;
+
 /**
  * Created by micha on 10/10/2015.
  */
 public class Location implements Parcelable {
   private LatLng latLng;
-  private CharSequence address;
-  private CharSequence name;
-  private CharSequence city;
+  private String address;
+  private String name;
+  private String city;
 
-  public Location(Place place) {
+  public Location(Place place, Context context) {
     this.latLng = place.getLatLng();
-    this.address = place.getAddress();
-    this.name = place.getName();
+    this.address = place.getAddress().toString();
+    this.name = place.getName().toString();
+
+    Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+    if (geocoder != null) {
+      LatLng temp = this.latLng;
+      Address address;
+      try {
+        address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
+        String addressLine = address.getAddressLine(1);
+        if (addressLine != null && addressLine.length() > 0) {
+          this.address = addressLine;
+        }
+
+        if (address.getLocality() != null && address.getLocality().length() > 0) {
+          this.city = address.getLocality();
+        }
+      } catch (Exception e) {
+        // do nothing.
+      }
+    }
   }
+
 
   public LatLng getLatLng() {
     return latLng;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public CharSequence getAddress() {
+  public String getAddress() {
     return address;
   }
 
-  public CharSequence getName() {
+  public String getName() {
     return name;
   }
 
-  public CharSequence getCity() {
-    return city;
-  }
-
-  public static Creator<Location> getCREATOR() {
-    return CREATOR;
+  public String getCity() {
+    if (city == null) {
+      return address;
+    } else {
+      return city;
+    }
   }
 
   protected Location(Parcel in) {
     latLng = in.readParcelable(LatLng.class.getClassLoader());
+    address = in.readString();
+    name = in.readString();
+    city = in.readString();
   }
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeParcelable(latLng, flags);
+    dest.writeString(address);
+    dest.writeString(name);
+    dest.writeString(city);
   }
 
   @Override

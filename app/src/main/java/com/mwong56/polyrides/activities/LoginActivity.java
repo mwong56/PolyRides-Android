@@ -75,7 +75,7 @@ public class LoginActivity extends RxAppCompatActivity {
         .observeOn(Schedulers.newThread())
         .subscribe(userId -> {
           User.setUserId(userId);
-          polyRidesService.saveParseuserInfo(userId);
+          polyRidesService.saveUserId(userId);
           startMainActivity();
         }, error -> showToast(error));
   }
