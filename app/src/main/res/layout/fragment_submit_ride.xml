@@ -12,7 +12,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
-      android:text="Michael Wong"
       android:textSize="22sp"/>
 
   <RelativeLayout
@@ -26,7 +25,6 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_action_settings"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"/>
   </RelativeLayout>
@@ -37,7 +35,6 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:gravity="center_horizontal"
-      android:text="SLO -> SF"
       android:textSize="22sp"/>
 
   <TextView
@@ -46,7 +43,6 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:gravity="center_horizontal"
-      android:text="Wednesday, November 4"
       android:textSize="18sp"/>
 
   <TextView
@@ -54,7 +50,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
-      android:text="11:30 PM"
       android:textSize="18sp"/>
 
   <TextView
@@ -63,7 +58,6 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="14dp"
       android:gravity="center_horizontal"
-      android:text="1 seat available"
       android:textSize="18sp"/>
 
   <TextView
@@ -71,7 +65,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
-      android:text="$15.00 per seat"
       android:textSize="18sp"/>
 
   <TextView
@@ -87,7 +80,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
-      android:text="michael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael wongmichael"
       android:textSize="16sp"/>
 
 

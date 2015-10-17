@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.models.Date;
@@ -17,11 +18,14 @@ import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.Time;
 import com.mwong56.polyrides.models.User;
+import com.mwong56.polyrides.services.FacebookService;
+import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,6 +64,7 @@ public class SubmitRideFragment extends Fragment {
   private Ride ride;
   private ProgressDialog dialog;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
+  private FacebookService fbService = FacebookServiceImpl.get();
 
   public static SubmitRideFragment newInstance(Ride ride) {
     Bundle bundle = new Bundle();
@@ -82,6 +87,9 @@ public class SubmitRideFragment extends Fragment {
   }
 
   private void initializeView() {
+    fbService.getUserName(AccessToken.getCurrentAccessToken())
+        .subscribe(userName -> nameTextView.setText(userName), error -> showToast(error));
+    Picasso.with(getContext()).load("https://graph.facebook.com/" + ride.getUserId() + "/picture?type=large").into(profileImageView);
     locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
     dateTextView.setText(ride.getDate().toString());
     timeTextView.setText(ride.getTime().toString());
@@ -113,7 +121,10 @@ public class SubmitRideFragment extends Fragment {
   }
 
   private void showToast(Throwable e) {
-    dialog.dismiss();
+    if (dialog != null && dialog.isShowing()) {
+      dialog.dismiss();
+      dialog = null;
+    }
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
 

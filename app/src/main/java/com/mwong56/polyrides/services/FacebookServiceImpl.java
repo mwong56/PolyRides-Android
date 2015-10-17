@@ -55,7 +55,7 @@ public class FacebookServiceImpl implements FacebookService {
 
   @Override
   public Observable<String> getUserName(final AccessToken token) {
-    return Observable.create(subscriber ->
+    Observable<String> toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
           if (jsonObject == null) {
             subscriber.onError(new Exception("Error: " + graphResponse.toString()));
@@ -73,5 +73,6 @@ public class FacebookServiceImpl implements FacebookService {
             }
           }
         }).executeAsync());
+    return toReturn;
   }
 }
