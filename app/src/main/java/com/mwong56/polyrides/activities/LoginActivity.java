@@ -1,19 +1,21 @@
 package com.mwong56.polyrides.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.login.widget.LoginButton;
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.models.User;
+import com.mwong56.polyrides.services.FacebookService;
+import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import org.json.JSONException;
@@ -21,7 +23,9 @@ import org.json.JSONException;
 import java.util.Arrays;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by micha on 10/13/2015.
@@ -30,36 +34,30 @@ public class LoginActivity extends RxAppCompatActivity {
   private static final String TAG = "LoginActivity";
 
   @Bind(R.id.login)
-  LoginButton loginButton;
+  Button loginButton;
 
-  private final PolyRidesService service = PolyRidesServiceImpl.get();
+  private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
+  private final FacebookService fbService = FacebookServiceImpl.get();
 
   @Override
-  public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-    super.onCreate(savedInstanceState, persistentState);
-
-    if (isExistingUser()) {
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (User.getUserId() != null) {
       startMainActivity();
     }
 
     setContentView(R.layout.activity_login);
+    ButterKnife.bind(this);
   }
 
   @OnClick(R.id.login)
   void onLoginClicked() {
-    service.facebookLogin(this, Arrays.asList("public_profile","user_friends"))
+//    progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait", "Logging in...", true);
+    polyRidesService.facebookLogin(this, Arrays.asList("public_profile", "user_friends"))
         .subscribe(user -> {
-          if (user == null) {
-            Log.d(TAG, "User canceled fb login");
-          } else {
-            updateParseUserInfoInBackground();
-            startMainActivity();
-          }
-        });
-
-
+          updateParseUserInfoInBackground();
+        }, error -> showToast(error));
   }
-
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -67,32 +65,24 @@ public class LoginActivity extends RxAppCompatActivity {
     ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
   }
 
-  private boolean isExistingUser() {
-    ParseUser user = ParseUser.getCurrentUser();
-    return user != null && ParseFacebookUtils.isLinked(user);
-  }
-
   private void startMainActivity() {
+//    progressDialog.dismiss();
     Intent i = new Intent(LoginActivity.this, MainActivity.class);
     startActivity(i);
     finish();
   }
 
 
-  private void updateParseUserInfoInBackground(){
-    GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), (jsonObject, graphResponse) -> {
-      if (jsonObject != null) {
-        String userId;
-        String userName;
-        try {
-          userId = jsonObject.getString("id");
-          userName = jsonObject.getString("name");
-        } catch (JSONException e) {
-          Toast.makeText(getBaseContext(), "Error saving user", Toast.LENGTH_SHORT).show();
-          return;
-        }
-        service.saveParseuserInfo(userId, userName);
-      }
-    });
+  private void updateParseUserInfoInBackground() {
+    fbService.getUserDetails(AccessToken.getCurrentAccessToken())
+        .subscribe(userId -> {
+          User.setUserId(userId);
+          polyRidesService.saveParseuserInfo(userId);
+          startMainActivity();
+        }, error -> showToast(error));
+  }
+
+  private void showToast(Throwable e) {
+    Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.tumblr.remember.Remember;
 
 /**
  * Created by micha on 10/13/2015.
@@ -14,6 +15,8 @@ public class PolyRidesApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+
+    Remember.init(getApplicationContext(), "com.mwong56.polyrides");
 
     // Enable Local Datastore.
     Parse.enableLocalDatastore(this);

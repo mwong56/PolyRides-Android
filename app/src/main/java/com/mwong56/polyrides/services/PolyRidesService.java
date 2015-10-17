@@ -15,5 +15,5 @@ public interface PolyRidesService {
 
   Observable<ParseUser> facebookLogin(Activity activity, Collection<String> permissions);
 
-  void saveParseuserInfo(String userId, String username);
+  void saveParseuserInfo(String userId);
 }

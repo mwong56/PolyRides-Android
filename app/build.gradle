@@ -65,4 +65,5 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.0.1'
     compile 'com.wdullaer:materialdatetimepicker:1.5.3'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile (group: 'com.tumblr', name: 'remember', version: '1.0.0', ext: 'aar')
 }
