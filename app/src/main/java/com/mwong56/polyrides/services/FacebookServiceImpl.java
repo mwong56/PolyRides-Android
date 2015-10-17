@@ -32,27 +32,24 @@ public class FacebookServiceImpl implements FacebookService {
   }
 
   @Override
-  public Observable<String> getUserDetails(final AccessToken token) {
-    Observable<String> toReturn = Observable.create(subscriber   ->
-        GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
-            (jsonObject, graphResponse) -> {
-              if (jsonObject == null) {
-                subscriber.onError(new Exception("Error: " + graphResponse.toString()));
-              } else {
-                if (!subscriber.isUnsubscribed()) {
-                  String userId = null;
-                  try {
-                    userId = jsonObject.getString("id");
-                  } catch (JSONException e) {
-                    subscriber.onError(e);
-                  }
-
-                  subscriber.onNext(userId);
-                  subscriber.onCompleted();
-                }
+  public Observable<String> getUserId(final AccessToken token) {
+    return Observable.create(subscriber ->
+        GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
+          if (jsonObject == null) {
+            subscriber.onError(new Exception("Error: " + graphResponse.toString()));
+          } else {
+            if (!subscriber.isUnsubscribed()) {
+              String userId = null;
+              try {
+                userId = jsonObject.getString("id");
+              } catch (JSONException e) {
+                subscriber.onError(e);
               }
-            }));
 
-    return toReturn;
+              subscriber.onNext(userId);
+              subscriber.onCompleted();
+            }
+          }
+        }).executeAsync());
   }
 }

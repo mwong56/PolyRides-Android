@@ -1,14 +1,11 @@
 package com.mwong56.polyrides.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.services.FacebookService;
@@ -18,14 +15,13 @@ import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.parse.ParseFacebookUtils;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-import org.json.JSONException;
-
 import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by micha on 10/13/2015.
@@ -74,7 +70,9 @@ public class LoginActivity extends RxAppCompatActivity {
 
 
   private void updateParseUserInfoInBackground() {
-    fbService.getUserDetails(AccessToken.getCurrentAccessToken())
+    fbService.getUserId(AccessToken.getCurrentAccessToken())
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .observeOn(Schedulers.newThread())
         .subscribe(userId -> {
           User.setUserId(userId);
           polyRidesService.saveParseuserInfo(userId);
