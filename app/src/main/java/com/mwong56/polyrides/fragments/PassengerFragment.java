@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.FindRideActivity;
+import com.mwong56.polyrides.activities.MainActivity;
+import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.views.StartEndLayout;
 
 import butterknife.Bind;
@@ -23,9 +27,50 @@ public class PassengerFragment extends Fragment {
   @Bind(R.id.start_from_layout)
   StartEndLayout startEndLayout;
 
+  private MainActivity activity;
+
+
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
   }
+
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    startEndLayout.setup(activity.getGoogleApiClient(), this);
+
+    if (savedInstanceState != null) {
+      Location[] locations = (Location[]) savedInstanceState.getParcelableArray("locations");
+      if (locations[0] != null) {
+        startEndLayout.setStartLocation(locations[0]);
+      }
+
+      if (locations[1] != null) {
+        startEndLayout.setEndLocation(locations[1]);
+      }
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    Location[] locations = startEndLayout.getPlaces();
+    outState.putParcelableArray("locations", locations);
+  }
+
+  @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    this.activity = (MainActivity) activity;
+  }
+
+  @Override
+  public void onDetach() {
+    this.activity = null;
+    super.onDetach();
+  }
+
 
   @Nullable
   @Override
@@ -37,7 +82,20 @@ public class PassengerFragment extends Fragment {
 
   @OnClick(R.id.find_ride_button)
   void findRide() {
-    Intent i = new Intent(getActivity(), FindRideActivityFragment.class);
-    startActivity(i);
+    Location[] locations = startEndLayout.getPlaces();
+    if (locations[0] != null && locations[1] != null) {
+      Intent i = new Intent(getActivity(), FindRideActivity.class);
+      i.putExtra("start", locations[0]);
+      i.putExtra("end", locations[1]);
+      startActivity(i);
+    }
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode == Activity.RESULT_OK) {
+      startEndLayout.onActivityResultCalled(requestCode, data);
+    }
   }
 }

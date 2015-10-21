@@ -37,7 +37,7 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_new_ride);
+    setContentView(R.layout.toolbar_frame_layout);
     ButterKnife.bind(this);
 
     setSupportActionBar(toolbar);

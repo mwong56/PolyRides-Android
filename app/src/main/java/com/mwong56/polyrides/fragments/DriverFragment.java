@@ -12,7 +12,6 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.Location;
-import com.mwong56.polyrides.utils.OnActivityResultListener;
 import com.mwong56.polyrides.views.StartEndLayout;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -96,6 +95,5 @@ public class DriverFragment extends RxFragment {
     if (resultCode == Activity.RESULT_OK) {
       startEndLayout.onActivityResultCalled(requestCode, data);
     }
-
   }
 }

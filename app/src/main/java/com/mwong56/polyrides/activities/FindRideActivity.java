@@ -1,40 +1,68 @@
 package com.mwong56.polyrides.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.fragments.DateTimeFragment;
+import com.mwong56.polyrides.fragments.PassengerRidesFragment;
+import com.mwong56.polyrides.models.DateTime;
+import com.mwong56.polyrides.models.Location;
 
-public class FindRideActivity extends AppCompatActivity {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class FindRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener {
+
+  @Bind(R.id.toolbar)
+  Toolbar toolbar;
+
+  private Fragment fragment;
+  private Location start;
+  private Location end;
+  private DateTime dateTime;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_find_ride);
-  }
+    setContentView(R.layout.toolbar_frame_layout);
+    ButterKnife.bind(this);
+
+    setSupportActionBar(toolbar);
+    setTitle("Find Ride");
+
+    this.start = (Location) getIntent().getExtras().get("start");
+    this.end = (Location) getIntent().getExtras().get("end");
 
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_find_ride, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
+    if (savedInstanceState != null) {
+      fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
     }
 
-    return super.onOptionsItemSelected(item);
+    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
+    fragmentTransaction.commit();
+  }
+
+
+  @Override
+  public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+    super.onSaveInstanceState(outState, outPersistentState);
+    getSupportFragmentManager().putFragment(outState, "content", fragment);
+  }
+
+  @Override
+  public void onDateTimeSet(DateTime dateTime) {
+    this.dateTime = dateTime;
+    this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
+    getSupportFragmentManager()
+        .beginTransaction()
+        .replace(R.id.frame_layout, fragment, "PassengerFragment")
+        .addToBackStack("PassengerFragment")
+        .commit();
   }
 }
