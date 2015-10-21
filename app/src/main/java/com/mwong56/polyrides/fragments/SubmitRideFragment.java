@@ -18,6 +18,7 @@ import com.mwong56.polyrides.services.FacebookService;
 import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.mwong56.polyrides.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -82,7 +83,7 @@ public class SubmitRideFragment extends Fragment {
   private void initializeView() {
     fbService.getUserName(AccessToken.getCurrentAccessToken())
         .subscribe(userName -> nameTextView.setText(userName), error -> showToast(error));
-    Picasso.with(getContext()).load("https://graph.facebook.com/" + ride.getUserId() + "/picture?type=large").into(profileImageView);
+    Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImageView);
     locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
     dateTextView.setText(ride.getDateTime().printDate());
     timeTextView.setText(ride.getDateTime().printTime());

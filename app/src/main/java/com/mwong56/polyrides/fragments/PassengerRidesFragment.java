@@ -11,14 +11,20 @@ import android.widget.Toast;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.mwong56.polyrides.views.PassengerRideViewHolder;
 import com.trello.rxlifecycle.components.support.RxFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 /**
  * Created by micha on 10/20/2015.
@@ -32,6 +38,8 @@ public class PassengerRidesFragment extends RxFragment {
   private Location start;
   private Location end;
   private DateTime dateTime;
+  private EasyRecyclerAdapter<Ride> adapter;
+  private List<Ride> rideList;
 
   public static PassengerRidesFragment newInstance(Location start, Location end, DateTime dateTime) {
     Bundle args = new Bundle();
@@ -50,15 +58,18 @@ public class PassengerRidesFragment extends RxFragment {
     this.start = getArguments().getParcelable("start");
     this.end = getArguments().getParcelable("end");
     this.dateTime = getArguments().getParcelable("dateTime");
+    this.rideList = new ArrayList<>();
+    this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList, getActivity());
+    this.recyclerView.setAdapter(adapter);
 
     polyRidesService.getRides(dateTime.getDate())
         .compose(bindToLifecycle())
         .observeOn(Schedulers.newThread())
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(rides -> {
-          System.out.print(rides);
+          rideList.addAll(rides);
+          adapter.notifyDataSetChanged();
         }, error -> showToast(error));
-
   }
 
   @Nullable

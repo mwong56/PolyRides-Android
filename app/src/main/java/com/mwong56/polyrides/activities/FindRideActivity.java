@@ -12,11 +12,13 @@ import com.mwong56.polyrides.fragments.DateTimeFragment;
 import com.mwong56.polyrides.fragments.PassengerRidesFragment;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Ride;
+import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FindRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener {
+public class FindRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener, PassengerRideViewHolder.RideListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -64,5 +66,10 @@ public class FindRideActivity extends AppCompatActivity implements DateTimeFragm
         .replace(R.id.frame_layout, fragment, "PassengerFragment")
         .addToBackStack("PassengerFragment")
         .commit();
+  }
+
+  @Override
+  public void onRideClicked(Ride ride) {
+    // TODO.
   }
 }
