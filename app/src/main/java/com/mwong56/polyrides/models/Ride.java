@@ -3,35 +3,56 @@ package com.mwong56.polyrides.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseObject;
+
+import java.util.Date;
+
 /**
  * Created by micha on 10/17/2015.
  */
 public class Ride implements Parcelable {
   private Location start;
   private Location end;
-  private Date date;
-  private Time time;
+  private DateTime dateTime;
   private int cost;
   private int seats;
   private String note;
   private String userId;
 
-  public Ride(Location start, Location end, Date date, Time time, int cost, int seats, String note, String userId) {
+  public static Ride parseToRide(ParseObject object) {
+    int cost = object.getInt("cost");
+    Date date = object.getDate("dateTime");
+    String notes = object.getString("notes");
+    int seats = object.getInt("seats");
+    double endLat = object.getDouble("endLat");
+    double endLong = object.getDouble("endLong");
+    double startLat = object.getDouble("startLat");
+    double startLong = object.getDouble("startLong");
+    String endCity = object.getString("endCity");
+    String startCity = object.getString("startCity");
+    String userId = object.getString("userId");
+
+    Location start = new Location(startLat, startLong, startCity);
+    Location end = new Location(endLat, endLong, endCity);
+
+    return new Ride(start, end, DateTime.dateToDateTime(date), cost, seats, notes, userId);
+  }
+
+  public Ride(Location start, Location end, DateTime dateTime, int cost, int seats, String note, String userId) {
     this.start = start;
     this.end = end;
-    this.date = date;
-    this.time = time;
+    this.dateTime = dateTime;
     this.cost = cost;
     this.seats = seats;
     this.note = note;
     this.userId = userId;
   }
 
+
   protected Ride(Parcel in) {
     start = in.readParcelable(Location.class.getClassLoader());
     end = in.readParcelable(Location.class.getClassLoader());
-    date = in.readParcelable(Date.class.getClassLoader());
-    time = in.readParcelable(Time.class.getClassLoader());
+    dateTime = in.readParcelable(DateTime.class.getClassLoader());
     cost = in.readInt();
     seats = in.readInt();
     note = in.readString();
@@ -42,8 +63,7 @@ public class Ride implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeParcelable(start, flags);
     dest.writeParcelable(end, flags);
-    dest.writeParcelable(date, flags);
-    dest.writeParcelable(time, flags);
+    dest.writeParcelable(dateTime, flags);
     dest.writeInt(cost);
     dest.writeInt(seats);
     dest.writeString(note);
@@ -68,7 +88,11 @@ public class Ride implements Parcelable {
   };
 
   public Date getDate() {
-    return date;
+    return dateTime.getDate();
+  }
+
+  public DateTime getDateTime() {
+    return dateTime;
   }
 
   public Location getStart() {
@@ -91,12 +115,7 @@ public class Ride implements Parcelable {
     return userId;
   }
 
-  public Time getTime() {
-    return time;
-  }
-
   public String getNote() {
     return note;
   }
-
 }

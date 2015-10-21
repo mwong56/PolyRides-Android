@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.models.Date;
-import com.mwong56.polyrides.models.Time;
+import com.mwong56.polyrides.models.DateTime;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -33,11 +32,12 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   TextView timeTextView;
 
   private DateTimeListener listener;
-  private Time time;
-  private Date date;
+  private DateTime dateTime;
+  private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
+  private boolean dateSet, timeSet;
 
   public interface DateTimeListener {
-    void onDateTimeSet(Date date, Time time);
+    void onDateTimeSet(DateTime dateTime);
   }
 
   public static DateTimeFragment newInstance() {
@@ -47,13 +47,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-
-    if (this.date != null) {
-      dateTextView.setText(this.date.toString());
-    }
-    if (this.time != null) {
-      timeTextView.setText(this.time.toString());
-    }
+    setTime();
   }
 
   @Override
@@ -104,45 +98,55 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
     tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
   }
 
+  private void setTime() {
+    if (this.dateTime != null) {
+      if (this.dateTime.printDate() != null) {
+        dateTextView.setText(this.dateTime.printDate());
+      }
+
+      if (this.dateTime.printTime() != null) {
+        timeTextView.setText(this.dateTime.printTime());
+      }
+    }
+  }
+
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putParcelable("date", this.date);
-    outState.putParcelable("time", this.time);
+    outState.putParcelable("dateTime", this.dateTime);
   }
 
 
   @Override
   public void onViewStateRestored(Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
-    if (savedInstanceState != null) {
-      this.date = (Date) savedInstanceState.get("date");
-      this.time = (Time) savedInstanceState.get("time");
-      if (this.date != null) {
-        dateTextView.setText(this.date.toString());
-      }
-      if (this.time != null) {
-        timeTextView.setText(this.time.toString());
-      }
-    }
+    setTime();
   }
 
   @OnClick(R.id.next_button)
   void onNextClicked() {
-    listener.onDateTimeSet(this.date, this.time);
+    if (this.dateSet && this.timeSet) {
+      listener.onDateTimeSet(new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute));
+
+    }
   }
 
   @Override
   public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-    //TODO: Validate date.
-    this.date = new Date(year, monthOfYear, dayOfMonth);
+    //TODO: Validate dateTime.
+    this.year = year;
+    this.monthOfYear = monthOfYear;
+    this.dayOfMonth = dayOfMonth;
+    this.dateSet = true;
     dateTextView.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
   }
 
   @Override
   public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-    //TODO: Validate date.
-    this.time = new Time(hourOfDay, minute);
+    //TODO: Validate dateTime.
+    this.hourOfDay = hourOfDay;
+    this.minute = minute;
+    this.timeSet = true;
     timeTextView.setText(hourOfDay + ":" + minute);
   }
 

@@ -2,19 +2,19 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
-import com.mwong56.polyrides.models.Date;
-import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
-import com.mwong56.polyrides.models.Time;
-import com.parse.ParseException;
+import com.mwong56.polyrides.models.User;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -70,10 +70,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("endLong", ride.getEnd().getLatLng().longitude);
           newRide.put("startCity", ride.getStart().getCity());
           newRide.put("endCity", ride.getEnd().getCity());
-          Calendar cal = Calendar.getInstance();
-          cal.set(ride.getDate().getYear(), ride.getDate().getMonth(), ride.getDate().getDay(),
-              ride.getTime().getHour(), ride.getTime().getMinute());
-          newRide.put("dateTime", cal.getTime());
+          newRide.put("dateTime", ride.getDate());
           newRide.put("cost", ride.getCost());
           newRide.put("seats", ride.getSeats());
           newRide.put("notes", ride.getNote());
@@ -90,6 +87,40 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           });
         }
     );
+  }
+
+  @Override
+  public Observable<List<Ride>> getRides(Date passengerRequestDate) {
+    return Observable.create(subscriber -> {
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
+      Date currentDate = Calendar.getInstance().getTime();
+      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
+      if (currentDate.compareTo(passengerRequestDate) > 0) {
+        Date newDate = new Date(currentDate.getTime() + -60 * 60 * 24);
+
+        if (newDate.compareTo(passengerRequestDate) < 0) {
+          query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + -60 * 60 * 24));
+          query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + 60 * 60 * 24));
+        }
+      }
+
+      query.whereNotEqualTo("userId", User.getUserId());
+      query.findInBackground((objects, e) -> {
+        List<Ride> rides = new ArrayList<>();
+        if (e != null) {
+          subscriber.onError(e);
+        } else {
+
+          for (ParseObject object : objects) {
+            rides.add(Ride.parseToRide(object));
+          }
+          if (!subscriber.isUnsubscribed()) {
+            subscriber.onNext(rides);
+            subscriber.onCompleted();
+          }
+        }
+      });
+    });
   }
 
 }

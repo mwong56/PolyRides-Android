@@ -12,10 +12,9 @@ import com.mwong56.polyrides.fragments.DateTimeFragment;
 import com.mwong56.polyrides.fragments.NotesFragment;
 import com.mwong56.polyrides.fragments.SeatsFragment;
 import com.mwong56.polyrides.fragments.SubmitRideFragment;
-import com.mwong56.polyrides.models.Date;
+import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
-import com.mwong56.polyrides.models.Time;
 import com.mwong56.polyrides.models.User;
 
 import butterknife.Bind;
@@ -30,8 +29,7 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   private Fragment fragment;
   private Location start;
   private Location end;
-  private Date date;
-  private Time time;
+  private DateTime dateTime;
   private int cost;
   private int seats;
   private String note;
@@ -65,9 +63,8 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   }
 
   @Override
-  public void onDateTimeSet(Date date, Time time) {
-    this.date = date;
-    this.time = time;
+  public void onDateTimeSet(DateTime dateTime) {
+    this.dateTime = dateTime;
     getSupportFragmentManager()
         .beginTransaction()
         .replace(R.id.frame_layout, SeatsFragment.newInstance(), "SeatsFragment")
@@ -90,7 +87,7 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Override
   public void onNotesSet(String string) {
     this.note = string;
-    Ride ride = new Ride(start, end, date, time, cost, seats, note, User.getUserId());
+    Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId());
     fragment = SubmitRideFragment.newInstance(ride);
     getSupportFragmentManager()
         .beginTransaction()

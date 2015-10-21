@@ -20,6 +20,12 @@ public class Location implements Parcelable {
   private String name;
   private String city;
 
+  public Location(double lat, double lng, String city) {
+    latLng = new LatLng(lat, lng);
+    this.city = city;
+  }
+
+
   public Location(Place place, Context context) {
     this.latLng = place.getLatLng();
     this.address = place.getAddress().toString();
@@ -45,6 +51,12 @@ public class Location implements Parcelable {
     }
   }
 
+  public android.location.Location toLocation() {
+    android.location.Location location = new android.location.Location(city);
+    location.setLatitude(latLng.latitude);
+    location.setLongitude(latLng.longitude);
+    return location;
+  }
 
   public LatLng getLatLng() {
     return latLng;

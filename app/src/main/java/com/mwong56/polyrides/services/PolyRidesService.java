@@ -2,13 +2,12 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
-import com.mwong56.polyrides.models.Date;
-import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
-import com.mwong56.polyrides.models.Time;
 import com.parse.ParseUser;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import rx.Observable;
 
@@ -22,4 +21,6 @@ public interface PolyRidesService {
   void saveUserId(String userId);
 
   Observable<Void> saveNewRide(Ride ride);
+
+  Observable<List<Ride>> getRides(Date date);
 }
