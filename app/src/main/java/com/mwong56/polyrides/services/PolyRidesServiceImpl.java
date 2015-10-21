@@ -27,6 +27,9 @@ import rx.schedulers.Schedulers;
  */
 public class PolyRidesServiceImpl implements PolyRidesService {
 
+  private static final int ONE_DAY_AHEAD =  60 * 60 * 24 * 1000;
+  private static final int ONE_DAY_BEHIND = -60 * 60 * 24 * 1000;
+
   private static class SingletonHolder {
     private static final PolyRidesService INSTANCE = new PolyRidesServiceImpl();
   }
@@ -96,11 +99,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       Date currentDate = Calendar.getInstance().getTime();
       query.whereGreaterThanOrEqualTo("dateTime", currentDate);
       if (currentDate.compareTo(passengerRequestDate) > 0) {
-        Date newDate = new Date(currentDate.getTime() + -60 * 60 * 24);
+        Date newDate = new Date(currentDate.getTime() + ONE_DAY_BEHIND);
 
         if (newDate.compareTo(passengerRequestDate) < 0) {
-          query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + -60 * 60 * 24));
-          query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + 60 * 60 * 24));
+          query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_BEHIND));
+          query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_AHEAD));
         }
       }
 

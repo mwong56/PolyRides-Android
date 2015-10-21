@@ -52,6 +52,7 @@ public class PassengerRidesFragment extends RxFragment {
     this.dateTime = getArguments().getParcelable("dateTime");
 
     polyRidesService.getRides(dateTime.getDate())
+        .compose(bindToLifecycle())
         .observeOn(Schedulers.newThread())
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(rides -> {
