@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.mwong56.polyrides.R;
@@ -18,7 +17,7 @@ import com.mwong56.polyrides.views.PassengerRideViewHolder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FindRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener, PassengerRideViewHolder.RideListener {
+public class FindRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener, PassengerRideViewHolder.RideListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;

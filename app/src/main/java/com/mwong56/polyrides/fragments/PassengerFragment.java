@@ -29,7 +29,6 @@ public class PassengerFragment extends Fragment {
 
   private MainActivity activity;
 
-
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
   }

@@ -1,27 +1,29 @@
 package com.mwong56.polyrides.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
 import com.mwong56.polyrides.fragments.NotesFragment;
+import com.mwong56.polyrides.fragments.RideDetailsFragment;
 import com.mwong56.polyrides.fragments.SeatsFragment;
-import com.mwong56.polyrides.fragments.SubmitRideFragment;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
+import com.mwong56.polyrides.services.PolyRidesService;
+import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NewRideActivity extends AppCompatActivity implements DateTimeFragment.DateTimeListener,
-    SeatsFragment.SeatsListener, NotesFragment.NotesListener {
+public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener,
+    SeatsFragment.SeatsListener, NotesFragment.NotesListener, RideDetailsFragment.RideDetailsListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -33,6 +35,7 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   private int cost;
   private int seats;
   private String note;
+  private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +68,8 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
   @Override
   public void onDateTimeSet(DateTime dateTime) {
     this.dateTime = dateTime;
-    getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.frame_layout, SeatsFragment.newInstance(), "SeatsFragment")
-        .addToBackStack("SeatsFragment")
-        .commit();
+    fragment = SeatsFragment.newInstance();
+    replaceFragment(fragment, "SeatsFragment");
   }
 
   @Override
@@ -77,24 +77,37 @@ public class NewRideActivity extends AppCompatActivity implements DateTimeFragme
     this.cost = cost;
     this.seats = seats;
     fragment = NotesFragment.newInstance();
-    getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.frame_layout, fragment, "NotesFragment")
-        .addToBackStack("NotesFragment")
-        .commit();
+    replaceFragment(fragment, "NotesFragment");
   }
 
   @Override
   public void onNotesSet(String string) {
     this.note = string;
     Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId());
-    fragment = SubmitRideFragment.newInstance(ride);
+    fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
+    replaceFragment(fragment, "RideDetailsFragment");
+  }
+
+  @Override
+  public void onDetailsButtonClicked(Ride ride) {
+    polyRidesService.saveNewRide(ride)
+        .compose(bindToLifecycle())
+        .subscribe(onNext -> openMainActivity()
+            , error -> showToast(error)
+        );
+  }
+
+  private void openMainActivity() {
+    Intent i = new Intent(NewRideActivity.this, MainActivity.class);
+    startActivity(i);
+    finish();
+  }
+
+  private void replaceFragment(Fragment fragment, String tag) {
     getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.frame_layout,
-            fragment,
-            "SubmitRideFragment")
-        .addToBackStack("SubmitRideFragment")
+        .replace(R.id.frame_layout, fragment, tag)
+        .addToBackStack(tag)
         .commit();
   }
 }
