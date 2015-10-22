@@ -51,7 +51,7 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
   @Override
   public void onSetValues(Ride ride, PositionInfo positionInfo) {
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImage);
-    city.setText(ride.getStart().getCity() + "-->" + ride.getEnd().getCity());
+    city.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
     time.setText(ride.getDateTime().printDate() + " at " + ride.getDateTime().printTime());
   }
 

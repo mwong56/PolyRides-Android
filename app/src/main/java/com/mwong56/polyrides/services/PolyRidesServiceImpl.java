@@ -27,7 +27,7 @@ import rx.schedulers.Schedulers;
  */
 public class PolyRidesServiceImpl implements PolyRidesService {
 
-  private static final int ONE_DAY_AHEAD =  60 * 60 * 24 * 1000;
+  private static final int ONE_DAY_AHEAD = 60 * 60 * 24 * 1000;
   private static final int ONE_DAY_BEHIND = -60 * 60 * 24 * 1000;
 
   private static class SingletonHolder {
@@ -45,8 +45,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<ParseUser> facebookLogin(final Activity activity, final Collection<String> permissions) {
     return Observable.defer(() -> TaskObservable.just(ParseFacebookUtils.logInWithReadPermissionsInBackground(activity, permissions)))
-        .observeOn(Schedulers.newThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.newThread())
         .map(parseUser -> {
           if (parseUser == null) {
             throw OnErrorThrowable.from(new Exception("Parse user is null"));
@@ -65,7 +65,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<Void> saveNewRide(Ride ride) {
-    return Observable.create(subscriber -> {
+    Observable toReturn = Observable.create(subscriber -> {
           ParseObject newRide = new ParseObject("Ride");
           newRide.put("startLat", ride.getStart().getLatLng().latitude);
           newRide.put("startLong", ride.getStart().getLatLng().longitude);
@@ -90,11 +90,12 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           });
         }
     );
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
   public Observable<List<Ride>> getRides(Date passengerRequestDate) {
-    return Observable.create(subscriber -> {
+    Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
       query.whereGreaterThanOrEqualTo("dateTime", currentDate);
@@ -108,22 +109,22 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       }
 
       query.whereNotEqualTo("userId", User.getUserId());
-      query.findInBackground((objects, e) -> {
+      try {
         List<Ride> rides = new ArrayList<>();
-        if (e != null) {
-          subscriber.onError(e);
-        } else {
 
-          for (ParseObject object : objects) {
-            rides.add(Ride.parseToRide(object));
-          }
-          if (!subscriber.isUnsubscribed()) {
-            subscriber.onNext(rides);
-            subscriber.onCompleted();
-          }
+        for (ParseObject object : query.find()) {
+          rides.add(Ride.parseToRide(object));
         }
-      });
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(rides);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
     });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
 }

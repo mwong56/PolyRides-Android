@@ -8,7 +8,7 @@
               android:paddingTop="@dimen/activity_vertical_margin">
 
   <include
-      android:id="@+id/start_from_layout"
+      android:id="@+id/start_from_view"
       layout="@layout/view_start_from"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>

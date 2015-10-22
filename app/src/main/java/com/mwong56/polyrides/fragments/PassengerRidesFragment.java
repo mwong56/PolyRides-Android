@@ -2,6 +2,7 @@ package com.mwong56.polyrides.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,10 +63,14 @@ public class PassengerRidesFragment extends RxFragment {
     this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList, getActivity());
     this.recyclerView.setAdapter(adapter);
 
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    recyclerView.setLayoutManager(layoutManager);
+
     polyRidesService.getRides(dateTime.getDate())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.newThread())
         .compose(bindToLifecycle())
-        .observeOn(Schedulers.newThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(rides -> {
           rideList.addAll(rides);
           adapter.notifyDataSetChanged();
@@ -76,7 +81,7 @@ public class PassengerRidesFragment extends RxFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-    ButterKnife.bind(view);
+    ButterKnife.bind(this, view);
     return view;
   }
 
@@ -84,6 +89,7 @@ public class PassengerRidesFragment extends RxFragment {
 //    if (dialog != null && dialog.isShowing()) {
 //      dialog.dismiss();
 //      dialog = null;
+
 //    }
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }

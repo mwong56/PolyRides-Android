@@ -1,16 +1,11 @@
 package com.mwong56.polyrides.services;
 
-import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -33,7 +28,7 @@ public class FacebookServiceImpl implements FacebookService {
 
   @Override
   public Observable<String> getUserId(final AccessToken token) {
-    return Observable.create(subscriber ->
+    Observable toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
           if (jsonObject == null) {
             subscriber.onError(new Exception("Error: " + graphResponse.toString()));
@@ -51,6 +46,8 @@ public class FacebookServiceImpl implements FacebookService {
             }
           }
         }).executeAsync());
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
@@ -73,6 +70,7 @@ public class FacebookServiceImpl implements FacebookService {
             }
           }
         }).executeAsync());
-    return toReturn;
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 }

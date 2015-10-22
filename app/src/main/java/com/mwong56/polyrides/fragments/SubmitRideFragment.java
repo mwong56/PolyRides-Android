@@ -7,58 +7,30 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.models.Ride;
-import com.mwong56.polyrides.services.FacebookService;
-import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
-import com.mwong56.polyrides.utils.Utils;
-import com.squareup.picasso.Picasso;
+import com.mwong56.polyrides.views.RideDetailsView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class SubmitRideFragment extends Fragment {
 
-  @Bind(R.id.name)
-  TextView nameTextView;
-
-  @Bind(R.id.profile_image)
-  CircleImageView profileImageView;
-
-  @Bind(R.id.location)
-  TextView locationTextView;
-
-  @Bind(R.id.date)
-  TextView dateTextView;
-
-  @Bind(R.id.time)
-  TextView timeTextView;
-
-  @Bind(R.id.seat)
-  TextView seatTextView;
-
-  @Bind(R.id.cost)
-  TextView costTextView;
-
-  @Bind(R.id.note)
-  TextView noteTextView;
+  @Bind(R.id.ride_details_view)
+  RideDetailsView rideDetailsView;
 
   private Ride ride;
   private ProgressDialog dialog;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
-  private FacebookService fbService = FacebookServiceImpl.get();
 
   public static SubmitRideFragment newInstance(Ride ride) {
     Bundle bundle = new Bundle();
@@ -77,20 +49,9 @@ public class SubmitRideFragment extends Fragment {
       this.ride = args.getParcelable("ride");
     }
 
-    initializeView();
+    rideDetailsView.setup(ride);
   }
 
-  private void initializeView() {
-    fbService.getUserName(AccessToken.getCurrentAccessToken())
-        .subscribe(userName -> nameTextView.setText(userName), error -> showToast(error));
-    Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImageView);
-    locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
-    dateTextView.setText(ride.getDateTime().printDate());
-    timeTextView.setText(ride.getDateTime().printTime());
-    costTextView.setText("$" + ride.getCost() + " per seat");
-    seatTextView.setText(ride.getSeats() + " seat/s available");
-    noteTextView.setText(ride.getNote());
-  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,

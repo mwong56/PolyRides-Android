@@ -27,8 +27,8 @@ public class LocationServiceImpl implements LocationService {
   public Observable<Place> getCurrentLocation(Context context) {
     ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
     return locationProvider.getCurrentPlace(null)
-        .observeOn(Schedulers.newThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.newThread())
         .flatMap(buffer -> {
           PlaceLikelihood placeLikelihood = buffer.get(0);
           if (placeLikelihood != null) {

@@ -9,7 +9,7 @@
 
   <include
       layout="@layout/view_start_from"
-      android:id="@+id/start_from_layout"
+      android:id="@+id/start_from_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 

@@ -27,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by micha on 10/10/2015.
  */
-public class StartEndLayout extends LinearLayout implements OnActivityResultListener {
+public class StartEndView extends LinearLayout implements OnActivityResultListener {
 
   private static final int START_RESULT = 1;
   private static final int END_RESULT = 2;
@@ -44,15 +44,15 @@ public class StartEndLayout extends LinearLayout implements OnActivityResultList
   private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
-  public StartEndLayout(Context context) {
+  public StartEndView(Context context) {
     super(context);
   }
 
-  public StartEndLayout(Context context, AttributeSet attrs) {
+  public StartEndView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public StartEndLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+  public StartEndView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 

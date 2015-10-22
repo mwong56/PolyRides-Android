@@ -12,7 +12,7 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.Location;
-import com.mwong56.polyrides.views.StartEndLayout;
+import com.mwong56.polyrides.views.StartEndView;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.Bind;
@@ -24,8 +24,8 @@ import butterknife.OnClick;
  */
 public class DriverFragment extends RxFragment {
 
-  @Bind(R.id.start_from_layout)
-  StartEndLayout startEndLayout;
+  @Bind(R.id.start_from_view)
+  StartEndView startEndView;
 
   private MainActivity activity;
 
@@ -36,16 +36,16 @@ public class DriverFragment extends RxFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    startEndLayout.setup(activity.getGoogleApiClient(), this);
+    startEndView.setup(activity.getGoogleApiClient(), this);
 
     if (savedInstanceState != null) {
       Location[] locations = (Location[]) savedInstanceState.getParcelableArray("locations");
       if (locations[0] != null) {
-        startEndLayout.setStartLocation(locations[0]);
+        startEndView.setStartLocation(locations[0]);
       }
 
       if (locations[1] != null) {
-        startEndLayout.setEndLocation(locations[1]);
+        startEndView.setEndLocation(locations[1]);
       }
     }
   }
@@ -53,7 +53,7 @@ public class DriverFragment extends RxFragment {
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    Location[] locations = startEndLayout.getPlaces();
+    Location[] locations = startEndView.getPlaces();
     outState.putParcelableArray("locations", locations);
   }
 
@@ -80,7 +80,7 @@ public class DriverFragment extends RxFragment {
 
   @OnClick(R.id.new_ride_button)
   void newRide() {
-    Location[] locations = startEndLayout.getPlaces();
+    Location[] locations = startEndView.getPlaces();
     if (locations[0] != null && locations[1] != null) {
       Intent i = new Intent(getActivity(), NewRideActivity.class);
       i.putExtra("start", locations[0]);
@@ -93,7 +93,7 @@ public class DriverFragment extends RxFragment {
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK) {
-      startEndLayout.onActivityResultCalled(requestCode, data);
+      startEndView.onActivityResultCalled(requestCode, data);
     }
   }
 }
