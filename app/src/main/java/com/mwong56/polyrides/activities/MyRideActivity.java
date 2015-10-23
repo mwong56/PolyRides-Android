@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
@@ -7,27 +8,25 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.fragments.DateTimeFragment;
-import com.mwong56.polyrides.fragments.PassengerRidesFragment;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
-import com.mwong56.polyrides.models.DateTime;
-import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
-import com.mwong56.polyrides.views.PassengerRideViewHolder;
+import com.mwong56.polyrides.services.PolyRidesService;
+import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FindRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener,
-    PassengerRideViewHolder.RideListener, RideDetailsFragment.RideDetailsListener {
+/**
+ * Created by micha on 10/22/2015.
+ */
+public class MyRideActivity extends BaseRxActivity implements RideDetailsFragment.RideDetailsListener{
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 
   private Fragment fragment;
-  private Location start;
-  private Location end;
-  private DateTime dateTime;
+  private Ride ride;
+  private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +35,17 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
     ButterKnife.bind(this);
 
     setSupportActionBar(toolbar);
-    setTitle("Find Ride");
 
-    this.start = (Location) getIntent().getExtras().get("start");
-    this.end = (Location) getIntent().getExtras().get("end");
-
+    ride = getIntent().getExtras().getParcelable("ride");
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
     }
 
     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-    fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
+    fragmentTransaction.add(R.id.frame_layout, RideDetailsFragment.newInstance(ride, RideDetailsFragment.REMOVE), "RideDetailsFragment");
     fragmentTransaction.commit();
   }
-
 
   @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -59,20 +54,11 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   }
 
   @Override
-  public void onDateTimeSet(DateTime dateTime) {
-    this.dateTime = dateTime;
-    this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
-    replaceFragment(fragment, "PassengerFragment");
-  }
-
-  @Override
-  public void onRideClicked(Ride ride) {
-    this.fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.MESSAGE);
-    replaceFragment(fragment, "RideDetailsFragment");
-  }
-
-  @Override
   public void onDetailsButtonClicked(Ride ride) {
-    //TODO: Launch message view.
+    polyRidesService.removeRide(ride).subscribe(onNext -> {
+      Intent i = new Intent(getBaseContext(), MainActivity.class);
+      startActivity(i);
+      finish();
+    }, onError -> showToast(onError));
   }
 }

@@ -21,8 +21,10 @@ import butterknife.OnClick;
 public class RideDetailsFragment extends BaseRxFragment {
   public static final int SUBMIT = 0;
   public static final int MESSAGE = 1;
+  public static final int REMOVE = 2;
   private static final String SUBMIT_STRING = "Submit Ride";
   private static final String MESSAGE_STRING = "Send Message";
+  private static final String REMOVE_STRING = "Remove Ride";
 
   @Bind(R.id.ride_details_view)
   RideDetailsView rideDetailsView;
@@ -57,6 +59,9 @@ public class RideDetailsFragment extends BaseRxFragment {
         break;
       case MESSAGE:
         this.button.setText(MESSAGE_STRING);
+        break;
+      case REMOVE:
+        this.button.setText(REMOVE_STRING);
         break;
     }
 

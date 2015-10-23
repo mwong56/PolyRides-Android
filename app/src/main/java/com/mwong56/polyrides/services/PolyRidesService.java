@@ -22,5 +22,7 @@ public interface PolyRidesService {
 
   Observable<Void> saveNewRide(Ride ride);
 
-  Observable<List<Ride>> getRides(Date date);
+  Observable<List<Ride>> getRides(Date date, boolean myRides);
+
+  Observable<Void> removeRide(Ride ride);
 }

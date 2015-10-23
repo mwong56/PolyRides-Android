@@ -103,6 +103,4 @@ public class SeatsFragment extends Fragment {
     int seats = seatsPicker.getValue();
     listener.onSeatsSet(cost, seats);
   }
-
-
 }

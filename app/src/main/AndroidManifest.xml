@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-  package="com.mwong56.polyrides"
-  xmlns:android="http://schemas.android.com/apk/res/android">
+    package="com.mwong56.polyrides"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
@@ -14,33 +14,33 @@
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
   <permission
-    android:name="com.mwong56.polyrides.C2D_MESSAGE"
-    android:protectionLevel="signature"/>
+      android:name="com.mwong56.polyrides.C2D_MESSAGE"
+      android:protectionLevel="signature"/>
   <uses-permission android:name="com.mwong56.polyrides.C2D_MESSAGE"/>
 
   <application
-    android:name=".application.PolyRidesApp"
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:theme="@style/AppTheme">
+      android:name=".application.PolyRidesApp"
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:theme="@style/AppTheme">
 
     <meta-data
-      android:name="com.google.android.gms.version"
-      android:value="@integer/google_play_services_version"/>
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version"/>
 
     <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDPJT0KIoQPM5ctM5PtJm0dE9604d2RmTA"/>
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDPJT0KIoQPM5ctM5PtJm0dE9604d2RmTA"/>
 
     <meta-data
-      android:name="com.facebook.sdk.ApplicationId"
-      android:value="@string/facebook_app_id"/>
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id"/>
 
 
     <activity
-      android:name=".activities.LoginActivity"
-      android:label="@string/app_name">
+        android:name=".activities.LoginActivity"
+        android:label="@string/app_name">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -49,31 +49,33 @@
     </activity>
 
     <activity
-      android:name=".activities.MainActivity"
-      android:label="@string/app_name">
+        android:name=".activities.MainActivity"
+        android:label="@string/app_name">
     </activity>
 
     <activity
-      android:name=".activities.NewRideActivity"
-      android:label="@string/title_activity_new_ride">
+        android:name=".activities.NewRideActivity">
     </activity>
     <activity
-      android:name=".activities.FindRideActivity"
-      android:label="@string/title_activity_find_ride">
+        android:name=".activities.FindRideActivity">
     </activity>
 
     <activity
-      android:name="com.facebook.FacebookActivity"
-      android:configChanges=
-        "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-      android:label="@string/app_name"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        android:name=".activities.MyRideActivity">
+    </activity>
+
+    <activity
+        android:name="com.facebook.FacebookActivity"
+        android:configChanges=
+            "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
     <service android:name="com.parse.PushService"/>
 
     <receiver
-      android:name="com.parse.ParsePushBroadcastReceiver"
-      android:exported="false">
+        android:name="com.parse.ParsePushBroadcastReceiver"
+        android:exported="false">
       <intent-filter>
         <action android:name="com.parse.push.intent.RECEIVE"/>
         <action android:name="com.parse.push.intent.DELETE"/>
@@ -81,8 +83,8 @@
       </intent-filter>
     </receiver>
     <receiver
-      android:name="com.parse.GcmBroadcastReceiver"
-      android:permission="com.google.android.c2dm.permission.SEND">
+        android:name="com.parse.GcmBroadcastReceiver"
+        android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
         <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
         <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
@@ -92,8 +94,8 @@
     </receiver>
 
     <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDPJT0KIoQPM5ctM5PtJm0dE9604d2RmTA"/>
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDPJT0KIoQPM5ctM5PtJm0dE9604d2RmTA"/>
   </application>
 
 </manifest>

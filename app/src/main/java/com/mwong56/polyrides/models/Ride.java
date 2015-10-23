@@ -18,36 +18,7 @@ public class Ride implements Parcelable {
   private int seats;
   private String note;
   private String userId;
-
-  public static Ride parseToRide(ParseObject object) {
-    int cost = object.getInt("cost");
-    Date date = object.getDate("dateTime");
-    String notes = object.getString("notes");
-    int seats = object.getInt("seats");
-    double endLat = object.getDouble("endLat");
-    double endLong = object.getDouble("endLong");
-    double startLat = object.getDouble("startLat");
-    double startLong = object.getDouble("startLong");
-    String endCity = object.getString("endCity");
-    String startCity = object.getString("startCity");
-    String userId = object.getString("userId");
-
-    Location start = new Location(startLat, startLong, startCity);
-    Location end = new Location(endLat, endLong, endCity);
-
-    return new Ride(start, end, DateTime.dateToDateTime(date), cost, seats, notes, userId);
-  }
-
-  public Ride(Location start, Location end, DateTime dateTime, int cost, int seats, String note, String userId) {
-    this.start = start;
-    this.end = end;
-    this.dateTime = dateTime;
-    this.cost = cost;
-    this.seats = seats;
-    this.note = note;
-    this.userId = userId;
-  }
-
+  private String objectId;
 
   protected Ride(Parcel in) {
     start = in.readParcelable(Location.class.getClassLoader());
@@ -57,6 +28,7 @@ public class Ride implements Parcelable {
     seats = in.readInt();
     note = in.readString();
     userId = in.readString();
+    objectId = in.readString();
   }
 
   @Override
@@ -68,6 +40,7 @@ public class Ride implements Parcelable {
     dest.writeInt(seats);
     dest.writeString(note);
     dest.writeString(userId);
+    dest.writeString(objectId);
   }
 
   @Override
@@ -86,6 +59,41 @@ public class Ride implements Parcelable {
       return new Ride[size];
     }
   };
+
+  public static Ride parseToRide(ParseObject object) {
+    int cost = object.getInt("cost");
+    Date date = object.getDate("dateTime");
+    String notes = object.getString("notes");
+    int seats = object.getInt("seats");
+    double endLat = object.getDouble("endLat");
+    double endLong = object.getDouble("endLong");
+    double startLat = object.getDouble("startLat");
+    double startLong = object.getDouble("startLong");
+    String endCity = object.getString("endCity");
+    String startCity = object.getString("startCity");
+    String userId = object.getString("userId");
+    String objectId = object.getObjectId();
+
+    Location start = new Location(startLat, startLong, startCity);
+    Location end = new Location(endLat, endLong, endCity);
+
+    return new Ride(start, end, DateTime.dateToDateTime(date), cost, seats, notes, userId, objectId);
+  }
+
+  public Ride(Location start, Location end, DateTime dateTime, int cost, int seats, String note, String userId, String objectId) {
+    this.start = start;
+    this.end = end;
+    this.dateTime = dateTime;
+    this.cost = cost;
+    this.seats = seats;
+    this.note = note;
+    this.userId = userId;
+    this.objectId = objectId;
+  }
+
+  public String getObjectId() {
+    return objectId;
+  }
 
   public Date getDate() {
     return dateTime.getDate();

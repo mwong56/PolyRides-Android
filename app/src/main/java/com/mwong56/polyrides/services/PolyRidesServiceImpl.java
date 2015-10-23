@@ -63,6 +63,29 @@ public class PolyRidesServiceImpl implements PolyRidesService {
     installation.saveEventually();
   }
 
+  public Observable<Void> removeRide(Ride ride) {
+    Observable toReturn = Observable.create(subscriber -> {
+      if (ride.getObjectId() == null) {
+        subscriber.onError(new Exception("Object is null"));
+      }
+      ParseQuery query = new ParseQuery("Ride");
+      query.whereEqualTo("objectId", ride.getObjectId());
+
+      try {
+        ParseObject object = query.getFirst();
+        object.delete();
+
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
   @Override
   public Observable<Void> saveNewRide(Ride ride) {
     Observable toReturn = Observable.create(subscriber -> {
@@ -94,21 +117,25 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<List<Ride>> getRides(Date passengerRequestDate) {
+  public Observable<List<Ride>> getRides(Date date, boolean myRides) {
     Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
       query.whereGreaterThanOrEqualTo("dateTime", currentDate);
-      if (currentDate.compareTo(passengerRequestDate) > 0) {
+      if (currentDate.compareTo(date) > 0) {
         Date newDate = new Date(currentDate.getTime() + ONE_DAY_BEHIND);
 
-        if (newDate.compareTo(passengerRequestDate) < 0) {
+        if (newDate.compareTo(date) < 0) {
           query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_BEHIND));
           query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_AHEAD));
         }
       }
+      if (myRides) {
+        query.whereEqualTo("userId", User.getUserId());
+      } else {
+        query.whereNotEqualTo("userId", User.getUserId());
+      }
 
-      query.whereNotEqualTo("userId", User.getUserId());
       try {
         List<Ride> rides = new ArrayList<>();
 

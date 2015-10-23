@@ -83,7 +83,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   @Override
   public void onNotesSet(String string) {
     this.note = string;
-    Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId());
+    Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId(), null);
     fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
     replaceFragment(fragment, "RideDetailsFragment");
   }
@@ -101,13 +101,5 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     Intent i = new Intent(NewRideActivity.this, MainActivity.class);
     startActivity(i);
     finish();
-  }
-
-  private void replaceFragment(Fragment fragment, String tag) {
-    getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.frame_layout, fragment, tag)
-        .addToBackStack(tag)
-        .commit();
   }
 }
