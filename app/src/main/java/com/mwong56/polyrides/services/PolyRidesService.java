@@ -2,6 +2,8 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
+import com.mwong56.polyrides.models.Message;
+import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
 import com.parse.ParseUser;
 
@@ -26,5 +28,7 @@ public interface PolyRidesService {
 
   Observable<Void> removeRide(Ride ride);
 
-//  Observable<List<Messages>> getMessages(Ride ride);
+  Observable<List<Messages>> getMessages();
+
+  Observable<List<Message>> getMessage(String groupId);
 }

@@ -2,6 +2,8 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
+import com.mwong56.polyrides.models.Message;
+import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
 import com.parse.ParseFacebookUtils;
@@ -77,6 +79,53 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
         if (!subscriber.isUnsubscribed()) {
           subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<List<Messages>> getMessages() {
+    Observable toReturn = Observable.create(subscriber -> {
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+      query.whereEqualTo("userId", User.getUserId());
+      try {
+        List<Messages> messages = new ArrayList<>();
+        for (ParseObject object : query.find()) {
+          messages.add(Messages.ParseToMessages(object));
+        }
+
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(messages);
+          subscriber.onCompleted();
+        }
+
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+
+    });
+    return toReturn;
+  }
+
+  @Override
+  public Observable<List<Message>> getMessage(String groupId) {
+    Observable toReturn = Observable.create(subscriber -> {
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
+      query.whereEqualTo("groupId", groupId);
+
+      try {
+        List<Message> messageList = new ArrayList<>();
+        for (ParseObject object : query.find()) {
+          messageList.add(Message.ParseToMessage(object));
+        }
+
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(messageList);
           subscriber.onCompleted();
         }
       } catch (Exception e) {
