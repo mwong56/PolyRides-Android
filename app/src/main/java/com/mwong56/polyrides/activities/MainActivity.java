@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
     viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(4);
 
     tabLayout.setupWithViewPager(viewPager);
 
