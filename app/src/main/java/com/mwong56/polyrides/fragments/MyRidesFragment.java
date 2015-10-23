@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +33,6 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   RecyclerView recyclerView;
 
   private List<Ride> rideList;
-  private ProgressDialog progressDialog;
   private EasyRecyclerAdapter<Ride> adapter;
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
@@ -46,9 +44,6 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-
-    progressDialog = ProgressDialog.show(getContext(), "Please wait", "Searching...");
-    progressDialog.show();
 
     this.rideList = new ArrayList<>();
     this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList, this);
@@ -64,7 +59,6 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
           rideList.addAll(rides);
           //TODO: Sort.
           adapter.notifyDataSetChanged();
-          progressDialog.hide();
         }, error -> showToast(error));
 
   }

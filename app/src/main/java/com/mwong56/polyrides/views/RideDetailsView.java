@@ -67,7 +67,7 @@ public class RideDetailsView extends LinearLayout {
   }
 
   public void setup(Ride ride) {
-    fbService.getUserName(AccessToken.getCurrentAccessToken())
+    fbService.getMyUserName(AccessToken.getCurrentAccessToken())
         .subscribe(userName -> nameTextView.setText(userName), error -> showToast(error));
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImageView);
     locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());

@@ -44,11 +44,12 @@ public class LoginActivity extends BaseRxActivity {
 
   @OnClick(R.id.login)
   void onLoginClicked() {
-//    progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait", "Logging in...", true);
     polyRidesService.facebookLogin(this, Arrays.asList("public_profile", "user_friends"))
-        .compose(bindToLifecycle())
+        .flatMap(parseUser -> fbService.getMyUserId(AccessToken.getCurrentAccessToken()))
         .subscribe(user -> {
-          updateParseUserInfoInBackground();
+          polyRidesService.saveUserId(user);
+          User.setUserId(user);
+          startMainActivity();
         }, error -> showToast(error));
   }
 
@@ -59,20 +60,10 @@ public class LoginActivity extends BaseRxActivity {
   }
 
   private void startMainActivity() {
-//    progressDialog.dismiss();
     Intent i = new Intent(LoginActivity.this, MainActivity.class);
     startActivity(i);
     finish();
   }
 
 
-  private void updateParseUserInfoInBackground() {
-    fbService.getUserId(AccessToken.getCurrentAccessToken())
-        .compose(bindToLifecycle())
-        .subscribe(userId -> {
-          User.setUserId(userId);
-          polyRidesService.saveUserId(userId);
-          startMainActivity();
-        }, error -> showToast(error));
-  }
 }

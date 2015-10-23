@@ -49,6 +49,10 @@ public class Messages {
     return groupId;
   }
 
+  public String getUserId2() {
+    return groupId.replace(User.getUserId(), "");
+  }
+
   public String getLastMessage() {
     return lastMessage;
   }

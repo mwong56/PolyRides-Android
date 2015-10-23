@@ -47,8 +47,6 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<ParseUser> facebookLogin(final Activity activity, final Collection<String> permissions) {
     return Observable.defer(() -> TaskObservable.just(ParseFacebookUtils.logInWithReadPermissionsInBackground(activity, permissions)))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.newThread())
         .map(parseUser -> {
           if (parseUser == null) {
             throw OnErrorThrowable.from(new Exception("Parse user is null"));

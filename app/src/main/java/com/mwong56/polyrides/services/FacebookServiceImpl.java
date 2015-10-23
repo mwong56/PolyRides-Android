@@ -27,7 +27,7 @@ public class FacebookServiceImpl implements FacebookService {
   }
 
   @Override
-  public Observable<String> getUserId(final AccessToken token) {
+  public Observable<String> getMyUserId(final AccessToken token) {
     Observable toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
           if (jsonObject == null) {
@@ -45,13 +45,13 @@ public class FacebookServiceImpl implements FacebookService {
               subscriber.onCompleted();
             }
           }
-        }).executeAsync());
+        }).executeAndWait());
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
-  public Observable<String> getUserName(final AccessToken token) {
+  public Observable<String> getMyUserName(final AccessToken token) {
     Observable<String> toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
           if (jsonObject == null) {
@@ -69,8 +69,31 @@ public class FacebookServiceImpl implements FacebookService {
               subscriber.onCompleted();
             }
           }
-        }).executeAsync());
+        }).executeAndWait());
 
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<String> getUserName(final AccessToken token, final String userId) {
+    Observable<String> toReturn = Observable.create(subscriber ->
+        GraphRequest.newGraphPathRequest(token, "/" + userId, graphResponse -> {
+          if (graphResponse == null || graphResponse.getJSONObject() == null) {
+            subscriber.onError(new Exception("Error: " + graphResponse.toString()));
+          } else {
+            if (!subscriber.isUnsubscribed()) {
+              String userName = null;
+              try {
+                userName = graphResponse.getJSONObject().getString("name");
+              } catch (JSONException e) {
+                subscriber.onError(e);
+              }
+
+              subscriber.onNext(userName);
+              subscriber.onCompleted();
+            }
+          }
+        }).executeAndWait());
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 }

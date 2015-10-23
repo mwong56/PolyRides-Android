@@ -62,12 +62,15 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/conversation_list_date"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-      <ImageView
+      <TextView
           android:id="@+id/conversation_list_unread"
           android:layout_width="16dp"
           android:layout_height="16dp"
+          android:lines="1"
+          android:singleLine="true"
           android:visibility="gone" />
     </LinearLayout>
 
