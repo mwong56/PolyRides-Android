@@ -50,7 +50,8 @@ public class Messages {
   }
 
   public String getUserId2() {
-    return groupId.replace(User.getUserId(), "");
+//    return groupId.replace(User.getUserId(), "");
+    return "10153738107997317";
   }
 
   public String getLastMessage() {

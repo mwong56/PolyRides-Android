@@ -1,6 +1,7 @@
 package com.mwong56.polyrides.views;
 
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,9 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
   @ViewId(R.id.conversation_list_unread)
   TextView unreadCount;
 
+  @ViewId(R.id.conversation_list_badges)
+  LinearLayout unreadView;
+
   private final FacebookService facebookService = FacebookServiceImpl.get();
 
   public MessagesViewHolder(View view) {
@@ -51,7 +55,12 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), messages.getUserId2())
         .subscribe(userName -> name.setText(userName), error -> showToast(error));
     snippet.setText(messages.getLastMessage());
-    unreadCount.setText(messages.getCounter());
+    if (messages.getCounter() > 0) {
+      unreadView.setVisibility(View.VISIBLE);
+      unreadCount.setText(messages.getCounter() + "");
+    } else {
+      unreadView.setVisibility(View.GONE);
+    }
   }
 
 
