@@ -25,4 +25,6 @@ public interface PolyRidesService {
   Observable<List<Ride>> getRides(Date date, boolean myRides);
 
   Observable<Void> removeRide(Ride ride);
+
+//  Observable<List<Messages>> getMessages(Ride ride);
 }
