@@ -63,7 +63,9 @@ public class MessageActivity extends BaseRxActivity {
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    layoutManager.setStackFromEnd(true);
     recyclerView.setLayoutManager(layoutManager);
+
 
     this.messages = Parcels.unwrap(getIntent().getParcelableExtra("messages"));
     this.adapter = new MessageListAdapter(getBaseContext(), messageList);
