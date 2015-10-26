@@ -55,8 +55,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     Message message = messageList.get(position);
     Picasso.with(context).load(Utils.getProfileImageUrl(message.getUserId())).into(holder.avatar);
     holder.message_text_view.setText(message.getText());
+  }
 
-
+  public void addMessage(Message message) {
+    messageList.add(message);
+    notifyDataSetChanged();
   }
 
   @Override

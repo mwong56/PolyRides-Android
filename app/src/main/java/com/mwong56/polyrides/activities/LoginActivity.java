@@ -2,6 +2,7 @@ package com.mwong56.polyrides.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.widget.Button;
 
 import com.facebook.AccessToken;
@@ -18,6 +19,9 @@ import java.util.Arrays;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by micha on 10/13/2015.
@@ -45,10 +49,11 @@ public class LoginActivity extends BaseRxActivity {
   @OnClick(R.id.login)
   void onLoginClicked() {
     polyRidesService.facebookLogin(this, Arrays.asList("public_profile", "user_friends"))
-        .flatMap(parseUser -> fbService.getMyUserId(AccessToken.getCurrentAccessToken()))
-        .subscribe(user -> {
-          polyRidesService.saveUserId(user);
-          User.setUserId(user);
+        .flatMap(parseUser -> getUserIdAndUsername())
+        .subscribe(pair -> {
+          polyRidesService.saveUserId(pair.first);
+          User.setUserId(pair.first);
+          User.setUserName(pair.second);
           startMainActivity();
         }, error -> showToast(error));
   }
@@ -63,7 +68,17 @@ public class LoginActivity extends BaseRxActivity {
     Intent i = new Intent(LoginActivity.this, MainActivity.class);
     startActivity(i);
     finish();
+    String userName = "";
+    String userId = "";
+    Pair.create(userName, userId);
   }
 
+  Observable<Pair<String, String>> getUserIdAndUsername() {
+    return Observable.zip(fbService.getMyUserId(AccessToken.getCurrentAccessToken()),
+        fbService.getMyUserName(AccessToken.getCurrentAccessToken()), (s, s2) -> Pair.create(s, s2))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.newThread())
+        .compose(bindToLifecycle());
+  }
 
 }

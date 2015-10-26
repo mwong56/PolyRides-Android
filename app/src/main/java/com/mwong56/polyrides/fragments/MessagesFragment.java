@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.MessageActivity;
 import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.views.MessagesViewHolder;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class MessagesFragment extends BaseRxFragment {
+public class MessagesFragment extends BaseRxFragment implements MessagesViewHolder.MessagesListener {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -58,8 +62,15 @@ public class MessagesFragment extends BaseRxFragment {
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.view_recycler_view, container, false);
+    View view = inflater.inflate(R.layout.fragment_reycler_view, container, false);
     ButterKnife.bind(this, view);
     return view;
+  }
+
+  @Override
+  public void onMessagesClicked(Messages messages) {
+    Intent i = new Intent(getActivity(), MessageActivity.class);
+    i.putExtra("messages", Parcels.wrap(messages));
+    startActivity(i);
   }
 }

@@ -14,4 +14,12 @@ public class User {
   public static void setUserId(String userId) {
     Remember.putString("userId", userId);
   }
+
+  public static String getUserName() {
+    return Remember.getString("userName", null);
+  }
+
+  public static void setUserName(String userName) {
+    Remember.putString("userName", userName);
+  }
 }

@@ -86,6 +86,28 @@ public class PolyRidesServiceImpl implements PolyRidesService {
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
+  public Observable<Void> saveMessage(Message message) {
+    Observable toReturn = Observable.create(subscriber -> {
+      ParseObject toSave = new ParseObject("Message");
+      toSave.put("groupId", message.getGroupId());
+      toSave.put("userId", message.getUserId());
+      toSave.put("text", message.getText());
+      toSave.put("userName", message.getUserName());
+
+      try {
+        toSave.save();
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
   @Override
   public Observable<List<Messages>> getMessages() {
     Observable toReturn = Observable.create(subscriber -> {

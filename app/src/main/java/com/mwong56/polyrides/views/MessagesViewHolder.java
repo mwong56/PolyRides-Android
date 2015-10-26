@@ -50,6 +50,16 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
   }
 
   @Override
+  public void onSetListeners() {
+    getView().setOnClickListener(v -> {
+      MessagesListener listener = getListener(MessagesListener.class);
+      if (listener != null) {
+        listener.onMessagesClicked(getItem());
+      }
+    });
+  }
+
+  @Override
   public void onSetValues(Messages messages, PositionInfo positionInfo) {
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(messages.getUserId2())).into(avatar);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), messages.getUserId2())
@@ -66,5 +76,9 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
 
   protected void showToast(Throwable e) {
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+  }
+
+  public interface MessagesListener {
+    void onMessagesClicked(Messages messages);
   }
 }

@@ -31,4 +31,6 @@ public interface PolyRidesService {
   Observable<List<Messages>> getMessages();
 
   Observable<List<Message>> getMessage(String groupId);
+
+  Observable<Void> saveMessage(Message message);
 }
