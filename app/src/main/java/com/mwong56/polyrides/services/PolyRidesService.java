@@ -28,13 +28,13 @@ public interface PolyRidesService {
 
   Observable<Void> removeRide(Ride ride);
 
-  Observable<List<Messages>> getMessages();
-
   Observable<List<Message>> getMessage(String groupId);
 
   Observable<Void> saveMessage(Message message);
 
-  Observable<Void> createMessages(Messages messages);
+  Observable<List<Messages>> getMessages();
 
-  Observable<Void> updateMessages(Messages messages);
+  Observable<Void> createMessages(Messages messages, String userId);
+
+  Observable<Void> updateMessages(Messages messages, String userId);
 }

@@ -33,69 +33,96 @@ import butterknife.ButterKnife;
  */
 public class MessageActivity extends BaseRxActivity {
 
-  @Bind(R.id.recycler_view)
-  RecyclerView recyclerView;
+    @Bind(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-  @Bind(R.id.toolbar)
-  Toolbar toolbar;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
-  @Bind(R.id.message_edit_text)
-  EditText messageText;
+    @Bind(R.id.message_edit_text)
+    EditText messageText;
 
-  @Bind(R.id.btn_send)
-  SendButton sendButton;
+    @Bind(R.id.btn_send)
+    SendButton sendButton;
 
-  private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
-  private final FacebookService facebookService = FacebookServiceImpl.get();
-  private final List<Message> messageList = new ArrayList<>();
-  private MessageListAdapter adapter;
-  private Messages messages;
+    private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
+    private final FacebookService facebookService = FacebookServiceImpl.get();
+    private final List<Message> messageList = new ArrayList<>();
+    private MessageListAdapter adapter;
+    private Messages messages;
+    private String otherUser;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_messages);
-    ButterKnife.bind(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_messages);
+        ButterKnife.bind(this);
 
-    setSupportActionBar(toolbar);
-//    facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.messages.getUserId2())
-//        .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
+        setSupportActionBar(toolbar);
+        facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.messages.getOtherUserId())
+                .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
-    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    layoutManager.setStackFromEnd(true);
-    recyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
 
 
-    this.messages = Parcels.unwrap(getIntent().getParcelableExtra("messages"));
-    this.adapter = new MessageListAdapter(getBaseContext(), messageList);
-    this.recyclerView.setAdapter(adapter);
-    this.sendButton.setOnSendClickListener(v -> onSendClick());
-    polyRidesService.getMessage(messages.getGroupId())
-        .compose(bindToLifecycle())
-        .subscribe(messages -> {
-          messageList.addAll(messages);
-          adapter.notifyDataSetChanged();
-        }, error -> showToast(error));
-  }
-
-  void onSendClick() {
-    if (validateMessage()) {
-      String text = messageText.getText().toString();
-      Message toSave = new Message(messages.getGroupId(), User.getUserId(), text, User.getUserName());
-      adapter.addMessage(toSave);
-      polyRidesService.saveMessage(toSave)
-          .subscribe(onNext -> {}, onError -> showToast(onError));
-      messageText.setText(null);
-      sendButton.setCurrentState(SendButton.STATE_DONE);
+        this.messages = Parcels.unwrap(getIntent().getParcelableExtra("messages"));
+        this.adapter = new MessageListAdapter(getBaseContext(), messageList);
+        this.recyclerView.setAdapter(adapter);
+        this.sendButton.setOnSendClickListener(v -> onSendClick());
+        polyRidesService.getMessage(messages.getGroupId())
+                .compose(bindToLifecycle())
+                .subscribe(messages -> {
+                    messageList.addAll(messages);
+                    adapter.notifyDataSetChanged();
+                }, error -> showToast(error));
     }
-  }
 
-  private boolean validateMessage() {
-    if (TextUtils.isEmpty(messageText.getText())) {
-      sendButton.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.shake_error));
-      return false;
+    void onSendClick() {
+        if (validateMessage()) {
+            String text = messageText.getText().toString();
+            Message message = new Message(messages.getGroupId(), User.getUserId(), text, User.getUserName());
+            updateDatabase(message);
+            adapter.addMessage(message);
+            messageText.setText(null);
+            sendButton.setCurrentState(SendButton.STATE_DONE);
+        }
     }
-    return true;
-  }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+        this.otherUser = title.toString();
+    }
+
+    void updateDatabase(Message message) {
+        polyRidesService.saveMessage(message)
+                .subscribe(onNext -> {
+                }, onError -> showToast(onError));
+        messages.setLastMessage(message.getText());
+        messages.setLastUserId(User.getUserId());
+
+        if (messages.isNewMessages()) {
+            polyRidesService.createMessages(messages, User.getUserId()).subscribe(v -> {
+            }, e -> showToast(e));
+            polyRidesService.createMessages(messages, messages.getOtherUserId()).subscribe(v -> {
+            }, e -> showToast(e));
+            messages.setIsNewMessage(false);
+        } else {
+            polyRidesService.updateMessages(messages, User.getUserId()).subscribe(v -> {
+            }, e -> showToast(e));
+            polyRidesService.updateMessages(messages, messages.getOtherUserId()).subscribe(v -> {
+            }, e -> showToast(e));
+        }
+    }
+
+    private boolean validateMessage() {
+        if (TextUtils.isEmpty(messageText.getText())) {
+            sendButton.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.shake_error));
+            return false;
+        }
+        return true;
+    }
 }

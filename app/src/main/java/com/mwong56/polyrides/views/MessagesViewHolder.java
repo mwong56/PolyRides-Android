@@ -61,8 +61,8 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
 
   @Override
   public void onSetValues(Messages messages, PositionInfo positionInfo) {
-    Picasso.with(getContext()).load(Utils.getProfileImageUrl(messages.getUserId2())).into(avatar);
-    facebookService.getUserName(AccessToken.getCurrentAccessToken(), messages.getUserId2())
+    Picasso.with(getContext()).load(Utils.getProfileImageUrl(messages.getOtherUserId())).into(avatar);
+    facebookService.getUserName(AccessToken.getCurrentAccessToken(), messages.getOtherUserId())
         .subscribe(userName -> name.setText(userName), error -> showToast(error));
     snippet.setText(messages.getLastMessage());
     if (messages.getCounter() > 0) {

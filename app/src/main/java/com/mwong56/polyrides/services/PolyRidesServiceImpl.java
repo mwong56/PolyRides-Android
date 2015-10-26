@@ -109,7 +109,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> createMessages(Messages messages) {
+  public Observable<Void> createMessages(Messages messages, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
       ParseObject toSave = new ParseObject("Messages");
       toSave.put("counter", messages.getCounter());
@@ -117,6 +117,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       toSave.put("groupId", messages.getGroupId());
       toSave.put("lastMessage", messages.getLastMessage());
       toSave.put("lastUserId", messages.getLastUserId());
+      toSave.put("userId", userId);
 
       try {
         toSave.save();
@@ -133,10 +134,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> updateMessages(Messages messages) {
+  public Observable<Void> updateMessages(Messages messages, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
       ParseQuery query = new ParseQuery("Messages");
       query.whereEqualTo("groupId", messages.getGroupId());
+      query.whereEqualTo("userId", userId);
       ParseObject object = null;
       try {
         object = query.getFirst();

@@ -15,6 +15,7 @@ public class Messages {
   String groupId;
   String lastMessage;
   String lastUserId;
+  boolean newMessages = false;
 
   public static Messages ParseToMessages(ParseObject object) {
     int counter = object.getInt("counter");
@@ -35,6 +36,10 @@ public class Messages {
     this.groupId = groupId;
     this.lastMessage = lastMessage;
     this.lastUserId = lastUserId;
+
+    if (lastMessage == null || lastUserId == null) {
+      this.newMessages = true;
+    }
   }
 
   public int getCounter() {
@@ -49,7 +54,7 @@ public class Messages {
     return groupId;
   }
 
-  public String getUserId2() {
+  public String getOtherUserId() {
 //    return groupId.replace(User.getUserId(), "");
     return "10153738107997317";
   }
@@ -80,5 +85,13 @@ public class Messages {
 
   public void setLastUserId(String lastUserId) {
     this.lastUserId = lastUserId;
+  }
+
+  public boolean isNewMessages() {
+    return this.newMessages;
+  }
+
+  public void setIsNewMessage(boolean flag) {
+    this.newMessages = flag;
   }
 }

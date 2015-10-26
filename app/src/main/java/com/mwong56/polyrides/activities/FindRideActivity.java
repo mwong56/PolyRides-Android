@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,12 @@ import com.mwong56.polyrides.fragments.PassengerRidesFragment;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
+import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
+
+import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,5 +79,11 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   @Override
   public void onDetailsButtonClicked(Ride ride) {
     //TODO: Launch message view.
+    String groupId = ride.getUserId().compareTo(User.getUserId()) > 0 ? User.getUserId() +
+              ride.getUserId() : ride.getUserId() + User.getUserId();
+
+    Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
+    i.putExtra("messages", Parcels.wrap(new Messages(0, null, groupId, null, null)));
+    startActivity(i);
   }
 }

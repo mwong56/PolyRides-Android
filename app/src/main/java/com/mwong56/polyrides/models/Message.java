@@ -20,13 +20,13 @@ public class Message {
     String userId = object.getString("userId");
     String text = object.getString("text");
     String userName = object.getString("userName");
-    return new Message(groupId, userId, text, userName);
+    return new Message(groupId, userId, text, userName, false);
   }
 
   public Message() {
   }
 
-  public Message(String groupId, String userId, String text, String userName) {
+  public Message(String groupId, String userId, String text, String userName, boolean isNewMessage) {
     this.groupId = groupId;
     this.userId = userId;
     this.text = text;
