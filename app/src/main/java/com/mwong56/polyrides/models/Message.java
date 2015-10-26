@@ -48,4 +48,8 @@ public class Message {
   public String getUserName() {
     return userName;
   }
+
+  public boolean isOutgoingMessage() {
+    return User.getUserId().equals(userId);
+  }
 }
