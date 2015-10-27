@@ -126,8 +126,8 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @OnClick(R.id.next_button)
   void onNextClicked() {
     if (this.dateSet && this.timeSet) {
-      listener.onDateTimeSet(new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute));
-
+      this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+      listener.onDateTimeSet(this.dateTime);
     }
   }
 
