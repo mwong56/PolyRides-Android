@@ -9,7 +9,7 @@ import org.parceler.Parcel;
  */
 
 @Parcel
-public class Messages {
+public class Chat {
   int counter;
   String description;
   String groupId;
@@ -17,29 +17,32 @@ public class Messages {
   String lastUserId;
   boolean newMessages = false;
 
-  public static Messages ParseToMessages(ParseObject object) {
+  public static Chat ParseToMessages(ParseObject object) {
     int counter = object.getInt("counter");
     String description = object.getString("description");
     String groupId = object.getString("groupId");
     String lastMessage = object.getString("lastMessage");
     String lastUserId = object.getString("lastUserId");
-    return new Messages(counter, description, groupId, lastMessage, lastUserId);
+    return new Chat(counter, description, groupId, lastMessage, lastUserId);
   }
 
-  public Messages() {
+  public Chat() {
 
   }
 
-  public Messages(int counter, String description, String groupId, String lastMessage, String lastUserId) {
+  public Chat(int counter, String groupId, boolean isNewMessage) {
+    this.counter = counter;
+    this.groupId = groupId;
+    this.newMessages = isNewMessage;
+  }
+
+  public Chat(int counter, String description, String groupId, String lastMessage, String lastUserId) {
     this.counter = counter;
     this.description = description;
     this.groupId = groupId;
     this.lastMessage = lastMessage;
     this.lastUserId = lastUserId;
-
-    if (lastMessage == null || lastUserId == null) {
-      this.newMessages = true;
-    }
+//    this.newMessages = isNewMessage;
   }
 
   public int getCounter() {

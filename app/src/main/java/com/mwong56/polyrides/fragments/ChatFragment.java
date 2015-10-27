@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MessageActivity;
-import com.mwong56.polyrides.models.Messages;
+import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
-import com.mwong56.polyrides.views.MessagesViewHolder;
-
-import org.parceler.Parcels;
+import com.mwong56.polyrides.views.ChatViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,33 +26,33 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class MessagesFragment extends BaseRxFragment implements MessagesViewHolder.MessagesListener {
+public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatListener {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
 
-  private final List<Messages> messagesList = new ArrayList<>();
+  private final List<Chat> chatList = new ArrayList<>();
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
-  private EasyRecyclerAdapter<Messages> adapter;
+  private EasyRecyclerAdapter<Chat> adapter;
 
-  public static MessagesFragment newInstance() {
-    return new MessagesFragment();
+  public static ChatFragment newInstance() {
+    return new ChatFragment();
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    this.adapter = new EasyRecyclerAdapter<>(getContext(), MessagesViewHolder.class, messagesList, this);
+    this.adapter = new EasyRecyclerAdapter<>(getContext(), ChatViewHolder.class, chatList, this);
     this.recyclerView.setAdapter(adapter);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
 
-    polyRidesService.getMessages()
+    polyRidesService.getChats()
         .compose(bindToLifecycle())
-        .subscribe(messages -> {
-          messagesList.addAll(messages);
+        .subscribe(chats -> {
+          chatList.addAll(chats);
           adapter.notifyDataSetChanged();
         }, error -> showToast(error));
   }
@@ -68,9 +66,9 @@ public class MessagesFragment extends BaseRxFragment implements MessagesViewHold
   }
 
   @Override
-  public void onMessagesClicked(Messages messages) {
+  public void onChatClicked(Chat chat) {
     Intent i = new Intent(getActivity(), MessageActivity.class);
-    i.putExtra("messages", Parcels.wrap(messages));
+    i.putExtra("groupId", chat.getGroupId());
     startActivity(i);
   }
 }

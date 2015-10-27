@@ -2,8 +2,8 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
+import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.models.Message;
-import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
 import com.parse.ParseUser;
 
@@ -32,9 +32,11 @@ public interface PolyRidesService {
 
   Observable<Void> saveMessage(Message message);
 
-  Observable<List<Messages>> getMessages();
+  Observable<List<Chat>> getChats();
 
-  Observable<Void> createMessages(Messages messages, String userId);
+  Observable<Chat> getChat(String groupId);
 
-  Observable<Void> updateMessages(Messages messages, String userId);
+  Observable<Void> createMessages(Chat chat, String userId);
+
+  Observable<Void> updateMessages(Chat chat, String userId);
 }

@@ -2,8 +2,8 @@ package com.mwong56.polyrides.services;
 
 import android.app.Activity;
 
+import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.models.Message;
-import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
 import com.parse.ParseFacebookUtils;
@@ -109,14 +109,14 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> createMessages(Messages messages, String userId) {
+  public Observable<Void> createMessages(Chat chat, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
-      ParseObject toSave = new ParseObject("Messages");
-      toSave.put("counter", messages.getCounter());
-      toSave.put("description", messages.getDescription());
-      toSave.put("groupId", messages.getGroupId());
-      toSave.put("lastMessage", messages.getLastMessage());
-      toSave.put("lastUserId", messages.getLastUserId());
+      ParseObject toSave = new ParseObject("Chat");
+      toSave.put("counter", chat.getCounter());
+      toSave.put("description", chat.getDescription());
+      toSave.put("groupId", chat.getGroupId());
+      toSave.put("lastMessage", chat.getLastMessage());
+      toSave.put("lastUserId", chat.getLastUserId());
       toSave.put("userId", userId);
 
       try {
@@ -134,10 +134,10 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> updateMessages(Messages messages, String userId) {
+  public Observable<Void> updateMessages(Chat chat, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
-      ParseQuery query = new ParseQuery("Messages");
-      query.whereEqualTo("groupId", messages.getGroupId());
+      ParseQuery query = new ParseQuery("Chat");
+      query.whereEqualTo("groupId", chat.getGroupId());
       query.whereEqualTo("userId", userId);
       ParseObject object = null;
       try {
@@ -146,9 +146,9 @@ public class PolyRidesServiceImpl implements PolyRidesService {
         subscriber.onError(e);
       }
 
-      object.put("counter", messages.getCounter());
-      object.put("lastMessage", messages.getLastMessage());
-      object.put("lastUserId", messages.getLastUserId());
+      object.put("counter", chat.getCounter());
+      object.put("lastMessage", chat.getLastMessage());
+      object.put("lastUserId", chat.getLastUserId());
 
       try {
         object.save();
@@ -165,14 +165,14 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<List<Messages>> getMessages() {
+  public Observable<List<Chat>> getChats() {
     Observable toReturn = Observable.create(subscriber -> {
-      ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat");
       query.whereEqualTo("userId", User.getUserId());
       try {
-        List<Messages> messages = new ArrayList<>();
+        List<Chat> messages = new ArrayList<>();
         for (ParseObject object : query.find()) {
-          messages.add(Messages.ParseToMessages(object));
+          messages.add(Chat.ParseToMessages(object));
         }
 
         if (!subscriber.isUnsubscribed()) {
@@ -185,7 +185,34 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       }
 
     });
-    return toReturn;
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<Chat> getChat(String groupId) {
+    Observable toReturn = Observable.create(subscriber -> {
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat");
+      query.whereEqualTo("userId", User.getUserId());
+      query.whereEqualTo("groupId", groupId);
+      try {
+        ParseObject object = query.getFirst();
+        if (object == null) {
+          if (!subscriber.isUnsubscribed()) {
+            subscriber.onNext(null);
+            subscriber.onCompleted();
+          }
+        } else {
+          if (!subscriber.isUnsubscribed()) {
+            subscriber.onNext(Chat.ParseToMessages(object));
+            subscriber.onCompleted();
+          }
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override

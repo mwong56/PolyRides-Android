@@ -11,9 +11,9 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
 import com.mwong56.polyrides.fragments.PassengerRidesFragment;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
+import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
-import com.mwong56.polyrides.models.Messages;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
@@ -80,10 +80,10 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   public void onDetailsButtonClicked(Ride ride) {
     //TODO: Launch message view.
     String groupId = ride.getUserId().compareTo(User.getUserId()) > 0 ? User.getUserId() +
-              ride.getUserId() : ride.getUserId() + User.getUserId();
+        ride.getUserId() : ride.getUserId() + User.getUserId();
 
     Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
-    i.putExtra("messages", Parcels.wrap(new Messages(0, null, groupId, null, null)));
+    i.putExtra("messages", Parcels.wrap(new Chat(0, groupId, false)));
     startActivity(i);
   }
 }

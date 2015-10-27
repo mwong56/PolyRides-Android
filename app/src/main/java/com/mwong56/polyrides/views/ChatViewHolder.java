@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.models.Messages;
+import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.services.FacebookService;
 import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.utils.Utils;
@@ -23,7 +23,7 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
  * Created by micha on 10/23/2015.
  */
 @LayoutId(R.layout.list_item_messages)
-public class MessagesViewHolder extends ItemViewHolder<Messages> {
+public class ChatViewHolder extends ItemViewHolder<Chat> {
 
   @ViewId(R.id.conversation_list_avatar)
   CircleImageView avatar;
@@ -45,29 +45,29 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
 
   private final FacebookService facebookService = FacebookServiceImpl.get();
 
-  public MessagesViewHolder(View view) {
+  public ChatViewHolder(View view) {
     super(view);
   }
 
   @Override
   public void onSetListeners() {
     getView().setOnClickListener(v -> {
-      MessagesListener listener = getListener(MessagesListener.class);
+      ChatListener listener = getListener(ChatListener.class);
       if (listener != null) {
-        listener.onMessagesClicked(getItem());
+        listener.onChatClicked(getItem());
       }
     });
   }
 
   @Override
-  public void onSetValues(Messages messages, PositionInfo positionInfo) {
-    Picasso.with(getContext()).load(Utils.getProfileImageUrl(messages.getOtherUserId())).into(avatar);
-    facebookService.getUserName(AccessToken.getCurrentAccessToken(), messages.getOtherUserId())
+  public void onSetValues(Chat chat, PositionInfo positionInfo) {
+    Picasso.with(getContext()).load(Utils.getProfileImageUrl(chat.getOtherUserId())).into(avatar);
+    facebookService.getUserName(AccessToken.getCurrentAccessToken(), chat.getOtherUserId())
         .subscribe(userName -> name.setText(userName), error -> showToast(error));
-    snippet.setText(messages.getLastMessage());
-    if (messages.getCounter() > 0) {
+    snippet.setText(chat.getLastMessage());
+    if (chat.getCounter() > 0) {
       unreadView.setVisibility(View.VISIBLE);
-      unreadCount.setText(messages.getCounter() + "");
+      unreadCount.setText(chat.getCounter() + "");
     } else {
       unreadView.setVisibility(View.GONE);
     }
@@ -78,7 +78,7 @@ public class MessagesViewHolder extends ItemViewHolder<Messages> {
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
 
-  public interface MessagesListener {
-    void onMessagesClicked(Messages messages);
+  public interface ChatListener {
+    void onChatClicked(Chat chat);
   }
 }
