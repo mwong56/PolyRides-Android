@@ -100,11 +100,11 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
 
   private void setTime() {
     if (this.dateTime != null) {
-      if (this.dateTime.printDate() != null) {
+      if (this.dateSet) {
         dateTextView.setText(this.dateTime.printDate());
       }
 
-      if (this.dateTime.printTime() != null) {
+      if (this.timeSet) {
         timeTextView.setText(this.dateTime.printTime());
       }
     }
@@ -149,6 +149,4 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
     this.timeSet = true;
     timeTextView.setText(hourOfDay + ":" + minute);
   }
-
-
 }

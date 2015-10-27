@@ -85,18 +85,14 @@ public class DateTime implements Parcelable {
     return minute;
   }
 
+
   public String printDate() {
-    if (month != 0) {
-      return (month + 1) + "/" + day + "/" + year;
-    }
-    return null;
+    return (month + 1) + "/" + day + "/" + year;
   }
 
   public String printTime() {
-    if (hour != 0) {
-      return hour + ":" + minute;
-    }
-    return null;
+    return hour + ":" + minute;
+
   }
 
   public Date getDate() {
