@@ -1,10 +1,13 @@
 package com.mwong56.polyrides.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   @Bind(R.id.end)
   PlacesAutoComplete endEditText;
 
+  private Activity activity;
   private Fragment fragment;
   private GoogleApiClient apiClient;
   private LocationService locationService = LocationServiceImpl.instance();
@@ -73,7 +77,8 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
   }
 
-  public void setup(GoogleApiClient client, Fragment fragment) {
+  public void setup(Activity activity, GoogleApiClient client, Fragment fragment) {
+    this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;
     this.startEditText.setup(client);
@@ -102,16 +107,29 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   void setStart() {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
-            .subscribe(place -> setStartLocation(new Location(place, getContext())),
-                error -> showToast("Could not find location")));
+            .subscribe(place -> {
+              setStartLocation(new Location(place, getContext()));
+              hideKeyboard();
+            }, error -> showToast("Could not find location")));
   }
 
   @OnClick(R.id.end_location)
   void setEnd() {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
-            .subscribe(place -> setEndLocation(new Location(place, getContext())),
-                error -> showToast("Could not find location")));
+            .subscribe(place -> {
+              setEndLocation(new Location(place, getContext()));
+              hideKeyboard();
+            }, error -> showToast("Could not find location")));
+  }
+
+  private void hideKeyboard() {
+    // Check if no view has focus:
+    View view = activity.getCurrentFocus();
+    if (view != null) {
+      InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
   }
 
   @Override

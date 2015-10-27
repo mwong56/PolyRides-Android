@@ -3,6 +3,7 @@ package com.mwong56.polyrides.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -37,10 +38,12 @@ public class PassengerFragment extends Fragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    startEndView.setup(activity.getGoogleApiClient(), this);
+    startEndView.setup(activity, activity.getGoogleApiClient(), this);
 
     if (savedInstanceState != null) {
-      Location[] locations = (Location[]) savedInstanceState.getParcelableArray("locations");
+      Parcelable[] parcelables = savedInstanceState.getParcelableArray("locations");
+      Location[] locations = new Location[] {(Location)parcelables[0], (Location)parcelables[1]};
+
       if (locations[0] != null) {
         startEndView.setStartLocation(locations[0]);
       }

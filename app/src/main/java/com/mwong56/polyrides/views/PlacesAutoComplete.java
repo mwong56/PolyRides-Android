@@ -1,7 +1,6 @@
 package com.mwong56.polyrides.views;
 
 import android.content.Context;
-import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
@@ -56,6 +55,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     }
 
     this.setAdapter(adapter);
+
     this.setOnItemClickListener((parent, view, position, id) -> {
       final AutocompletePrediction item = adapter.getItem(position);
       final String placeId = item.getPlaceId();
@@ -79,9 +79,11 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
           Toast.LENGTH_SHORT).show();
       Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
     });
+
     this.setOnKeyListener((v, keyCode, event) -> {
       if (PlacesAutoComplete.this.location != null) {
         PlacesAutoComplete.this.location = null;
+        setThreshold(1);
         Toast.makeText(getContext(), "Resetted place",
             Toast.LENGTH_SHORT).show();
       }
@@ -95,6 +97,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
 
   public void setLocation(Location location) {
     this.location = location;
+    setThreshold(1000);
     this.post(() -> setText(location.getAddress()));
   }
 }
