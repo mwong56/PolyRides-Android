@@ -109,14 +109,15 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> createMessages(Chat chat, String userId) {
+  public Observable<Void> createChat(Chat chat, String userId, String otherUserId, String otherUserName) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
       ParseObject toSave = new ParseObject("Chat");
-      toSave.put("counter", chat.getCounter());
-      toSave.put("description", chat.getDescription());
+      toSave.put("counter", 0);
       toSave.put("groupId", chat.getGroupId());
       toSave.put("lastMessage", chat.getLastMessage());
       toSave.put("lastUserId", chat.getLastUserId());
+      toSave.put("otherUserId", otherUserId);
+      toSave.put("otherUserName", otherUserName);
       toSave.put("userId", userId);
 
       try {
@@ -134,7 +135,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<Void> updateMessages(Chat chat, String userId) {
+  public Observable<Void> updateChat(Chat chat, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
       ParseQuery query = new ParseQuery("Chat");
       query.whereEqualTo("groupId", chat.getGroupId());
@@ -146,9 +147,38 @@ public class PolyRidesServiceImpl implements PolyRidesService {
         subscriber.onError(e);
       }
 
-      object.put("counter", chat.getCounter());
+      object.put("counter", object.getInt("counter") + 1);
       object.put("lastMessage", chat.getLastMessage());
       object.put("lastUserId", chat.getLastUserId());
+
+      try {
+        object.save();
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<Void> clearMessagesCounter(String groupId, String userId) {
+    Observable<Void> toReturn = Observable.create(subscriber -> {
+      ParseQuery query = new ParseQuery("Chat");
+      query.whereEqualTo("groupId", groupId);
+      query.whereEqualTo("userId", userId);
+      ParseObject object = null;
+      try {
+        object = query.getFirst();
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+
+      object.put("counter", 0);
 
       try {
         object.save();

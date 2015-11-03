@@ -92,7 +92,6 @@ public class DateTime implements Parcelable {
 
   public String printTime() {
     return hour + ":" + minute;
-
   }
 
   public Date getDate() {

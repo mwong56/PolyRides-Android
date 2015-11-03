@@ -19,6 +19,7 @@ import com.mwong56.polyrides.services.FacebookService;
 import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.mwong56.polyrides.utils.DoNothingOnNextAction;
 import com.mwong56.polyrides.utils.Utils;
 import com.mwong56.polyrides.views.SendButton;
 
@@ -33,6 +34,8 @@ import rx.Observable;
  * Created by micha on 10/25/2015.
  */
 public class MessageActivity extends BaseRxActivity {
+
+  private static final DoNothingOnNextAction doNothingOnNextAction = new DoNothingOnNextAction();
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -82,6 +85,13 @@ public class MessageActivity extends BaseRxActivity {
         }, error -> showToast(error));
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
+        .subscribe(v -> {}, error -> showToast(error));
+  }
+
   private void setupViews() {
     LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -112,23 +122,21 @@ public class MessageActivity extends BaseRxActivity {
 
   void updateDatabase(Message message) {
     polyRidesService.saveMessage(message)
-        .subscribe(onNext -> {},
-            onError -> showToast(onError));
+        .subscribe(doNothingOnNextAction, onError -> showToast(onError));
 
     if (this.chat == null) {
-      this.chat = new Chat(1, this.otherUserName, this.groupId, message.getText(), User.getUserId());
-      polyRidesService.createMessages(chat, User.getUserId()).subscribe(v -> {
-      }, e -> showToast(e));
-      polyRidesService.createMessages(chat, chat.getOtherUserId()).subscribe(v -> {
-      }, e -> showToast(e));
+      this.chat = new Chat(this.groupId, message.getText(), User.getUserId());
+      polyRidesService.createChat(chat, User.getUserId(), chat.getOtherUserId(), this.otherUserName)
+          .subscribe(doNothingOnNextAction, e -> showToast(e));
+      polyRidesService.createChat(chat, chat.getOtherUserId(), User.getUserId(), User.getUserName())
+          .subscribe(doNothingOnNextAction, e -> showToast(e));
     } else {
-      this.chat.setCounter(chat.getCounter() + 1);
       this.chat.setLastMessage(chat.getLastMessage());
       this.chat.setLastUserId(User.getUserId());
-      polyRidesService.updateMessages(chat, User.getUserId()).subscribe(v -> {
-      }, e -> showToast(e));
-      polyRidesService.updateMessages(chat, chat.getOtherUserId()).subscribe(v -> {
-      }, e -> showToast(e));
+      polyRidesService.updateChat(chat, User.getUserId())
+          .subscribe(doNothingOnNextAction, e -> showToast(e));
+      polyRidesService.updateChat(chat, chat.getOtherUserId())
+          .subscribe(doNothingOnNextAction, e -> showToast(e));
     }
   }
 

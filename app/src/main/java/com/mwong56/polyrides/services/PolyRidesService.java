@@ -36,7 +36,9 @@ public interface PolyRidesService {
 
   Observable<Chat> getChat(String groupId);
 
-  Observable<Void> createMessages(Chat chat, String userId);
+  Observable<Void> createChat(Chat chat, String userId, String otherUserId, String otherUserName);
 
-  Observable<Void> updateMessages(Chat chat, String userId);
+  Observable<Void> updateChat(Chat chat, String userId);
+
+  Observable<Void> clearMessagesCounter(String groupId, String userId);
 }
