@@ -82,14 +82,17 @@ public class MessageActivity extends BaseRxActivity {
           messageList.addAll(pair.first);
           adapter.notifyDataSetChanged();
           this.chat = pair.second;
-        }, error -> showToast(error));
+        }, error -> {
+          this.chat = null;
+        });
   }
 
   @Override
   protected void onResume() {
     super.onResume();
     polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
-        .subscribe(v -> {}, error -> showToast(error));
+        .subscribe(v -> {
+        }, error -> showToast(error));
   }
 
   private void setupViews() {
@@ -106,7 +109,7 @@ public class MessageActivity extends BaseRxActivity {
   void onSendClick() {
     if (validateMessage()) {
       String text = messageText.getText().toString();
-      Message message = new Message(chat.getGroupId(), User.getUserId(), text, User.getUserName());
+      Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName());
       updateDatabase(message);
       adapter.addMessage(message);
       messageText.setText(null);
@@ -126,16 +129,16 @@ public class MessageActivity extends BaseRxActivity {
 
     if (this.chat == null) {
       this.chat = new Chat(this.groupId, message.getText(), User.getUserId());
-      polyRidesService.createChat(chat, User.getUserId(), chat.getOtherUserId(), this.otherUserName)
-          .subscribe(doNothingOnNextAction, e -> showToast(e));
-      polyRidesService.createChat(chat, chat.getOtherUserId(), User.getUserId(), User.getUserName())
+      Observable.mergeDelayError(
+          polyRidesService.createChat(chat, User.getUserId(), chat.getOtherUserId(), this.otherUserName),
+          polyRidesService.createChat(chat, chat.getOtherUserId(), User.getUserId(), User.getUserName()))
           .subscribe(doNothingOnNextAction, e -> showToast(e));
     } else {
-      this.chat.setLastMessage(chat.getLastMessage());
+      this.chat.setLastMessage(message.getText());
       this.chat.setLastUserId(User.getUserId());
-      polyRidesService.updateChat(chat, User.getUserId())
-          .subscribe(doNothingOnNextAction, e -> showToast(e));
-      polyRidesService.updateChat(chat, chat.getOtherUserId())
+      Observable.mergeDelayError(
+          polyRidesService.updateChat(chat, User.getUserId()),
+          polyRidesService.updateChat(chat, chat.getOtherUserId()))
           .subscribe(doNothingOnNextAction, e -> showToast(e));
     }
   }

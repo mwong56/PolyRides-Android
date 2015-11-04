@@ -10,32 +10,28 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Chat {
+  int counter;
   String groupId;
   String lastMessage;
   String lastUserId;
   boolean newMessages = false;
 
   public static Chat ParseToMessages(ParseObject object) {
+    int counter = object.getInt("counter");
     String groupId = object.getString("groupId");
     String lastMessage = object.getString("lastMessage");
     String lastUserId = object.getString("lastUserId");
-    return new Chat(groupId, lastMessage, lastUserId);
+    Chat chat = new Chat(groupId, lastMessage, lastUserId);
+    chat.setCounter(counter);
+    return chat;
   }
 
-  public Chat() {
-
-  }
-
-  public Chat(String groupId, boolean isNewMessage) {
-    this.groupId = groupId;
-    this.newMessages = isNewMessage;
-  }
+  public Chat() {}
 
   public Chat(String groupId, String lastMessage, String lastUserId) {
     this.groupId = groupId;
     this.lastMessage = lastMessage;
     this.lastUserId = lastUserId;
-//    this.newMessages = isNewMessage;
   }
 
   public String getGroupId() {
@@ -43,8 +39,7 @@ public class Chat {
   }
 
   public String getOtherUserId() {
-//    return groupId.replace(User.getUserId(), "");
-    return "10153738107997317";
+    return groupId.replace(User.getUserId(), "");
   }
 
   public String getLastMessage() {
@@ -67,11 +62,12 @@ public class Chat {
     this.lastUserId = lastUserId;
   }
 
-  public boolean isNewMessages() {
-    return this.newMessages;
+  public void setCounter(int counter) {
+    this.counter = counter;
   }
 
-  public void setIsNewMessage(boolean flag) {
-    this.newMessages = flag;
+  public int getCounter() {
+    return this.counter;
   }
+
 }

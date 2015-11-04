@@ -8,6 +8,6 @@ import rx.functions.Action1;
 public class DoNothingOnNextAction implements Action1 {
   @Override
   public void call(Object o) {
-    return;
+
   }
 }

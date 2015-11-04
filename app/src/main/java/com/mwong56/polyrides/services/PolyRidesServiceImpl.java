@@ -111,8 +111,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<Void> createChat(Chat chat, String userId, String otherUserId, String otherUserName) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
-      ParseObject toSave = new ParseObject("Chat");
-      toSave.put("counter", 0);
+      ParseObject toSave = new ParseObject("Messages");
+      toSave.put("counter", 1);
       toSave.put("groupId", chat.getGroupId());
       toSave.put("lastMessage", chat.getLastMessage());
       toSave.put("lastUserId", chat.getLastUserId());
@@ -137,7 +137,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<Void> updateChat(Chat chat, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
-      ParseQuery query = new ParseQuery("Chat");
+      ParseQuery query = new ParseQuery("Messages");
       query.whereEqualTo("groupId", chat.getGroupId());
       query.whereEqualTo("userId", userId);
       ParseObject object = null;
@@ -147,7 +147,10 @@ public class PolyRidesServiceImpl implements PolyRidesService {
         subscriber.onError(e);
       }
 
-      object.put("counter", object.getInt("counter") + 1);
+      if (!userId.equals(User.getUserId())) {
+        object.put("counter", object.getInt("counter") + 1);
+      }
+
       object.put("lastMessage", chat.getLastMessage());
       object.put("lastUserId", chat.getLastUserId());
 
@@ -168,7 +171,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<Void> clearMessagesCounter(String groupId, String userId) {
     Observable<Void> toReturn = Observable.create(subscriber -> {
-      ParseQuery query = new ParseQuery("Chat");
+      ParseQuery query = new ParseQuery("Messages");
       query.whereEqualTo("groupId", groupId);
       query.whereEqualTo("userId", userId);
       ParseObject object = null;
@@ -197,7 +200,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<List<Chat>> getChats() {
     Observable toReturn = Observable.create(subscriber -> {
-      ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat");
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
       query.whereEqualTo("userId", User.getUserId());
       try {
         List<Chat> messages = new ArrayList<>();
@@ -221,7 +224,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   @Override
   public Observable<Chat> getChat(String groupId) {
     Observable toReturn = Observable.create(subscriber -> {
-      ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat");
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
       query.whereEqualTo("userId", User.getUserId());
       query.whereEqualTo("groupId", groupId);
       try {
