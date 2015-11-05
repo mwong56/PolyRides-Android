@@ -8,8 +8,8 @@
               android:paddingTop="@dimen/activity_vertical_margin">
 
   <include
-      layout="@layout/view_start_from"
       android:id="@+id/start_from_view"
+      layout="@layout/view_start_from"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 
@@ -22,5 +22,15 @@
       android:layout_marginTop="20dp"
       android:background="@android:color/transparent"
       android:text="Create New Ride"/>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"/>
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:src="@drawable/powered_by_google_light"/>
 
 </LinearLayout>
