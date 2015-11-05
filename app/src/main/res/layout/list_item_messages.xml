@@ -19,7 +19,7 @@
       android:layout_height="48dp"
       android:layout_marginRight="16dp"
       app:civ_border_color="#FF000000"
-      app:civ_border_width="2dp"/>
+      app:civ_border_width="1dp"/>
 
   <RelativeLayout
       android:id="@+id/conversation_list_block"

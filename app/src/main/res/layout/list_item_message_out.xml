@@ -7,6 +7,8 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     android:paddingTop="2dp">
 
   <LinearLayout
@@ -32,7 +34,7 @@
           android:layout_alignParentRight="true"
           android:layout_alignParentTop="true"
           app:civ_border_color="#FF000000"
-          app:civ_border_width="2dp"/>
+          app:civ_border_width="1dp"/>
 
       <LinearLayout
           android:id="@+id/message_block"

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
@@ -98,10 +99,22 @@ public class MessageActivity extends BaseRxActivity {
     this.otherId = Utils.extractOtherUserId(this.groupId);
 
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.otherId)
         .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 
     setupViews();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
