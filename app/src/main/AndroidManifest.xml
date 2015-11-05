@@ -14,9 +14,9 @@
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
   <permission
-      android:name="com.mwong56.polyrides.C2D_MESSAGE"
+      android:name="com.mwong56.polyrides.permission.C2D_MESSAGE"
       android:protectionLevel="signature"/>
-  <uses-permission android:name="com.mwong56.polyrides.C2D_MESSAGE"/>
+  <uses-permission android:name="com.mwong56.polyrides.permission.C2D_MESSAGE"/>
 
   <application
       android:name=".application.PolyRidesApp"
@@ -36,7 +36,6 @@
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
-
 
     <activity
         android:name=".activities.LoginActivity"
@@ -78,15 +77,6 @@
     <service android:name="com.parse.PushService"/>
 
     <receiver
-        android:name="com.parse.ParsePushBroadcastReceiver"
-        android:exported="false">
-      <intent-filter>
-        <action android:name="com.parse.push.intent.RECEIVE"/>
-        <action android:name="com.parse.push.intent.DELETE"/>
-        <action android:name="com.parse.push.intent.OPEN"/>
-      </intent-filter>
-    </receiver>
-    <receiver
         android:name="com.parse.GcmBroadcastReceiver"
         android:permission="com.google.android.c2dm.permission.SEND">
       <intent-filter>
@@ -96,10 +86,16 @@
         <category android:name="com.mwong56.polyrides"/>
       </intent-filter>
     </receiver>
+    <receiver
+        android:name=".receivers.MessageReceiver"
+        android:exported="false">
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDPJT0KIoQPM5ctM5PtJm0dE9604d2RmTA"/>
+      <intent-filter>
+        <action android:name="com.parse.push.intent.RECEIVE"/>
+        <action android:name="com.parse.push.intent.OPEN"/>
+        <action android:name="com.parse.push.intent.DELETE"/>
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>

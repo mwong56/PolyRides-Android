@@ -48,10 +48,19 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+  }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    refreshChats();
+  }
+
+  private void refreshChats() {
     polyRidesService.getChats()
         .compose(bindToLifecycle())
         .subscribe(chats -> {
+          chatList.clear();
           chatList.addAll(chats);
           adapter.notifyDataSetChanged();
         }, error -> showToast(error));

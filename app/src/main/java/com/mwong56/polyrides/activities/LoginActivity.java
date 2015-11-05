@@ -12,6 +12,7 @@ import com.mwong56.polyrides.services.FacebookService;
 import com.mwong56.polyrides.services.FacebookServiceImpl;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.mwong56.polyrides.utils.DoNothingOnNextAction;
 import com.parse.ParseFacebookUtils;
 
 import java.util.Arrays;
@@ -51,7 +52,8 @@ public class LoginActivity extends BaseRxActivity {
     polyRidesService.facebookLogin(this, Arrays.asList("public_profile", "user_friends"))
         .flatMap(parseUser -> getUserIdAndUsername())
         .subscribe(pair -> {
-          polyRidesService.saveUserId(pair.first);
+          polyRidesService.saveUserId(pair.first)
+              .subscribe(new DoNothingOnNextAction(), error -> showToast(error));
           User.setUserId(pair.first);
           User.setUserName(pair.second);
           startMainActivity();
@@ -68,9 +70,6 @@ public class LoginActivity extends BaseRxActivity {
     Intent i = new Intent(LoginActivity.this, MainActivity.class);
     startActivity(i);
     finish();
-    String userName = "";
-    String userId = "";
-    Pair.create(userName, userId);
   }
 
   Observable<Pair<String, String>> getUserIdAndUsername() {

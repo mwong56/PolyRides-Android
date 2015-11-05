@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +37,6 @@ public class PassengerRidesFragment extends BaseRxFragment {
   private DateTime dateTime;
   private EasyRecyclerAdapter<Ride> adapter;
   private List<Ride> rideList;
-  private ProgressDialog progressDialog;
 
   public static PassengerRidesFragment newInstance(Location start, Location end, DateTime dateTime) {
     Bundle args = new Bundle();
@@ -54,9 +52,6 @@ public class PassengerRidesFragment extends BaseRxFragment {
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    progressDialog = ProgressDialog.show(getContext(), "Please wait", "Searching...");
-    progressDialog.show();
-
     this.start = getArguments().getParcelable("start");
     this.end = getArguments().getParcelable("end");
     this.dateTime = getArguments().getParcelable("dateTime");
@@ -68,13 +63,23 @@ public class PassengerRidesFragment extends BaseRxFragment {
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
 
+
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    refreshRides();
+  }
+
+  private void refreshRides() {
     polyRidesService.getRides(dateTime.getDate(), false)
         .compose(bindToLifecycle())
         .subscribe(rides -> {
+          rideList.clear();
           rideList.addAll(rides);
           //TODO: Sort.
           adapter.notifyDataSetChanged();
-          progressDialog.hide();
         }, error -> showToast(error));
   }
 

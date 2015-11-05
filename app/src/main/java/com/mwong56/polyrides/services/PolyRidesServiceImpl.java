@@ -9,8 +9,11 @@ import com.mwong56.polyrides.models.User;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,10 +60,22 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public void saveUserId(String userId) {
-    ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-    installation.put("userId", userId);
-    installation.saveEventually();
+  public Observable<Void> saveUserId(String userId) {
+    Observable toReturn = Observable.create(subscriber -> {
+      try {
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user", userId);
+        installation.save();
+
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   public Observable<Void> removeRide(Ride ride) {
@@ -185,6 +200,36 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
       try {
         object.save();
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(null);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<Void> sendPush(String userId, String userName, String groupId, String text) {
+    Observable<Void> toReturn = Observable.create(subscriber -> {
+
+      ParseQuery pushQuery = ParseInstallation.getQuery();
+      pushQuery.whereEqualTo("user", userId);
+
+      ParsePush push = new ParsePush();
+      push.setQuery(pushQuery);
+
+      try {
+        JSONObject object = new JSONObject();
+        object.put("badge", "Increment");
+        object.put("alert", userName + "\n" + text);
+        object.put("groupId", groupId);
+        push.setData(object);
+        push.send();
+
         if (!subscriber.isUnsubscribed()) {
           subscriber.onNext(null);
           subscriber.onCompleted();

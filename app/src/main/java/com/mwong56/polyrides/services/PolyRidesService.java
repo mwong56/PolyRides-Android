@@ -20,7 +20,7 @@ public interface PolyRidesService {
 
   Observable<ParseUser> facebookLogin(Activity activity, Collection<String> permissions);
 
-  void saveUserId(String userId);
+  Observable<Void> saveUserId(String userId);
 
   Observable<Void> saveNewRide(Ride ride);
 
@@ -41,4 +41,6 @@ public interface PolyRidesService {
   Observable<Void> updateChat(Chat chat, String userId);
 
   Observable<Void> clearMessagesCounter(String groupId, String userId);
+
+  Observable<Void> sendPush(String otherUserId, String userName, String groupId, String text);
 }

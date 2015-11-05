@@ -1,10 +1,14 @@
 package com.mwong56.polyrides.application;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 import com.tumblr.remember.Remember;
 
 /**
@@ -21,8 +25,17 @@ public class PolyRidesApp extends Application {
     // Enable Local Datastore.
     Parse.enableLocalDatastore(this);
 
-    Parse.initialize(this, "c6e3kc0AWh95MO0sBssnh00v4KKPkoZh1cQc4aBa", "SZ6GYt8TIixLjdpgKKT1NAqQqoc57zT9WNx0lyj7");
+    Parse.initialize(this, "7OAm6NrMXr29nbc6As83oPjGTZBHk5ZHgNpMn8Aw", "K2MVOxHv29ogGzUut5JSNPjIX3IRcl1yaSDQCOVe");
     ParseInstallation.getCurrentInstallation().saveInBackground();
     ParseFacebookUtils.initialize(this);
+    Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
+    ParsePush.subscribeInBackground("", new SaveCallback() {
+      @Override
+      public void done(ParseException e) {
+        if (e != null) {
+          Log.e("Parse Push", e.toString());
+        }
+      }
+    });
   }
 }

@@ -1,11 +1,14 @@
 package com.mwong56.polyrides.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
@@ -22,6 +25,9 @@ import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.utils.DoNothingOnNextAction;
 import com.mwong56.polyrides.utils.Utils;
 import com.mwong56.polyrides.views.SendButton;
+import com.parse.ParsePushBroadcastReceiver;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +42,7 @@ import rx.Observable;
 public class MessageActivity extends BaseRxActivity {
 
   private static final DoNothingOnNextAction doNothingOnNextAction = new DoNothingOnNextAction();
+  private static final String TAG = MessageActivity.TAG;
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -57,7 +64,28 @@ public class MessageActivity extends BaseRxActivity {
   private String otherId;
   private String otherUserName;
 
-  private Chat chat;
+  private Chat chat = null;
+
+  private final ParsePushBroadcastReceiver receiver = new ParsePushBroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      try {
+        JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+        String groupId = json.getString("groupId");
+
+        if (groupId == null) {
+          return;
+        }
+
+        if (MessageActivity.this.groupId.equals(groupId)) {
+          refreshMessages();
+        }
+
+      } catch (Exception e) {
+        Log.e(TAG, e.toString());
+      }
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,26 +101,36 @@ public class MessageActivity extends BaseRxActivity {
         .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 
     setupViews();
+  }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    this.registerReceiver(receiver, Utils.buildParseIntentFilter());
+    polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
+        .subscribe(v -> {}, error -> {});
+    refreshMessages();
+  }
+
+  @Override
+  protected void onStop() {
+    this.unregisterReceiver(receiver);
+    super.onStop();
+  }
+
+  private void refreshMessages() {
     Observable.zip(polyRidesService.getMessage(this.groupId),
         polyRidesService.getChat(this.groupId),
         (messages, chat) -> Pair.create(messages, chat))
         .compose(bindToLifecycle())
         .subscribe(pair -> {
+          messageList.clear();
           messageList.addAll(pair.first);
           adapter.notifyDataSetChanged();
           this.chat = pair.second;
         }, error -> {
           this.chat = null;
         });
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
-        .subscribe(v -> {
-        }, error -> showToast(error));
   }
 
   private void setupViews() {
@@ -124,8 +162,10 @@ public class MessageActivity extends BaseRxActivity {
   }
 
   void updateDatabase(Message message) {
-    polyRidesService.saveMessage(message)
-        .subscribe(doNothingOnNextAction, onError -> showToast(onError));
+    Observable.mergeDelayError(polyRidesService.saveMessage(message),
+        polyRidesService.sendPush(this.otherId, User.getUserName(),
+            this.groupId, message.getText()))
+            .subscribe(doNothingOnNextAction, onError -> showToast(onError));
 
     if (this.chat == null) {
       this.chat = new Chat(this.groupId, message.getText(), User.getUserId());
@@ -150,4 +190,5 @@ public class MessageActivity extends BaseRxActivity {
     }
     return true;
   }
+
 }
