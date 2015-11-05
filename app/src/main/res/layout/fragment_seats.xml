@@ -7,6 +7,15 @@
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin">
 
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:layout_marginTop="24dp"
+      android:adjustViewBounds="true"
+      android:scaleType="fitXY"
+      android:src="@drawable/car_progress3"/>
+
   <android.support.design.widget.TextInputLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
@@ -21,28 +30,29 @@
 
   </android.support.design.widget.TextInputLayout>
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"
+      android:orientation="vertical">
 
     <TextView
+        android:id="@+id/seats_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Available Seats"
-        android:layout_above="@+id/seats"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="Available Seats"/>
 
     <NumberPicker
         android:id="@+id/seats"
-        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"/>
 
-
-  </RelativeLayout>
-
-
+  </LinearLayout>
 
   <Button
       android:id="@+id/next_button"

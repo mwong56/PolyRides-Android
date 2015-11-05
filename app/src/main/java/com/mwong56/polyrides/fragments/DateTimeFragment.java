@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.FindRideActivity;
+import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.DateTime;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -24,6 +27,9 @@ import butterknife.OnClick;
  * A placeholder fragment containing a simple view.
  */
 public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+
+  @Bind(R.id.header_image)
+  ImageView headerImageView;
 
   @Bind(R.id.chosen_date)
   TextView dateTextView;
@@ -48,6 +54,12 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     setTime();
+
+    if (getActivity() instanceof FindRideActivity) {
+      headerImageView.setImageResource(R.drawable.car_progress_passenger2);
+    } else if (getActivity() instanceof NewRideActivity) {
+      headerImageView.setImageResource(R.drawable.car_progress2);
+    }
   }
 
   @Override

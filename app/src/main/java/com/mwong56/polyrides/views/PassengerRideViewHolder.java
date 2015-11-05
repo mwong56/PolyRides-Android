@@ -1,8 +1,6 @@
 package com.mwong56.polyrides.views;
 
-import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mwong56.polyrides.R;
@@ -10,6 +8,7 @@ import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
@@ -21,11 +20,8 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 @LayoutId(R.layout.list_item_passenger_ride)
 public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
 
-  @ViewId(R.id.card_view)
-  CardView view;
-
   @ViewId(R.id.image)
-  ImageView profileImage;
+  CircleImageView profileImage;
 
   @ViewId(R.id.city)
   TextView city;
@@ -40,7 +36,7 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
 
   @Override
   public void onSetListeners() {
-    view.setOnClickListener(v -> {
+    this.getView().setOnClickListener(v -> {
       RideListener listener = getListener(RideListener.class);
       if (listener != null) {
         listener.onRideClicked(getItem());
@@ -51,7 +47,7 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
   @Override
   public void onSetValues(Ride ride, PositionInfo positionInfo) {
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImage);
-    city.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
+    city.setText(ride.getStart().getCity() + " → " + ride.getEnd().getCity());
     time.setText(ride.getDateTime().printDate() + " at " + ride.getDateTime().printTime());
   }
 
