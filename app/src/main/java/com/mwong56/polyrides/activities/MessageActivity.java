@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.adapters.MessageListAdapter;
+import com.mwong56.polyrides.application.PolyRidesApp;
 import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.models.Message;
 import com.mwong56.polyrides.models.User;
@@ -106,6 +107,7 @@ public class MessageActivity extends BaseRxActivity {
   @Override
   protected void onResume() {
     super.onResume();
+    ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(this.groupId);
     this.registerReceiver(receiver, Utils.buildParseIntentFilter());
     polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
         .subscribe(v -> {}, error -> {});
@@ -115,6 +117,7 @@ public class MessageActivity extends BaseRxActivity {
   @Override
   protected void onStop() {
     this.unregisterReceiver(receiver);
+    ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(null);
     super.onStop();
   }
 
@@ -150,6 +153,7 @@ public class MessageActivity extends BaseRxActivity {
       Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName());
       updateDatabase(message);
       adapter.addMessage(message);
+      recyclerView.scrollToPosition(messageList.size() - 1);
       messageText.setText(null);
       sendButton.setCurrentState(SendButton.STATE_DONE);
     }
