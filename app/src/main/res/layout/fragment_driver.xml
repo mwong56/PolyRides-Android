@@ -21,14 +21,14 @@
       layout="@layout/view_start_from"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
-  
+
   <Button
       android:id="@+id/new_ride_button"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="20dp"
-      android:background="@android:color/transparent"
       android:text="Create New Ride"/>
 
   <View

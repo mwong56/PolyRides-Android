@@ -28,7 +28,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="20dp"
-      android:background="@android:color/transparent"
+      style="?android:attr/borderlessButtonStyle"
       android:text="Find Me a Ride"/>
 
   <View
