@@ -16,6 +16,8 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -74,7 +76,7 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   @Override
   public void onRideClicked(Ride ride) {
     Intent i = new Intent(getActivity(), MyRideActivity.class);
-    i.putExtra("ride", ride);
+    i.putExtra("ride", Parcels.wrap(ride));
     startActivity(i);
   }
 }

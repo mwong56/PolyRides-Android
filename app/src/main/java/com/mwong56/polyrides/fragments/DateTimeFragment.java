@@ -22,6 +22,8 @@ import java.util.Calendar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,9 +40,9 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   TextView timeTextView;
 
   private DateTimeListener listener;
-  private DateTime dateTime;
+  @State DateTime dateTime;
   private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
-  private boolean dateSet, timeSet;
+  @State boolean dateSet, timeSet;
 
   public interface DateTimeListener {
     void onDateTimeSet(DateTime dateTime);
@@ -53,11 +55,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    if (savedInstanceState != null) {
-      this.dateTime = savedInstanceState.getParcelable("dateTime");
-      this.dateSet = savedInstanceState.getBoolean("dateSet");
-      this.timeSet = savedInstanceState.getBoolean("timeSet");
-    }
+    Icepick.restoreInstanceState(this, savedInstanceState);
     setTime();
 
     if (getActivity() instanceof FindRideActivity) {
@@ -131,9 +129,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-    outState.putParcelable("dateTime", this.dateTime);
-    outState.putBoolean("dateSet", this.dateSet);
-    outState.putBoolean("timeSet", this.timeSet);
+    Icepick.saveInstanceState(this, outState);
   }
 
 

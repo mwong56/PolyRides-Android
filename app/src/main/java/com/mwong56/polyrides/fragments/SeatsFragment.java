@@ -15,6 +15,8 @@ import com.mwong56.polyrides.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -28,8 +30,10 @@ public class SeatsFragment extends Fragment {
   NumberPicker seatsPicker;
 
   private SeatsListener listener;
-  private int cost;
-  private int seats;
+  @State
+  int cost;
+  @State
+  int seats;
 
   public interface SeatsListener {
     void onSeatsSet(int cost, int seats);
@@ -42,13 +46,12 @@ public class SeatsFragment extends Fragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    Icepick.restoreInstanceState(this, savedInstanceState);
     seatsPicker.setMinValue(1);
     seatsPicker.setMaxValue(100);
     seatsPicker.setWrapSelectorWheel(false);
 
     if (savedInstanceState != null) {
-      cost = savedInstanceState.getInt("cost");
-      seats = savedInstanceState.getInt("seats");
       costEditText.setText(cost + "");
       seatsPicker.setValue(seats);
     }
@@ -62,9 +65,8 @@ public class SeatsFragment extends Fragment {
     } catch (Exception e) {
       cost = 0;
     }
-    int seats = seatsPicker.getValue();
-    outState.putInt("cost", cost);
-    outState.putInt("seats", seats);
+    seats = seatsPicker.getValue();
+    Icepick.saveInstanceState(this, outState);
   }
 
   @Override

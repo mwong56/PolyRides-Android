@@ -19,8 +19,12 @@ import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 
 public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener,
     SeatsFragment.SeatsListener, NotesFragment.NotesListener, RideDetailsFragment.RideDetailsListener {
@@ -28,13 +32,14 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 
+  @State Location start;
+  @State Location end;
+  @State int cost;
+  @State int seats;
+  @State String note;
+
   private Fragment fragment;
-  private Location start;
-  private Location end;
   private DateTime dateTime;
-  private int cost;
-  private int seats;
-  private String note;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
   @Override
@@ -42,6 +47,8 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     super.onCreate(savedInstanceState);
     setContentView(R.layout.toolbar_frame_layout);
     ButterKnife.bind(this);
+
+    onRestoreInstanceState(savedInstanceState);
 
     setSupportActionBar(toolbar);
     setTitle("New Ride");
@@ -60,9 +67,32 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    //TODO: Dumb hack for skipping state restoration. Activities onSaveInstanceState aren't guaranteed
+    // need to save in onPause/onResume but don't have bundle.. Use shared preferences later.
+    if (!(fragment instanceof DateTimeFragment)) {
+      if (this.dateTime == null) {
+        openMainActivity();
+      }
+    }
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    Icepick.restoreInstanceState(this, savedInstanceState);
+    if (savedInstanceState != null) {
+      this.dateTime = Parcels.unwrap(savedInstanceState.getParcelable("dateTime"));
+    }
+  }
+
+
+  @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
     super.onSaveInstanceState(outState, outPersistentState);
     getSupportFragmentManager().putFragment(outState, "content", fragment);
+    outState.putParcelable("dateTime", Parcels.wrap(this.dateTime));
+    Icepick.saveInstanceState(this, outState);
   }
 
   @Override

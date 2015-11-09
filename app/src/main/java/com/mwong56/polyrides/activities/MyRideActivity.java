@@ -13,6 +13,8 @@ import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -36,7 +38,7 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
 
     setSupportActionBar(toolbar);
 
-    ride = getIntent().getExtras().getParcelable("ride");
+    ride = Parcels.unwrap(getIntent().getExtras().getParcelable("ride"));
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().findFragmentByTag("content");

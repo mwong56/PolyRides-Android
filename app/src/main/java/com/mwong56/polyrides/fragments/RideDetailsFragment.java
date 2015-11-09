@@ -11,6 +11,8 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.views.RideDetailsView;
 
+import org.parceler.Parcels;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,7 +40,7 @@ public class RideDetailsFragment extends BaseRxFragment {
 
   public static RideDetailsFragment newInstance(Ride ride, int type) {
     Bundle bundle = new Bundle();
-    bundle.putParcelable("ride", ride);
+    bundle.putParcelable("ride", Parcels.wrap(ride));
     bundle.putInt("type", type);
     RideDetailsFragment fragment = new RideDetailsFragment();
     fragment.setArguments(bundle);
@@ -50,7 +52,7 @@ public class RideDetailsFragment extends BaseRxFragment {
     super.onActivityCreated(savedInstanceState);
 
     Bundle args = getArguments();
-    this.ride = args.getParcelable("ride");
+    this.ride = Parcels.unwrap(args.getParcelable("ride"));
     this.type = args.getInt("type");
 
     switch (type) {
