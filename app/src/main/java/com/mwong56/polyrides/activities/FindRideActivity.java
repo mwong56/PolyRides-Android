@@ -46,11 +46,12 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
+    } else {
+      fragment = DateTimeFragment.newInstance();
+      FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.add(R.id.frame_layout, fragment, "content");
+      fragmentTransaction.commit();
     }
-
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-    fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
-    fragmentTransaction.commit();
   }
 
 
@@ -64,13 +65,13 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   public void onDateTimeSet(DateTime dateTime) {
     this.dateTime = dateTime;
     this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
-    replaceFragment(fragment, "PassengerFragment");
+    replaceFragment(fragment, "content");
   }
 
   @Override
   public void onRideClicked(Ride ride) {
     this.fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.MESSAGE);
-    replaceFragment(fragment, "RideDetailsFragment");
+    replaceFragment(fragment, "content");
   }
 
   @Override

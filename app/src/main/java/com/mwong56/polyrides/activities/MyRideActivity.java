@@ -39,12 +39,13 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
     ride = getIntent().getExtras().getParcelable("ride");
 
     if (savedInstanceState != null) {
-      fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
+      fragment = getSupportFragmentManager().findFragmentByTag("content");
+    } else {
+      fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.REMOVE);
+      FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.add(R.id.frame_layout, fragment, "content");
+      fragmentTransaction.commit();
     }
-
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-    fragmentTransaction.add(R.id.frame_layout, RideDetailsFragment.newInstance(ride, RideDetailsFragment.REMOVE), "RideDetailsFragment");
-    fragmentTransaction.commit();
   }
 
   @Override

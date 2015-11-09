@@ -49,14 +49,14 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     this.start = (Location) getIntent().getExtras().get("start");
     this.end = (Location) getIntent().getExtras().get("end");
 
-
     if (savedInstanceState != null) {
-      fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
+      fragment = getSupportFragmentManager().findFragmentByTag("content");
+    } else {
+      fragment = DateTimeFragment.newInstance();
+      FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+      fragmentTransaction.add(R.id.frame_layout, fragment, "content");
+      fragmentTransaction.commit();
     }
-
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-    fragmentTransaction.add(R.id.frame_layout, DateTimeFragment.newInstance(), "DateTimeFragment");
-    fragmentTransaction.commit();
   }
 
   @Override
@@ -69,7 +69,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   public void onDateTimeSet(DateTime dateTime) {
     this.dateTime = dateTime;
     fragment = SeatsFragment.newInstance();
-    replaceFragment(fragment, "SeatsFragment");
+    replaceFragment(fragment, "content");
   }
 
   @Override
@@ -77,7 +77,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     this.cost = cost;
     this.seats = seats;
     fragment = NotesFragment.newInstance();
-    replaceFragment(fragment, "NotesFragment");
+    replaceFragment(fragment, "content");
   }
 
   @Override
@@ -85,7 +85,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     this.note = string;
     Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId(), null);
     fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
-    replaceFragment(fragment, "RideDetailsFragment");
+    replaceFragment(fragment, "content");
   }
 
   @Override

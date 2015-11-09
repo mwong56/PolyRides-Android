@@ -53,6 +53,11 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    if (savedInstanceState != null) {
+      this.dateTime = savedInstanceState.getParcelable("dateTime");
+      this.dateSet = savedInstanceState.getBoolean("dateSet");
+      this.timeSet = savedInstanceState.getBoolean("timeSet");
+    }
     setTime();
 
     if (getActivity() instanceof FindRideActivity) {
@@ -125,7 +130,10 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+    this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
     outState.putParcelable("dateTime", this.dateTime);
+    outState.putBoolean("dateSet", this.dateSet);
+    outState.putBoolean("timeSet", this.timeSet);
   }
 
 
