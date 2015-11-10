@@ -8,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MyRideActivity;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.mwong56.polyrides.views.DividerItemDecoration;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import org.parceler.Parcels;
@@ -24,6 +26,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 /**
@@ -33,6 +36,12 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
+
+  @Bind(R.id.no_my_rides)
+  LinearLayout noRidesView;
+
+  @Bind(R.id.progress_bar)
+  MaterialProgressBar progressBar;
 
   private List<Ride> rideList;
   private EasyRecyclerAdapter<Ride> adapter;
@@ -54,6 +63,7 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+    recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable.divider));
   }
 
   @Override
@@ -63,6 +73,9 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   }
 
   private void refreshRides() {
+    progressBar.setVisibility(View.VISIBLE);
+    noRidesView.setVisibility(View.GONE);
+
     polyRidesService.getRides(Calendar.getInstance().getTime(), true)
         .compose(bindToLifecycle())
         .subscribe(rides -> {
@@ -70,6 +83,13 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
           rideList.addAll(rides);
           //TODO: Sort.
           adapter.notifyDataSetChanged();
+          progressBar.setVisibility(View.GONE);
+
+          if (rides.size() == 0) {
+            noRidesView.setVisibility(View.VISIBLE);
+          } else {
+            noRidesView.setVisibility(View.GONE);
+          }
         }, error -> showToast(error));
   }
 

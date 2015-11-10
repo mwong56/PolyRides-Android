@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.MessageActivity;
@@ -15,12 +16,14 @@ import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.views.ChatViewHolder;
+import com.mwong56.polyrides.views.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 /**
@@ -30,6 +33,12 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
+
+  @Bind(R.id.progress_bar)
+  MaterialProgressBar progressBar;
+
+  @Bind(R.id.no_messages)
+  LinearLayout noMessageView;
 
   private final List<Chat> chatList = new ArrayList<>();
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
@@ -48,6 +57,7 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+    recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable.divider));
   }
 
   @Override
@@ -57,12 +67,22 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
   }
 
   private void refreshChats() {
+    progressBar.setVisibility(View.VISIBLE);
+    noMessageView.setVisibility(View.GONE);
+
     polyRidesService.getChats()
         .compose(bindToLifecycle())
         .subscribe(chats -> {
           chatList.clear();
           chatList.addAll(chats);
           adapter.notifyDataSetChanged();
+          progressBar.setVisibility(View.GONE);
+
+          if (chats.size() == 0) {
+            noMessageView.setVisibility(View.VISIBLE);
+          } else {
+            noMessageView.setVisibility(View.GONE);
+          }
         }, error -> showToast(error));
   }
 

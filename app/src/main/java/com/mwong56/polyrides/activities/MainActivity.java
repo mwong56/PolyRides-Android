@@ -36,13 +36,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-
     setSupportActionBar(toolbar);
     getSupportActionBar().setElevation(0);
 
     TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
     viewPager.setAdapter(adapter);
-    viewPager.setOffscreenPageLimit(4);
 
     tabLayout.setupWithViewPager(viewPager);
 

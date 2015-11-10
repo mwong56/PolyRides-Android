@@ -39,10 +39,11 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
   @Bind(R.id.chosen_time)
   TextView timeTextView;
 
-  private DateTimeListener listener;
   @State DateTime dateTime;
-  private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
   @State boolean dateSet, timeSet;
+
+  private DateTimeListener listener;
+  private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
   public interface DateTimeListener {
     void onDateTimeSet(DateTime dateTime);

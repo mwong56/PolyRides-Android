@@ -1,7 +1,141 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+  <LinearLayout
+      android:id="@+id/no_rides"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_margin="16dp"
+      android:gravity="center_vertical|center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+    <ImageView
+        android:layout_width="115dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/car_splash"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="No Rides to Show"
+        android:textColor="@color/PrimaryColor"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="There are no rides within 24 hours of your desired departure time. Please try another search."
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="12sp"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/no_my_rides"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_margin="16dp"
+      android:gravity="center_vertical|center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+    <ImageView
+        android:layout_width="115dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/car_splash"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="No Rides to Show"
+        android:textColor="@color/PrimaryColor"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="There are no rides within 24 hours. Create one now!"
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="12sp"/>
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/no_messages"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_margin="16dp"
+      android:gravity="center_vertical|center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+    <ImageView
+        android:id="@+id/splash"
+        android:layout_width="115dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/car_splash"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="No Messages to Show"
+        android:textColor="@color/PrimaryColor"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_horizontal"
+        android:text="Search for a ride and message a driver to start your first conversation!"
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="12sp"/>
+
+  </LinearLayout>
+
+  <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+      android:id="@+id/progress_bar"
+      style="@style/Widget.MaterialProgressBar.ProgressBar.Large"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_margin="16dp"
+      android:indeterminate="true"
+      android:visibility="gone"
+      app:mpb_progressStyle="circular"/>
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_view"

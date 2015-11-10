@@ -52,6 +52,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/conversation_list_name"
         android:layout_toLeftOf="@+id/conversation_list_badges"
+        android:textColor="@color/SecondaryText"
         android:lines="1"
         android:singleLine="true" />
 

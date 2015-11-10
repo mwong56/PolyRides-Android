@@ -6,34 +6,39 @@
                 android:orientation="vertical">
 
   <ImageView
-      android:layout_width="match_parent"
+      android:layout_width="300dp"
       android:layout_height="wrap_content"
       android:layout_above="@+id/splash"
       android:layout_gravity="center_horizontal"
       android:layout_margin="24dp"
       android:adjustViewBounds="true"
+      android:layout_centerHorizontal="true"
       android:scaleType="fitXY"
       android:src="@drawable/logo_big"/>
 
   <ImageView
       android:id="@+id/splash"
-      android:layout_width="match_parent"
-      android:layout_height="150dp"
+      android:layout_width="173dp"
+      android:layout_height="106dp"
+      android:layout_margin="16dp"
       android:layout_centerHorizontal="true"
       android:layout_centerVertical="true"
-      android:layout_margin="24dp"
       android:adjustViewBounds="true"
       android:scaleType="fitXY"
-      android:src="@drawable/car_splash"/>
+      android:src="@drawable/car_splash"
+      />
 
   <Button
       android:id="@+id/login"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@+id/splash"
-      style="?android:attr/borderlessButtonStyle"
+      android:layout_marginTop="8dp"
       android:layout_centerHorizontal="true"
-      android:text="    Log in with Facebook    "/>
+      android:background="@color/com_facebook_blue"
+      android:text="    Log in with Facebook    "
+      android:textColor="@android:color/white"/>
 
 
 </RelativeLayout>

@@ -59,6 +59,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       style="?android:attr/borderlessButtonStyle"
+      android:textColor="@color/PrimaryColor"
       android:text="Next"/>
 
 </LinearLayout>

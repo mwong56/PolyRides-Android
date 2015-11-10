@@ -5,7 +5,7 @@
     <item name="colorPrimary">@color/PrimaryColor</item>
     <item name="colorPrimaryDark">@color/PrimaryDarkColor</item>
     <item name="colorAccent">@color/PrimaryAccent</item>
-    <!--<item name="statusBarColor">@android:color/transparent</item>-->
+    <item name="android:textColor">@color/PrimaryText</item>
   </style>
 
   <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
