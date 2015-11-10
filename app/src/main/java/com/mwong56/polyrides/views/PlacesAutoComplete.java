@@ -100,4 +100,5 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     setThreshold(1000);
     this.post(() -> setText(location.getAddress()));
   }
+
 }

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -20,6 +18,7 @@ import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.OnActivityResultListener;
+import com.mwong56.polyrides.utils.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +46,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   private GoogleApiClient apiClient;
   private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
+  private StartEndViewListener listener;
 
   public StartEndView(Context context) {
     super(context);
@@ -62,10 +62,13 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
 
   public void setStartLocation(Location location) {
     this.startEditText.setLocation(location);
+    listener.onStartListener(location != null ? true : false);
   }
 
   public void setEndLocation(Location location) {
     this.endEditText.setLocation(location);
+    listener.onEndListener(location != null ? true : false);
+
   }
 
   /**
@@ -83,6 +86,10 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     this.fragment = fragment;
     this.startEditText.setup(client);
     this.endEditText.setup(client);
+  }
+
+  public void setListener(StartEndViewListener listener) {
+    this.listener = listener;
   }
 
   @OnLongClick(R.id.start)
@@ -109,7 +116,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
               setStartLocation(new Location(place, getContext()));
-              hideKeyboard();
+              Utils.hideKeyboard(this.activity);
             }, error -> showToast("Could not find location")));
   }
 
@@ -119,17 +126,8 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
               setEndLocation(new Location(place, getContext()));
-              hideKeyboard();
+              Utils.hideKeyboard(this.activity);
             }, error -> showToast("Could not find location")));
-  }
-
-  private void hideKeyboard() {
-    // Check if no view has focus:
-    View view = activity.getCurrentFocus();
-    if (view != null) {
-      InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
   }
 
   @Override
@@ -173,5 +171,10 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     } else if (requestCode == END_RESULT) {
       setEndLocation(location);
     }
+  }
+
+  public interface StartEndViewListener {
+    void onStartListener(boolean set);
+    void onEndListener(boolean set);
   }
 }
