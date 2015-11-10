@@ -6,6 +6,7 @@ import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
@@ -38,11 +39,11 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
     ButterKnife.bind(this);
 
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setTitle("Find Ride");
 
     this.start = (Location) getIntent().getExtras().get("start");
     this.end = (Location) getIntent().getExtras().get("end");
-
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
@@ -54,6 +55,28 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
     }
   }
 
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    //TODO: Dumb hack for skipping state restoration. Activities onSaveInstanceState aren't guaranteed
+    // need to save in onPause/onResume but don't have bundle.. Use shared preferences later.
+    if (!(fragment instanceof DateTimeFragment)) {
+      if (this.dateTime == null) {
+        openMainActivity();
+      }
+    }
+  }
 
   @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -82,5 +105,11 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
     Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
     i.putExtra("groupId", groupId);
     startActivity(i);
+  }
+
+  private void openMainActivity() {
+    Intent i = new Intent(FindRideActivity.this, MainActivity.class);
+    startActivity(i);
+    finish();
   }
 }

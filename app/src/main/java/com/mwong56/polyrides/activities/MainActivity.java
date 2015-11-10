@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     ButterKnife.bind(this);
 
     setSupportActionBar(toolbar);
+    getSupportActionBar().setElevation(0);
 
     TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
     viewPager.setAdapter(adapter);

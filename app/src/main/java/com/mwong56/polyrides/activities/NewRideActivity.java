@@ -6,6 +6,7 @@ import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
@@ -51,6 +52,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     onRestoreInstanceState(savedInstanceState);
 
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     setTitle("New Ride");
 
     this.start = (Location) getIntent().getExtras().get("start");
@@ -63,6 +65,17 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
+    }
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
   }
 

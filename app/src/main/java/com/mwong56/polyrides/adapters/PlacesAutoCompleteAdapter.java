@@ -121,6 +121,10 @@ public class PlacesAutoCompleteAdapter
     // Note that getPrimaryText() and getSecondaryText() return a CharSequence that may contain
     // styling based on the given CharacterStyle.
 
+    if (position > this.mResultList.size()) {
+      return row;
+    }
+
     AutocompletePrediction item = getItem(position);
 
     TextView textView1 = (TextView) row.findViewById(android.R.id.text1);

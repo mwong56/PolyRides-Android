@@ -118,6 +118,17 @@ public class MessageActivity extends BaseRxActivity {
   }
 
   @Override
+  public void onBackPressed() {
+    openMainActivity();
+  }
+
+  private void openMainActivity() {
+    Intent i = new Intent(MessageActivity.this, MainActivity.class);
+    startActivity(i);
+    finish();
+  }
+
+  @Override
   protected void onResume() {
     super.onResume();
     ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(this.groupId);

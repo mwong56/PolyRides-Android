@@ -54,15 +54,23 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+  }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    refreshRides();
+  }
+
+  private void refreshRides() {
     polyRidesService.getRides(Calendar.getInstance().getTime(), true)
         .compose(bindToLifecycle())
         .subscribe(rides -> {
+          rideList.clear();
           rideList.addAll(rides);
           //TODO: Sort.
           adapter.notifyDataSetChanged();
         }, error -> showToast(error));
-
   }
 
   @Nullable
