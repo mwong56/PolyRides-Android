@@ -22,7 +22,7 @@ import uk.co.ribot.easyadapter.annotations.ViewId;
 /**
  * Created by micha on 10/23/2015.
  */
-@LayoutId(R.layout.list_item_messages)
+@LayoutId(R.layout.list_item_chats)
 public class ChatViewHolder extends ItemViewHolder<Chat> {
 
   @ViewId(R.id.conversation_list_avatar)

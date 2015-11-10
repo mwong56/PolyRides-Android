@@ -85,4 +85,5 @@ dependencies {
     compile "org.parceler:parceler-api:1.0.3"
     apt "org.parceler:parceler:1.0.3"
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+    compile 'com.github.traex.rippleeffect:library:1.3'
 }
