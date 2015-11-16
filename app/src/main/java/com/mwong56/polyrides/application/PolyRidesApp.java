@@ -23,7 +23,7 @@ public class PolyRidesApp extends Application {
     // Enable Local Datastore.
     Parse.enableLocalDatastore(this);
 
-    Parse.initialize(this, "7OAm6NrMXr29nbc6As83oPjGTZBHk5ZHgNpMn8Aw", "K2MVOxHv29ogGzUut5JSNPjIX3IRcl1yaSDQCOVe");
+    Parse.initialize(this, "tNVCuf8tnZgADqVCuBUegChrNis54koIAqnGzSJ3", "pghidrtoMmpnst4uebxV5oiwtsbnNMZKxs53Yxs6");
     ParseInstallation.getCurrentInstallation().saveInBackground();
     ParseFacebookUtils.initialize(this);
     Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
