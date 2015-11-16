@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.MessageActivity;
 import com.mwong56.polyrides.application.PolyRidesApp;
 
@@ -32,10 +33,10 @@ public class MessageReceiver extends BroadcastReceiver {
       JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
       String alert = json.getString("alert");
-      String groupId = json.getString("groupId");
+      String groupId = json.isNull("groupId") ? null : json.getString("groupId");
 
       String applicationGroupId = ((PolyRidesApp) context.getApplicationContext()).getMessageGroupIdInForeground();
-      if (applicationGroupId != null) {
+      if (applicationGroupId != null && groupId != null) {
         if (applicationGroupId.equals(groupId)) {
           return;
         }
@@ -52,10 +53,15 @@ public class MessageReceiver extends BroadcastReceiver {
               BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
           .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(userName)
           .setContentText(message).setAutoCancel(true).setSound(soundUri)
-          .setVibrate(new long[] { 0, 100, 200, 300 });
+          .setVibrate(new long[]{0, 100, 200, 300});
 
-      Intent i = new Intent(context, MessageActivity.class);
-      i.putExtra("groupId", groupId);
+      Intent i;
+      if (groupId != null) {
+        i = new Intent(context, MessageActivity.class);
+        i.putExtra("groupId", groupId);
+      } else {
+        i = new Intent(context, MainActivity.class);
+      }
 
       PendingIntent pIntent = PendingIntent.getActivity(context, 0, i,
           PendingIntent.FLAG_CANCEL_CURRENT);
