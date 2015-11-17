@@ -1,0 +1,29 @@
+<resources>
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/PrimaryColor</item>
+    <item name="colorPrimaryDark">@color/PrimaryDarkColor</item>
+    <item name="colorAccent">@color/PrimaryAccent</item>
+    <item name="android:textColor">@color/PrimaryText</item>
+  </style>
+
+  <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+    <item name="tabMaxWidth">@dimen/design_tab_max_width</item>
+    <item name="tabIndicatorColor">@color/PrimaryAccent</item>
+    <item name="tabIndicatorHeight">2dp</item>
+    <item name="tabPaddingStart">12dp</item>
+    <item name="tabPaddingEnd">12dp</item>
+    <item name="tabBackground">@color/PrimaryColor</item>
+    <item name="tabTextAppearance">@style/CustomTabLayoutTextAppearance</item>
+    <item name="tabSelectedTextColor">@color/PrimaryAccent</item>
+  </style>
+
+  <style name="CustomTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
+    <item name="android:textSize">11sp</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="textAllCaps">true</item>
+  </style>
+
+
+</resources>
