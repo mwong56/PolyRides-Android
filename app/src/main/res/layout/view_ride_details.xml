@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mwong56.polyrides.views.RideDetailsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <TextView
+      android:id="@+id/name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:textSize="22sp"/>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_centerHorizontal="true"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"/>
+  </RelativeLayout>
+
+  <TextView
+      android:id="@+id/location"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center_horizontal"
+      android:textSize="22sp"/>
+
+  <TextView
+      android:id="@+id/date"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center_horizontal"
+      android:textSize="18sp"/>
+
+  <TextView
+      android:id="@+id/time"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:textSize="18sp"/>
+
+  <TextView
+      android:id="@+id/seat"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="14dp"
+      android:gravity="center_horizontal"
+      android:textSize="18sp"/>
+
+  <TextView
+      android:id="@+id/cost"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:textSize="18sp"/>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:layout_marginTop="14dp"
+      android:text="Notes:"
+      android:textSize="18sp"/>
+
+  <TextView
+      android:id="@+id/note"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:textSize="16sp"/>
+
+</com.mwong56.polyrides.views.RideDetailsView>
