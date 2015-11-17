@@ -1,11 +1,12 @@
 package com.mwong56.polyrides.views;
 
+import android.app.Activity;
 import android.content.Context;
-import android.location.Geocoder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -17,8 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.mwong56.polyrides.adapters.PlacesAutoCompleteAdapter;
 import com.mwong56.polyrides.models.Location;
-
-import java.util.Locale;
+import com.mwong56.polyrides.utils.Utils;
 
 /**
  * Created by micha on 10/9/2015.
@@ -26,11 +26,11 @@ import java.util.Locale;
 public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
 
   private static final String TAG = PlacesAutoComplete.class.getSimpleName();
-  private GoogleApiClient client;
   private PlacesAutoCompleteAdapter adapter;
   private Location location;
-  private Geocoder geocoder;
+  private boolean watchText;
 
+  //TODO: change this to an address that is relevant.
   private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
       new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
 
@@ -46,20 +46,14 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     super(context, attrs, defStyleAttr);
   }
 
-  public void setup(GoogleApiClient client) {
-    this.client = client;
-    //TODO: grab user location instead of passing predefined.
+  public void setup(final GoogleApiClient client, final Activity activity) {
     adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_GREATER_SYDNEY, null);
-    if (Geocoder.isPresent()) {
-      geocoder = new Geocoder(getContext(), Locale.ENGLISH);
-    }
-
     this.setAdapter(adapter);
 
     this.setOnItemClickListener((parent, view, position, id) -> {
+      Utils.hideKeyboard(activity);
       final AutocompletePrediction item = adapter.getItem(position);
       final String placeId = item.getPlaceId();
-      final CharSequence primaryText = item.getPrimaryText(null);
 
       PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
           .getPlaceById(client, placeId);
@@ -70,24 +64,33 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
           return;
         }
         final Place place1 = places.get(0);
-        Log.i(TAG, "Place details received: " + place1.getName());
         setLocation(new Location(place1, getContext()));
         places.release();
       });
-
-      Toast.makeText(getContext(), "Clicked: " + primaryText,
-          Toast.LENGTH_SHORT).show();
-      Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
     });
 
-    this.setOnKeyListener((v, keyCode, event) -> {
-      if (PlacesAutoComplete.this.location != null) {
-        PlacesAutoComplete.this.location = null;
-        setThreshold(1);
-        Toast.makeText(getContext(), "Resetted place",
-            Toast.LENGTH_SHORT).show();
+    this.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
-      return false;
+
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (isPerformingCompletion()) {
+          return;
+        }
+
+        //User typed, reset the saved location.
+        if (PlacesAutoComplete.this.location != null && watchText) {
+          PlacesAutoComplete.this.location = null;
+          watchText = false;
+          enableSuggestions(true);
+        }
+      }
+
+      @Override
+      public void afterTextChanged(Editable s) {
+      }
     });
   }
 
@@ -97,8 +100,15 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
 
   public void setLocation(Location location) {
     this.location = location;
-    setThreshold(1000);
-    this.post(() -> setText(location.getAddress()));
+    enableSuggestions(false);
+    this.post(() -> {
+      setText(location.getAddress());
+      watchText = true;
+    });
+  }
+
+  private void enableSuggestions(boolean enabled) {
+    setThreshold(enabled ? 1 : 1000);
   }
 
 }

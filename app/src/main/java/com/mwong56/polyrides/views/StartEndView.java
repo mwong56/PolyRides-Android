@@ -62,12 +62,14 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
 
   public void setStartLocation(Location location) {
     this.startEditText.setLocation(location);
-    listener.onStartListener(location != null ? true : false);
+    if (listener != null)
+      listener.onStartListener(location != null ? true : false);
   }
 
   public void setEndLocation(Location location) {
     this.endEditText.setLocation(location);
-    listener.onEndListener(location != null ? true : false);
+    if (listener != null)
+      listener.onEndListener(location != null ? true : false);
 
   }
 
@@ -84,8 +86,8 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;
-    this.startEditText.setup(client);
-    this.endEditText.setup(client);
+    this.startEditText.setup(client, activity);
+    this.endEditText.setup(client, activity);
   }
 
   public void setListener(StartEndViewListener listener) {
