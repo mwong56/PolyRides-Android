@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.FindRideActivity;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
@@ -46,6 +48,7 @@ public class PassengerRidesFragment extends BaseRxFragment {
   private DateTime dateTime;
   private EasyRecyclerAdapter<Ride> adapter;
   private List<Ride> rideList;
+  private FindRideActivity activity;
 
   public static PassengerRidesFragment newInstance(Location start, Location end, DateTime dateTime) {
     Bundle args = new Bundle();
@@ -75,6 +78,18 @@ public class PassengerRidesFragment extends BaseRxFragment {
   }
 
   @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    this.activity = (FindRideActivity) activity;
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    activity = null;
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
     refreshRides();
@@ -89,7 +104,7 @@ public class PassengerRidesFragment extends BaseRxFragment {
         .subscribe(rides -> {
           rideList.clear();
           rideList.addAll(rides);
-          //TODO: Sort.
+          //TODO: Sort. You can pull start and end location and date time from activity.getStart(), getEnd(), getDateTime().
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 
