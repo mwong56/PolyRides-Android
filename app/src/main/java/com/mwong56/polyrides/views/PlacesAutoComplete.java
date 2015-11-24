@@ -83,7 +83,6 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
         //User typed, reset the saved location.
         if (PlacesAutoComplete.this.location != null && watchText) {
           PlacesAutoComplete.this.location = null;
-          watchText = false;
           enableSuggestions(true);
         }
       }
@@ -99,6 +98,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setLocation(Location location) {
+    watchText = false;
     this.location = location;
     enableSuggestions(false);
     this.post(() -> {
@@ -109,6 +109,10 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
 
   private void enableSuggestions(boolean enabled) {
     setThreshold(enabled ? 1 : 1000);
+
+    if(!enabled) {
+      this.clearFocus();
+    }
   }
 
 }
