@@ -13,10 +13,16 @@ import com.tumblr.remember.Remember;
 public class PolyRidesApp extends Application {
 
   public String messageGroupIdInForeground = null;
+  public static PolyRidesApp INSTANCE = null;
+
+
 
   @Override
   public void onCreate() {
     super.onCreate();
+    if (INSTANCE == null) {
+      INSTANCE = this;
+    }
 
     Remember.init(getApplicationContext(), "com.mwong56.polyrides");
 

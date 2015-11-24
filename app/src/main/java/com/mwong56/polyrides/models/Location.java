@@ -8,6 +8,7 @@ import android.os.Parcelable;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
+import com.mwong56.polyrides.application.PolyRidesApp;
 
 import java.util.Locale;
 
@@ -23,6 +24,21 @@ public class Location implements Parcelable {
   public Location(double lat, double lng, String city) {
     latLng = new LatLng(lat, lng);
     this.city = city;
+    if (this.city == null || this.city.length() == 0) {
+      Geocoder geocoder = new Geocoder(PolyRidesApp.INSTANCE.getBaseContext(), Locale.ENGLISH);
+      if (geocoder != null) {
+        LatLng temp = this.latLng;
+        Address address;
+        try {
+          address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
+          if (address.getLocality() != null && address.getLocality().length() > 0) {
+            this.city = address.getLocality();
+          }
+        } catch (Exception e) {
+          // do nothing.
+        }
+      }
+    }
   }
 
 
