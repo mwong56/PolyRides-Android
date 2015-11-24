@@ -155,7 +155,8 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
     this.monthOfYear = monthOfYear;
     this.dayOfMonth = dayOfMonth;
     this.dateSet = true;
-    dateTextView.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
+    this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+    dateTextView.setText(dateTime.printDate());
   }
 
   @Override
@@ -164,6 +165,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
     this.hourOfDay = hourOfDay;
     this.minute = minute;
     this.timeSet = true;
-    timeTextView.setText(hourOfDay + ":" + minute);
+    this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+    timeTextView.setText(dateTime.printTime());
   }
 }

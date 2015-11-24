@@ -3,6 +3,7 @@ package com.mwong56.polyrides.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -87,11 +88,13 @@ public class DateTime implements Parcelable {
 
 
   public String printDate() {
-    return (month + 1) + "/" + day + "/" + year;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    return dateFormat.format(getDate());
   }
 
   public String printTime() {
-    return hour + ":" + minute;
+    SimpleDateFormat sdf = new SimpleDateFormat("h:mm");
+    return sdf.format(getDate());
   }
 
   public Date getDate() {
