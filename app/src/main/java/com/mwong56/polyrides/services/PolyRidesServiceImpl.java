@@ -327,6 +327,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("startCity", ride.getStart().getCity());
           newRide.put("endCity", ride.getEnd().getCity());
           newRide.put("dateTime", ride.getDate());
+          newRide.put("createdAt", Calendar.getInstance().getTime());
           newRide.put("cost", ride.getCost());
           newRide.put("seats", ride.getSeats());
           newRide.put("notes", ride.getNote());
