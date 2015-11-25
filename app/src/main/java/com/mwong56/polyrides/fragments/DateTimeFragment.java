@@ -3,6 +3,7 @@ package com.mwong56.polyrides.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
         now.get(Calendar.MONTH),
         now.get(Calendar.DAY_OF_MONTH)
     );
+    dpd.setAccentColor(ContextCompat.getColor(getContext(), R.color.PrimaryColor));
     dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
   }
 
@@ -111,6 +113,7 @@ public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTim
         now.get(Calendar.MINUTE),
         false
     );
+    tpd.setAccentColor(ContextCompat.getColor(getContext(), R.color.PrimaryColor));
     tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
   }
 
