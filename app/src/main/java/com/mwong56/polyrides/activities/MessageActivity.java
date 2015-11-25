@@ -32,6 +32,7 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -134,7 +135,9 @@ public class MessageActivity extends BaseRxActivity {
     ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(this.groupId);
     this.registerReceiver(receiver, Utils.buildParseIntentFilter());
     polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
-        .subscribe(v -> {}, error -> {});
+        .subscribe(v -> {
+        }, error -> {
+        });
     refreshMessages();
   }
 
@@ -174,7 +177,8 @@ public class MessageActivity extends BaseRxActivity {
   void onSendClick() {
     if (validateMessage()) {
       String text = messageText.getText().toString();
-      Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName());
+      Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName(),
+          Calendar.getInstance().getTime());
       updateDatabase(message);
       adapter.addMessage(message);
       recyclerView.scrollToPosition(messageList.size() - 1);
@@ -193,7 +197,7 @@ public class MessageActivity extends BaseRxActivity {
     Observable.mergeDelayError(polyRidesService.saveMessage(message),
         polyRidesService.sendPush(this.otherId, User.getUserName(),
             this.groupId, message.getText()))
-            .subscribe(doNothingOnNextAction, onError -> showToast(onError));
+        .subscribe(doNothingOnNextAction, onError -> showToast(onError));
 
     if (this.chat == null) {
       this.chat = new Chat(this.groupId, message.getText(), User.getUserId());

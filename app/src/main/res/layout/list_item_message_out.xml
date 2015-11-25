@@ -5,10 +5,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
     android:paddingTop="2dp">
 
   <LinearLayout
@@ -38,10 +38,11 @@
 
       <LinearLayout
           android:id="@+id/message_block"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentRight="true"
           android:layout_marginRight="44dp"
+          android:background="@drawable/message_sent_2"
           android:clipChildren="false"
           android:clipToPadding="false"
           android:gravity="right"
@@ -52,33 +53,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="all"
-            android:background="@drawable/message_sent_2"
             android:gravity="center_vertical"
             android:linksClickable="true"/>
 
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignRight="@+id/message_block"
-          android:layout_below="@+id/message_block"
-          android:layout_marginRight="16dp"
-          android:layout_marginTop="2dp"
-          android:gravity="left"
-          android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/date_view"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="3dip"
-            android:singleLine="true"/>
+            android:layout_alignRight="@+id/message_block"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="2dp"
+            android:gravity="left"
+            android:orientation="horizontal">
 
+          <TextView
+              android:id="@+id/date_view"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:paddingRight="3dip"
+              android:textColor="@android:color/darker_gray"
+              android:singleLine="true"/>
+
+        </LinearLayout>
       </LinearLayout>
-
     </RelativeLayout>
-
   </LinearLayout>
-
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.mwong56.polyrides.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.FindRideActivity;
@@ -23,12 +25,16 @@ import butterknife.OnClick;
 /**
  * Created by micha on 10/9/2015.
  */
-public class PassengerFragment extends Fragment {
+public class PassengerFragment extends Fragment implements StartEndView.StartEndViewListener {
 
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
 
+  @Bind(R.id.find_ride_button)
+  Button findRideButton;
+
   private MainActivity activity;
+  private boolean startSet, endSet;
 
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
@@ -39,10 +45,11 @@ public class PassengerFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
 
     startEndView.setup(activity, activity.getGoogleApiClient(), this);
+    startEndView.setListener(this);
 
     if (savedInstanceState != null) {
       Parcelable[] parcelables = savedInstanceState.getParcelableArray("locations");
-      Location[] locations = new Location[] {(Location)parcelables[0], (Location)parcelables[1]};
+      Location[] locations = new Location[]{(Location) parcelables[0], (Location) parcelables[1]};
 
       if (locations[0] != null) {
         startEndView.setStartLocation(locations[0]);
@@ -62,9 +69,9 @@ public class PassengerFragment extends Fragment {
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    this.activity = (MainActivity) activity;
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    this.activity = (MainActivity) context;
   }
 
   @Override
@@ -99,5 +106,32 @@ public class PassengerFragment extends Fragment {
     if (resultCode == Activity.RESULT_OK) {
       startEndView.onActivityResultCalled(requestCode, data);
     }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    validateNextButton();
+  }
+
+  private void validateNextButton() {
+    if (!startSet || !endSet) {
+      findRideButton.setTextColor(getResources().getColor(R.color.PrimaryAccent));
+    } else {
+      findRideButton.setTextColor(getResources().getColor(R.color.PrimaryColor));
+    }
+  }
+
+
+  @Override
+  public void onStartListener(boolean set) {
+    startSet = set;
+    validateNextButton();
+  }
+
+  @Override
+  public void onEndListener(boolean set) {
+    endSet = set;
+    validateNextButton();
   }
 }
