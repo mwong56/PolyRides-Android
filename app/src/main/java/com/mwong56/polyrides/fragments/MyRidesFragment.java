@@ -22,8 +22,6 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -75,6 +73,9 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   }
 
   private void refreshRides() {
+    rideList.clear();
+    adapter.notifyDataSetChanged();
+
     progressBar.setVisibility(View.VISIBLE);
     noRidesView.setVisibility(View.GONE);
 

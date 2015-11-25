@@ -61,11 +61,8 @@ public class NotesFragment extends Fragment {
     super.onDetach();
   }
 
-
   @OnClick(R.id.next_button)
   void onNextClicked() {
     listener.onNotesSet(noteView.getText().toString());
   }
-
-
 }
