@@ -66,8 +66,6 @@ dependencies {
     //Parse
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
-    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
-    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
 
     //Square
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -76,6 +74,7 @@ dependencies {
     compile 'com.squareup:otto:1.3.8'
 
     //Misc
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.wdullaer:materialdatetimepicker:1.5.3'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile (group: 'com.tumblr', name: 'remember', version: '1.0.0', ext: 'aar')
