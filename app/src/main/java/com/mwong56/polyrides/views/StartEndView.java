@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -23,7 +24,6 @@ import com.mwong56.polyrides.utils.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -36,11 +36,13 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   private static final String TAG = "StartEndLayout";
 
   @Bind(R.id.start)
-  PlacesAutoComplete startEditText;
+  AppCompatEditText startEditText;
 
   @Bind(R.id.end)
-  PlacesAutoComplete endEditText;
+  AppCompatEditText endEditText;
 
+  private Location startLocation;
+  private Location endLocation;
   private Activity activity;
   private Fragment fragment;
   private GoogleApiClient apiClient;
@@ -61,16 +63,17 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   }
 
   public void setStartLocation(Location location) {
-    this.startEditText.setLocation(location);
+    this.startLocation = location;
+    this.startEditText.setText(location.getAddress());
     if (listener != null)
       listener.onStartListener(location != null ? true : false);
   }
 
   public void setEndLocation(Location location) {
-    this.endEditText.setLocation(location);
+    this.endLocation = location;
+    this.endEditText.setText(location.getAddress());
     if (listener != null)
       listener.onEndListener(location != null ? true : false);
-
   }
 
   /**
@@ -79,31 +82,29 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
    * @return An array containing start and end place. Index 1 is start, Index 2 is end.
    */
   public Location[] getPlaces() {
-    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
+    return new Location[]{this.startLocation, this.endLocation};
   }
 
   public void setup(Activity activity, GoogleApiClient client, Fragment fragment) {
     this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;
-    this.startEditText.setup(client, activity);
-    this.endEditText.setup(client, activity);
+    this.startEditText.setFocusable(false);
+    this.endEditText.setFocusable(false);
   }
 
   public void setListener(StartEndViewListener listener) {
     this.listener = listener;
   }
 
-  @OnLongClick(R.id.start)
-  boolean onStartLongClick() {
+  @OnClick(R.id.start)
+  void onStartClick() {
     showPickerDialog(START_RESULT);
-    return true;
   }
 
-  @OnLongClick(R.id.end)
-  boolean onEndLongClick() {
+  @OnClick(R.id.end)
+  void onEndClick() {
     showPickerDialog(END_RESULT);
-    return true;
   }
 
   @Override
@@ -159,7 +160,6 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
       showToast("Please install Google Play Services.");
     }
   }
-
 
   private void showToast(String error) {
     Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
