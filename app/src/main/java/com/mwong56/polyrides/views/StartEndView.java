@@ -19,7 +19,6 @@ import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.OnActivityResultListener;
-import com.mwong56.polyrides.utils.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -111,26 +110,6 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-  }
-
-  @OnClick(R.id.start_location)
-  void setStart() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              setStartLocation(new Location(place, getContext()));
-              Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
-  }
-
-  @OnClick(R.id.end_location)
-  void setEnd() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              setEndLocation(new Location(place, getContext()));
-              Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
   }
 
   @Override

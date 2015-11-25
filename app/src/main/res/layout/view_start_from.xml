@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -13,9 +13,8 @@
       android:orientation="horizontal">
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
       <android.support.v7.widget.AppCompatEditText
           android:id="@+id/start"
@@ -25,21 +24,6 @@
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
-
-    <com.andexert.library.RippleView
-        rv_centered="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
-
-      <ImageView
-          android:id="@+id/start_location"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="9dp"
-          android:background="@drawable/ic_communication_location_on"/>
-
-    </com.andexert.library.RippleView>
   </LinearLayout>
 
   <LinearLayout
@@ -49,9 +33,8 @@
       android:orientation="horizontal">
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
       <android.support.v7.widget.AppCompatEditText
           android:id="@+id/end"
@@ -62,19 +45,5 @@
 
     </android.support.design.widget.TextInputLayout>
 
-
-    <com.andexert.library.RippleView
-        rv_centered="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
-
-      <ImageView
-          android:id="@+id/end_location"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="9dp"
-          android:background="@drawable/ic_communication_location_on"/>
-    </com.andexert.library.RippleView>
   </LinearLayout>
 </com.mwong56.polyrides.views.StartEndView>
