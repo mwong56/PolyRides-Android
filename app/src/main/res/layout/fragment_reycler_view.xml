@@ -16,11 +16,12 @@
       android:visibility="gone">
 
     <ImageView
-        android:layout_width="115dp"
-        android:layout_height="70dp"
+        android:layout_width="180dp"
+        android:layout_height="90dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
+        android:layout_marginBottom="8dp"
         android:scaleType="fitXY"
         android:src="@drawable/car_splash"/>
 
@@ -36,7 +37,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:gravity="center_horizontal"
         android:text="There are no rides within 24 hours of your desired departure time. Please try another search."
         android:textColor="@android:color/secondary_text_dark"
@@ -56,12 +57,13 @@
       android:visibility="gone">
 
     <ImageView
-        android:layout_width="115dp"
-        android:layout_height="70dp"
+        android:layout_width="180dp"
+        android:layout_height="90dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:layout_marginBottom="8dp"
+        android:scaleType="centerInside"
         android:src="@drawable/car_splash"/>
 
     <TextView
@@ -74,11 +76,11 @@
         android:textSize="20sp"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:gravity="center_horizontal"
-        android:text="There are no rides within 24 hours. Create one now!"
+        android:text="You have no currently active rides. When you offer a ride using the driver tab, your ride will appear here."
         android:textColor="@android:color/secondary_text_dark"
         android:textSize="12sp"/>
 
@@ -97,29 +99,31 @@
 
     <ImageView
         android:id="@+id/splash"
-        android:layout_width="115dp"
-        android:layout_height="70dp"
+        android:layout_width="280dp"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop="-24dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/car_splash"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/message_big"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
-        android:text="No Messages to Show"
+        android:layout_marginTop="-16dp"
+        android:text="No Messages"
         android:textColor="@color/PrimaryColor"
         android:textSize="20sp"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:gravity="center_horizontal"
-        android:text="Search for a ride and message a driver to start your first conversation!"
+        android:text="When you message a driver through the passenger tab, your messages will appear here."
         android:textColor="@android:color/secondary_text_dark"
         android:textSize="12sp"/>
 
