@@ -134,6 +134,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       toSave.put("otherUserId", otherUserId);
       toSave.put("otherUserName", otherUserName);
       toSave.put("userId", userId);
+      toSave.put("updatedAction", Calendar.getInstance().getTime());
+
 
       try {
         toSave.save();
@@ -168,6 +170,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
       object.put("lastMessage", chat.getLastMessage());
       object.put("lastUserId", chat.getLastUserId());
+      object.put("updatedAction", Calendar.getInstance().getTime());
 
       try {
         object.save();
@@ -327,11 +330,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("startCity", ride.getStart().getCity());
           newRide.put("endCity", ride.getEnd().getCity());
           newRide.put("dateTime", ride.getDate());
-          newRide.put("createdAt", Calendar.getInstance().getTime());
           newRide.put("cost", ride.getCost());
           newRide.put("seats", ride.getSeats());
           newRide.put("notes", ride.getNote());
           newRide.put("userId", ride.getUserId());
+          newRide.put("name", User.getUserName());
           newRide.saveInBackground(e -> {
             if (e != null) {
               subscriber.onError(e);
