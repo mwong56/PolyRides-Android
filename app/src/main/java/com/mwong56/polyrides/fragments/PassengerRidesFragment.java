@@ -19,6 +19,8 @@ import com.mwong56.polyrides.views.DividerItemDecoration;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -57,6 +59,14 @@ public class PassengerRidesFragment extends BaseRxFragment {
     return fragment;
   }
 
+  public Location getStart() {
+    return start;
+  }
+
+  public Location getEnd() {
+    return end;
+  }
+
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -89,7 +99,15 @@ public class PassengerRidesFragment extends BaseRxFragment {
         .subscribe(rides -> {
           rideList.clear();
           rideList.addAll(rides);
-          //TODO: Sort.
+          Collections.sort(rideList, new Comparator<Ride>() {
+            @Override
+            public int compare(Ride r1, Ride r2) {
+              double distance1 = r1.getStart().getDistanceTo(start) + r1.getEnd().getDistanceTo(end);
+              double distance2 = r2.getStart().getDistanceTo(start) + r2.getEnd().getDistanceTo(end);
+
+              return distance1 < distance2 ? -1 : 1;
+            }
+          });
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 

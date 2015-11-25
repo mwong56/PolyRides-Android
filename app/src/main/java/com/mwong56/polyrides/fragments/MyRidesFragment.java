@@ -22,6 +22,8 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -81,7 +83,6 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
         .subscribe(rides -> {
           rideList.clear();
           rideList.addAll(rides);
-          //TODO: Sort.
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 

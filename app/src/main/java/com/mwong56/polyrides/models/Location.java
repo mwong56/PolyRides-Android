@@ -67,6 +67,13 @@ public class Location implements Parcelable {
     }
   }
 
+  /**
+   * Returns the distance to the other location (in meters).
+   */
+  public double getDistanceTo(Location other) {
+    return this.toLocation().distanceTo(other.toLocation());
+  }
+
   public android.location.Location toLocation() {
     android.location.Location location = new android.location.Location(city);
     location.setLatitude(latLng.latitude);
