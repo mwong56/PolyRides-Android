@@ -55,6 +55,18 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
     }
   }
 
+  public Location getStart() {
+    return start;
+  }
+
+  public Location getEnd() {
+    return end;
+  }
+
+  public DateTime getDateTime() {
+    return dateTime;
+  }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
