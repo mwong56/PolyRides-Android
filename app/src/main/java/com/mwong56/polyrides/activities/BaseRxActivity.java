@@ -35,6 +35,7 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
   protected void replaceFragment(Fragment fragment, String tag) {
     getSupportFragmentManager()
         .beginTransaction()
+        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
         .replace(R.id.frame_layout, fragment, tag)
         .addToBackStack(tag)
         .commit();

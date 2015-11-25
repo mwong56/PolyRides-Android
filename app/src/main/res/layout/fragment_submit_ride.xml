@@ -8,8 +8,8 @@
               android:paddingTop="32dp">
 
   <include
-      layout="@layout/view_ride_details"
       android:id="@+id/ride_details_view"
+      layout="@layout/view_ride_details"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"/>
 
@@ -20,12 +20,13 @@
 
     <Button
         android:id="@+id/ride_details_button"
-        android:layout_width="match_parent"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/PrimaryColor"
-        style="?android:attr/borderlessButtonStyle"
-        android:text="Submit Ride"/>
+        android:layout_gravity="center_horizontal"
+        android:text="Submit Ride"
+        android:textColor="@color/PrimaryColor"/>
 
   </RelativeLayout>
 
