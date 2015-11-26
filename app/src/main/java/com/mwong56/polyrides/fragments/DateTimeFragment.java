@@ -2,7 +2,6 @@ package com.mwong56.polyrides.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ import icepick.State;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DateTimeFragment extends Fragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
   @Bind(R.id.header_image)
   ImageView headerImageView;

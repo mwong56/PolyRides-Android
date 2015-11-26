@@ -2,7 +2,6 @@ package com.mwong56.polyrides.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import icepick.State;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SeatsFragment extends Fragment {
+public class SeatsFragment extends BaseRxFragment {
 
   @Bind(R.id.cost)
   EditText costEditText;
