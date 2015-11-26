@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -61,6 +62,8 @@ public class LoginActivity extends BaseRxActivity {
                   .subscribe(new DoNothingOnNextAction(), error -> showToast(error));
               User.setUserId(pair.first);
               User.setUserName(pair.second);
+              Crashlytics.setUserIdentifier(pair.first);
+              Crashlytics.setUserName(pair.second);
               startMainActivity();
             }, error -> showToast(error));
       }
@@ -75,7 +78,6 @@ public class LoginActivity extends BaseRxActivity {
         showToast(exception);
       }
     });
-
   }
 
   @Override

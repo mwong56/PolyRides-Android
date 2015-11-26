@@ -97,6 +97,9 @@
         <action android:name="com.parse.push.intent.DELETE"/>
       </intent-filter>
     </receiver>
-  </application>
+      <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="7686c30289688a38799c64b5e11aaf5bcbe4fd99" />
+    </application>
 
 </manifest>

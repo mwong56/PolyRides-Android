@@ -3,12 +3,14 @@ package com.mwong56.polyrides.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tumblr.remember.Remember;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by micha on 10/13/2015.
@@ -27,6 +29,7 @@ public class PolyRidesApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    Fabric.with(this, new Crashlytics());
     if (INSTANCE == null) {
       INSTANCE = this;
     }
