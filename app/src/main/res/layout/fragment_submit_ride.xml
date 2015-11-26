@@ -14,21 +14,15 @@
       android:layout_height="wrap_content"/>
 
 
-  <RelativeLayout
+  <Button
+      android:id="@+id/ride_details_button"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
-      android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/ride_details_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:text="Submit Ride"
-        android:textColor="@color/PrimaryColor"/>
-
-  </RelativeLayout>
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_gravity="center_horizontal"
+      android:text="Submit Ride"
+      android:textColor="@color/PrimaryColor"/>
 
 
 </LinearLayout>

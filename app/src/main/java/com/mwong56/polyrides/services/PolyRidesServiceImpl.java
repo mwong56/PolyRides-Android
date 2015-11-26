@@ -282,6 +282,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
     Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
       query.whereEqualTo("groupId", groupId);
+      query.addAscendingOrder("createdAt");
 
       try {
         List<Message> messageList = new ArrayList<>();

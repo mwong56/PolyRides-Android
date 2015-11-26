@@ -135,9 +135,7 @@ public class MessageActivity extends BaseRxActivity {
     ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(this.groupId);
     this.registerReceiver(receiver, Utils.buildParseIntentFilter());
     polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
-        .subscribe(v -> {
-        }, error -> {
-        });
+        .subscribe(new DoNothingOnNextAction(), error -> {});
     refreshMessages();
   }
 
