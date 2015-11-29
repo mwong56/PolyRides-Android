@@ -1,0 +1,36 @@
+Applications Memory Usage (kB):
+Uptime: 56174122 Realtime: 56507771
+
+** MEMINFO in pid 31953 [com.mwong56.polyrides] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap     9391     9316        0        0    16384    13758     2625
+  Dalvik Heap     8012     7388        0        0    42122    32380     9742
+ Dalvik Other     1396     1396        0        0                           
+        Stack      444      444        0        0                           
+      Gfx dev     1148     1148        0        0                           
+    Other dev        8        0        8        0                           
+     .so mmap     1692      144      160        0                           
+    .apk mmap      221        0       60        0                           
+    .ttf mmap       27        0        0        0                           
+    .dex mmap     7204        0     7200        0                           
+    .oat mmap     2375        0      784        0                           
+    .art mmap     2551     2060       56        0                           
+   Other mmap       61        4       28        0                           
+   EGL mtrack    31520    31520        0        0                           
+      Unknown      173      172        0        0                           
+        TOTAL    66223    53592     8296        0    58506    46138    12367
+ 
+ Objects
+               Views:       58         ViewRootImpl:        1
+         AppContexts:        3           Activities:        1
+              Assets:        4        AssetManagers:        4
+       Local Binders:       21        Proxy Binders:       21
+       Parcel memory:        9         Parcel count:       39
+    Death Recipients:        1      OpenSSL Sockets:        1
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:       62
+ 

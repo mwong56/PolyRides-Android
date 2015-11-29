@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
@@ -59,6 +60,9 @@ public class MessageActivity extends BaseRxActivity {
   @Bind(R.id.btn_send)
   SendButton sendButton;
 
+  @Bind(R.id.toolbar_title)
+  ImageView toolbarTitle;
+
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
   private final FacebookService facebookService = FacebookServiceImpl.get();
   private final List<Message> messageList = new ArrayList<>();
@@ -101,6 +105,7 @@ public class MessageActivity extends BaseRxActivity {
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.otherId)
         .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 

@@ -6,4 +6,12 @@
     android:layout_height="@dimen/abc_action_bar_default_height_material"
     android:background="@color/PrimaryColor"
     android:elevation="6dp"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+  <ImageView
+      android:id="@+id/toolbar_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/title"/>
+
+</android.support.v7.widget.Toolbar>

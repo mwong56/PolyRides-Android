@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.DateTimeFragment;
@@ -27,6 +29,9 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 
+  @Bind(R.id.toolbar_title)
+  ImageView toolbarTitle;
+
   private Fragment fragment;
   private Location start;
   private Location end;
@@ -40,6 +45,7 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    toolbarTitle.setVisibility(View.GONE);
     setTitle("Find Ride");
 
     this.start = (Location) getIntent().getExtras().get("start");

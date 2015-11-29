@@ -45,6 +45,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   private GoogleApiClient apiClient;
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
   private StartEndViewListener listener;
+  private Intent placePicker;
 
   public StartEndView(Context context) {
     super(context);
@@ -87,6 +88,16 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     this.fragment = fragment;
     this.startEditText.setFocusable(false);
     this.endEditText.setFocusable(false);
+
+    try {
+      PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+      placePicker = builder.build(getContext());
+    } catch (GooglePlayServicesRepairableException e) {
+      Log.e(TAG, e.toString());
+      showToast("Sorry! Something went wrong.");
+    } catch (GooglePlayServicesNotAvailableException e) {
+      showToast("Please install Google Play Services.");
+    }
   }
 
   public void setListener(StartEndViewListener listener) {
@@ -126,14 +137,19 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
       return;
     }
 
-    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-    try {
-      fragment.startActivityForResult(builder.build(getContext()), result);
-    } catch (GooglePlayServicesRepairableException e) {
-      Log.e(TAG, e.toString());
-      showToast("Sorry! Something went wrong.");
-    } catch (GooglePlayServicesNotAvailableException e) {
-      showToast("Please install Google Play Services.");
+    if (placePicker == null) {
+      try {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        placePicker = builder.build(getContext());
+        fragment.startActivityForResult(placePicker, result);
+      } catch (GooglePlayServicesRepairableException e) {
+        Log.e(TAG, e.toString());
+        showToast("Sorry! Something went wrong.");
+      } catch (GooglePlayServicesNotAvailableException e) {
+        showToast("Please install Google Play Services.");
+      }
+    } else {
+      fragment.startActivityForResult(placePicker, result);
     }
   }
 
@@ -153,6 +169,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
 
   public interface StartEndViewListener {
     void onStartListener(boolean set);
+
     void onEndListener(boolean set);
   }
 }
