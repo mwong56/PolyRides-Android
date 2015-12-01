@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.facebook.AccessToken;
 import com.mwong56.polyrides.R;
@@ -32,6 +33,7 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -57,6 +59,9 @@ public class MessageActivity extends BaseRxActivity {
 
   @Bind(R.id.btn_send)
   SendButton sendButton;
+
+  @Bind(R.id.toolbar_title)
+  ImageView toolbarTitle;
 
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
   private final FacebookService facebookService = FacebookServiceImpl.get();
@@ -100,6 +105,7 @@ public class MessageActivity extends BaseRxActivity {
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.otherId)
         .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 
@@ -134,7 +140,7 @@ public class MessageActivity extends BaseRxActivity {
     ((PolyRidesApp) getApplication()).setMessageGroupIdInForeground(this.groupId);
     this.registerReceiver(receiver, Utils.buildParseIntentFilter());
     polyRidesService.clearMessagesCounter(this.groupId, User.getUserId())
-        .subscribe(v -> {}, error -> {});
+        .subscribe(new DoNothingOnNextAction(), error -> {});
     refreshMessages();
   }
 
@@ -174,7 +180,8 @@ public class MessageActivity extends BaseRxActivity {
   void onSendClick() {
     if (validateMessage()) {
       String text = messageText.getText().toString();
-      Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName());
+      Message message = new Message(this.groupId, User.getUserId(), text, User.getUserName(),
+          Calendar.getInstance().getTime());
       updateDatabase(message);
       adapter.addMessage(message);
       recyclerView.scrollToPosition(messageList.size() - 1);
@@ -193,7 +200,7 @@ public class MessageActivity extends BaseRxActivity {
     Observable.mergeDelayError(polyRidesService.saveMessage(message),
         polyRidesService.sendPush(this.otherId, User.getUserName(),
             this.groupId, message.getText()))
-            .subscribe(doNothingOnNextAction, onError -> showToast(onError));
+        .subscribe(doNothingOnNextAction, onError -> showToast(onError));
 
     if (this.chat == null) {
       this.chat = new Chat(this.groupId, message.getText(), User.getUserId());

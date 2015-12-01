@@ -3,6 +3,8 @@ package com.mwong56.polyrides.fragments;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.mwong56.polyrides.application.PolyRidesApp;
+import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import icepick.Icepick;
@@ -22,7 +24,13 @@ public abstract class BaseRxFragment extends RxFragment {
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     Icepick.saveInstanceState(this, outState);
+  }
 
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    RefWatcher refWatcher = PolyRidesApp.getRefWatcher(getActivity());
+    refWatcher.watch(this);
   }
 
   protected void showToast(Throwable e) {

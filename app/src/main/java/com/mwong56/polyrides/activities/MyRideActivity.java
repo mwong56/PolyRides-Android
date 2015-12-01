@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
@@ -27,6 +28,9 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
   @Bind(R.id.toolbar)
   Toolbar toolbar;
 
+  @Bind(R.id.toolbar_title)
+  ImageView toolbarTitle;
+
   private Fragment fragment;
   private Ride ride;
   private final PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
@@ -39,6 +43,7 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     ride = Parcels.unwrap(getIntent().getExtras().getParcelable("ride"));
 

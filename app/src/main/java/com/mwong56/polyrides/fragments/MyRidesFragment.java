@@ -73,6 +73,9 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
   }
 
   private void refreshRides() {
+    rideList.clear();
+    adapter.notifyDataSetChanged();
+
     progressBar.setVisibility(View.VISIBLE);
     noRidesView.setVisibility(View.GONE);
 
@@ -81,7 +84,6 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
         .subscribe(rides -> {
           rideList.clear();
           rideList.addAll(rides);
-          //TODO: Sort.
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 

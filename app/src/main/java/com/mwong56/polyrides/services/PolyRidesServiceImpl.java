@@ -1,30 +1,23 @@
 package com.mwong56.polyrides.services;
 
-import android.app.Activity;
-
 import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.models.Message;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.bolts.TaskObservable;
-import rx.exceptions.OnErrorThrowable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -45,18 +38,6 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   private PolyRidesServiceImpl() {
     // do nothing.
-  }
-
-  @Override
-  public Observable<ParseUser> facebookLogin(final Activity activity, final Collection<String> permissions) {
-    return Observable.defer(() -> TaskObservable.just(ParseFacebookUtils.logInWithReadPermissionsInBackground(activity, permissions)))
-        .map(parseUser -> {
-          if (parseUser == null) {
-            throw OnErrorThrowable.from(new Exception("Parse user is null"));
-          } else {
-            return parseUser;
-          }
-        });
   }
 
   @Override
@@ -134,6 +115,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       toSave.put("otherUserId", otherUserId);
       toSave.put("otherUserName", otherUserName);
       toSave.put("userId", userId);
+      toSave.put("updatedAction", Calendar.getInstance().getTime());
+
 
       try {
         toSave.save();
@@ -168,6 +151,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
       object.put("lastMessage", chat.getLastMessage());
       object.put("lastUserId", chat.getLastUserId());
+      object.put("updatedAction", Calendar.getInstance().getTime());
 
       try {
         object.save();
@@ -298,6 +282,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
     Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
       query.whereEqualTo("groupId", groupId);
+      query.addAscendingOrder("createdAt");
 
       try {
         List<Message> messageList = new ArrayList<>();
@@ -327,11 +312,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("startCity", ride.getStart().getCity());
           newRide.put("endCity", ride.getEnd().getCity());
           newRide.put("dateTime", ride.getDate());
-          newRide.put("createdAt", Calendar.getInstance().getTime());
           newRide.put("cost", ride.getCost());
           newRide.put("seats", ride.getSeats());
           newRide.put("notes", ride.getNote());
           newRide.put("userId", ride.getUserId());
+          newRide.put("name", User.getUserName());
           newRide.saveInBackground(e -> {
             if (e != null) {
               subscriber.onError(e);
@@ -384,7 +369,4 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
-
 }
-
-

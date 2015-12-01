@@ -1,59 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.andexert.library.RippleView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:rv_color="@color/PrimaryAccent"
-    app:rv_type="rectangle"
-    app:rv_centered="true">
+    android:layout_margin="16dp"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+  <de.hdodenhof.circleimageview.CircleImageView
+      android:id="@+id/image"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true"
+      android:layout_weight="0.2"
+      app:civ_border_color="#FF000000"
+      app:civ_border_width="1dp"/>
 
   <LinearLayout
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="match_parent"
-      android:layout_margin="16dp"
-      android:orientation="horizontal"
-      android:weightSum="1">
+      android:layout_marginLeft="8dp"
+      android:layout_weight="0.8"
+      android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:lines="1"
+        android:text="SLO → SF"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_weight="0.2"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="1dp"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_weight="0.8"
-        android:orientation="vertical">
-
-
-      <TextView
-          android:id="@+id/city"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:lines="1"
-          android:text="SLO → SF"
-          android:textColor="@android:color/black"
-          android:textStyle="bold"/>
-
-
-      <TextView
-          android:id="@+id/time"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:lines="1"
-          android:text="WEDNESDAY, Dec 30 at 2:15 PM"
-          android:textColor="@color/SecondaryText"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:text="WEDNESDAY, Dec 30 at 2:15 PM"
+        android:textColor="@color/SecondaryText"/>
 
   </LinearLayout>
-</com.andexert.library.RippleView>
+</LinearLayout>

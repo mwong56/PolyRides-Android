@@ -2,7 +2,6 @@ package com.mwong56.polyrides.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import butterknife.OnClick;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NotesFragment extends Fragment {
+public class NotesFragment extends BaseRxFragment {
 
   @Bind(R.id.note)
   EditText noteView;
@@ -61,11 +60,8 @@ public class NotesFragment extends Fragment {
     super.onDetach();
   }
 
-
   @OnClick(R.id.next_button)
   void onNextClicked() {
     listener.onNotesSet(noteView.getText().toString());
   }
-
-
 }

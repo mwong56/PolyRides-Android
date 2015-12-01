@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -15,15 +16,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Location;
-import com.mwong56.polyrides.services.LocationService;
-import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.OnActivityResultListener;
-import com.mwong56.polyrides.utils.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -36,17 +33,19 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   private static final String TAG = "StartEndLayout";
 
   @Bind(R.id.start)
-  PlacesAutoComplete startEditText;
+  AppCompatEditText startEditText;
 
   @Bind(R.id.end)
-  PlacesAutoComplete endEditText;
+  AppCompatEditText endEditText;
 
+  private Location startLocation;
+  private Location endLocation;
   private Activity activity;
   private Fragment fragment;
   private GoogleApiClient apiClient;
-  private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
   private StartEndViewListener listener;
+  private Intent placePicker;
 
   public StartEndView(Context context) {
     super(context);
@@ -61,16 +60,17 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   }
 
   public void setStartLocation(Location location) {
-    this.startEditText.setLocation(location);
+    this.startLocation = location;
+    this.startEditText.setText(location.getAddress());
     if (listener != null)
       listener.onStartListener(location != null ? true : false);
   }
 
   public void setEndLocation(Location location) {
-    this.endEditText.setLocation(location);
+    this.endLocation = location;
+    this.endEditText.setText(location.getAddress());
     if (listener != null)
       listener.onEndListener(location != null ? true : false);
-
   }
 
   /**
@@ -79,57 +79,45 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
    * @return An array containing start and end place. Index 1 is start, Index 2 is end.
    */
   public Location[] getPlaces() {
-    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
+    return new Location[]{this.startLocation, this.endLocation};
   }
 
   public void setup(Activity activity, GoogleApiClient client, Fragment fragment) {
     this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;
-    this.startEditText.setup(client, activity);
-    this.endEditText.setup(client, activity);
+    this.startEditText.setFocusable(false);
+    this.endEditText.setFocusable(false);
+
+    try {
+      PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+      placePicker = builder.build(getContext());
+    } catch (GooglePlayServicesRepairableException e) {
+      Log.e(TAG, e.toString());
+      showToast("Sorry! Something went wrong.");
+    } catch (GooglePlayServicesNotAvailableException e) {
+      showToast("Please install Google Play Services.");
+    }
   }
 
   public void setListener(StartEndViewListener listener) {
     this.listener = listener;
   }
 
-  @OnLongClick(R.id.start)
-  boolean onStartLongClick() {
+  @OnClick(R.id.start)
+  void onStartClick() {
     showPickerDialog(START_RESULT);
-    return true;
   }
 
-  @OnLongClick(R.id.end)
-  boolean onEndLongClick() {
+  @OnClick(R.id.end)
+  void onEndClick() {
     showPickerDialog(END_RESULT);
-    return true;
   }
 
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
     ButterKnife.bind(this);
-  }
-
-  @OnClick(R.id.start_location)
-  void setStart() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              setStartLocation(new Location(place, getContext()));
-              Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
-  }
-
-  @OnClick(R.id.end_location)
-  void setEnd() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              setEndLocation(new Location(place, getContext()));
-              Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
   }
 
   @Override
@@ -149,17 +137,21 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
       return;
     }
 
-    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-    try {
-      fragment.startActivityForResult(builder.build(getContext()), result);
-    } catch (GooglePlayServicesRepairableException e) {
-      Log.e(TAG, e.toString());
-      showToast("Sorry! Something went wrong.");
-    } catch (GooglePlayServicesNotAvailableException e) {
-      showToast("Please install Google Play Services.");
+    if (placePicker == null) {
+      try {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        placePicker = builder.build(getContext());
+        fragment.startActivityForResult(placePicker, result);
+      } catch (GooglePlayServicesRepairableException e) {
+        Log.e(TAG, e.toString());
+        showToast("Sorry! Something went wrong.");
+      } catch (GooglePlayServicesNotAvailableException e) {
+        showToast("Please install Google Play Services.");
+      }
+    } else {
+      fragment.startActivityForResult(placePicker, result);
     }
   }
-
 
   private void showToast(String error) {
     Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
@@ -177,6 +169,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
 
   public interface StartEndViewListener {
     void onStartListener(boolean set);
+
     void onEndListener(boolean set);
   }
 }

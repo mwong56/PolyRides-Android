@@ -1,7 +1,6 @@
 package com.mwong56.polyrides.models;
 
 import com.parse.ParseObject;
-
 import org.parceler.Parcel;
 
 import java.util.Date;

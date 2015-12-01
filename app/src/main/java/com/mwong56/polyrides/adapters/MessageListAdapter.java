@@ -54,7 +54,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
   public void onBindViewHolder(MessageViewHolder holder, int position) {
     Message message = messageList.get(position);
     Picasso.with(context).load(Utils.getProfileImageUrl(message.getUserId())).into(holder.avatar);
-    holder.message_text_view.setText(message.getText());
+    holder.messageTextView.setText(message.getText());
+    holder.dateTextView.setText(message.getDate());
   }
 
   public void addMessage(Message message) {
@@ -83,18 +84,16 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     protected CircleImageView avatar;
 
     @Bind(R.id.text_view)
-    protected TextView message_text_view;
+    protected TextView messageTextView;
 
     @Bind(R.id.date_view)
-    protected TextView date_text_view;
+    protected TextView dateTextView;
 
     public MessageViewHolder(View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
     }
-
   }
-
 }
 
 

@@ -22,22 +22,13 @@
 
   <Button
       android:id="@+id/find_ride_button"
+      style="?android:attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
+      android:gravity="bottom"
       android:layout_marginTop="20dp"
-      style="?android:attr/borderlessButtonStyle"
-      android:textColor="@color/PrimaryColor"
-      android:text="Find Me a Ride"/>
-
-  <View
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"/>
-
-  <ImageView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:src="@drawable/powered_by_google_light"/>
+      android:text="Find Me a Ride"
+      android:textColor="@color/PrimaryColor"/>
 
 </LinearLayout>

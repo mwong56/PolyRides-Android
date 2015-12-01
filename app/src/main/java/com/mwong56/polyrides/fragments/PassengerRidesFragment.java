@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.activities.FindRideActivity;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.Ride;
@@ -21,6 +19,7 @@ import com.mwong56.polyrides.views.DividerItemDecoration;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -48,7 +47,6 @@ public class PassengerRidesFragment extends BaseRxFragment {
   private DateTime dateTime;
   private EasyRecyclerAdapter<Ride> adapter;
   private List<Ride> rideList;
-  private FindRideActivity activity;
 
   public static PassengerRidesFragment newInstance(Location start, Location end, DateTime dateTime) {
     Bundle args = new Bundle();
@@ -58,6 +56,14 @@ public class PassengerRidesFragment extends BaseRxFragment {
     PassengerRidesFragment fragment = new PassengerRidesFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public Location getStart() {
+    return start;
+  }
+
+  public Location getEnd() {
+    return end;
   }
 
   @Override
@@ -78,24 +84,14 @@ public class PassengerRidesFragment extends BaseRxFragment {
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    this.activity = (FindRideActivity) activity;
-  }
-
-  @Override
-  public void onDetach() {
-    super.onDetach();
-    activity = null;
-  }
-
-  @Override
   public void onResume() {
     super.onResume();
     refreshRides();
   }
 
   private void refreshRides() {
+    rideList.clear();
+    adapter.notifyDataSetChanged();
     progressBar.setVisibility(View.VISIBLE);
     noRidesView.setVisibility(View.GONE);
 
@@ -104,7 +100,11 @@ public class PassengerRidesFragment extends BaseRxFragment {
         .subscribe(rides -> {
           rideList.clear();
           rideList.addAll(rides);
-          //TODO: Sort. You can pull start and end location and date time from activity.getStart(), getEnd(), getDateTime().
+          Collections.sort(rideList, (r1, r2) -> {
+            double distance1 = r1.getStart().getDistanceTo(start) + r1.getEnd().getDistanceTo(end);
+            double distance2 = r2.getStart().getDistanceTo(start) + r2.getEnd().getDistanceTo(end);
+            return distance1 < distance2 ? -1 : 1;
+          });
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 
