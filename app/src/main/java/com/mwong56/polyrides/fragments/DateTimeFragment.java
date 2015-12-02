@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import java.util.Calendar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
@@ -39,15 +39,12 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   @Bind(R.id.chosen_time)
   TextView timeTextView;
 
-  @State DateTime dateTime;
-  @State boolean dateSet, timeSet;
+  @State
+  DateTime dateTime;
+  @State
+  boolean dateSet, timeSet;
 
-  private DateTimeListener listener;
   private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
-
-  public interface DateTimeListener {
-    void onDateTimeSet(DateTime dateTime);
-  }
 
   public static DateTimeFragment newInstance() {
     return new DateTimeFragment();
@@ -75,19 +72,13 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   }
 
   @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    try {
-      listener = (DateTimeListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(context.toString() + " must implement DateTimeListener");
-    }
+  public void onPause() {
+    super.onPause();
   }
 
   @Override
-  public void onDetach() {
-    listener = null;
-    super.onDetach();
+  public void onResume() {
+    super.onResume();
   }
 
   @OnClick(R.id.dateButton)
@@ -146,7 +137,7 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   void onNextClicked() {
     if (this.dateSet && this.timeSet) {
       this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-      listener.onDateTimeSet(this.dateTime);
+      EventBus.getDefault().post(new DateTimeEvent().datetime = this.dateTime);
     }
   }
 
@@ -169,5 +160,10 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
     this.timeSet = true;
     this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
     timeTextView.setText(dateTime.printTime());
+  }
+
+
+  public class DateTimeEvent {
+    public DateTime datetime;
   }
 }

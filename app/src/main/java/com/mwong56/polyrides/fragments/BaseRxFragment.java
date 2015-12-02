@@ -14,6 +14,8 @@ import icepick.Icepick;
  */
 public abstract class BaseRxFragment extends RxFragment {
 
+//  protected Bus bus = BusSingleton.get();
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -24,6 +26,18 @@ public abstract class BaseRxFragment extends RxFragment {
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     Icepick.saveInstanceState(this, outState);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+//    bus.register(this);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+//    bus.unregister(this);
   }
 
   @Override

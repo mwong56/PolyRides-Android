@@ -22,8 +22,9 @@ import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
-public class FindRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener,
+public class FindRideActivity extends BaseRxActivity implements
     PassengerRideViewHolder.RideListener, RideDetailsFragment.RideDetailsListener {
 
   @Bind(R.id.toolbar)
@@ -36,6 +37,7 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   private Location start;
   private Location end;
   private DateTime dateTime;
+  private final EventBus bus = EventBus.getDefault();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
     }
+
+    bus.register(this);
   }
 
   @Override
@@ -85,14 +89,20 @@ public class FindRideActivity extends BaseRxActivity implements DateTimeFragment
   }
 
   @Override
+  protected void onDestroy() {
+    bus.unregister(this);
+    super.onDestroy();
+  }
+
+
+  @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
     super.onSaveInstanceState(outState, outPersistentState);
     getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
-  @Override
-  public void onDateTimeSet(DateTime dateTime) {
-    this.dateTime = dateTime;
+  public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
+    this.dateTime = dateTimeEvent.datetime;
     this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
     replaceFragment(fragment, "content");
   }

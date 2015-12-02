@@ -15,6 +15,8 @@ import icepick.Icepick;
  */
 public abstract class BaseRxActivity extends RxAppCompatActivity {
 
+//  protected Bus bus = BusSingleton.get();
+
   @Override
   public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
     super.onCreate(savedInstanceState, persistentState);
@@ -25,7 +27,18 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
     super.onSaveInstanceState(outState, outPersistentState);
     Icepick.saveInstanceState(this, outState);
+  }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+//    bus.register(this);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+//    bus.unregister(this);
   }
 
   protected void showToast(Throwable e) {

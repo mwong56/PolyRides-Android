@@ -26,10 +26,11 @@ import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
-public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.DateTimeListener,
+public class NewRideActivity extends BaseRxActivity implements
     SeatsFragment.SeatsListener, NotesFragment.NotesListener, RideDetailsFragment.RideDetailsListener {
 
   @Bind(R.id.toolbar)
@@ -38,15 +39,21 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   @Bind(R.id.toolbar_title)
   ImageView toolbarTitle;
 
-  @State Location start;
-  @State Location end;
-  @State int cost;
-  @State int seats;
-  @State String note;
+  @State
+  Location start;
+  @State
+  Location end;
+  @State
+  int cost;
+  @State
+  int seats;
+  @State
+  String note;
 
   private Fragment fragment;
   private DateTime dateTime;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
+  private final EventBus bus = EventBus.getDefault();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,8 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
     }
+
+    bus.register(this);
   }
 
   @Override
@@ -98,6 +107,12 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   }
 
   @Override
+  protected void onDestroy() {
+    bus.unregister(this);
+    super.onDestroy();
+  }
+
+  @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     Icepick.restoreInstanceState(this, savedInstanceState);
     if (savedInstanceState != null) {
@@ -114,9 +129,8 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
     Icepick.saveInstanceState(this, outState);
   }
 
-  @Override
-  public void onDateTimeSet(DateTime dateTime) {
-    this.dateTime = dateTime;
+  public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
+    this.dateTime = dateTimeEvent.datetime;
     fragment = SeatsFragment.newInstance();
     replaceFragment(fragment, "content");
   }
