@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -105,7 +106,7 @@ public class MessageActivity extends BaseRxActivity {
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
+    toolbarTitle.setVisibility(View.GONE);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), this.otherId)
         .subscribe(userName -> setTitle(userName), onError -> showToast(onError));
 
