@@ -30,9 +30,8 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   private Location location;
   private boolean watchText;
 
-  //TODO: change this to an address that is relevant.
-  private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-      new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+  private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+      new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
 
   public PlacesAutoComplete(Context context) {
     super(context);
@@ -47,7 +46,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setup(final GoogleApiClient client, final Activity activity) {
-    adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_GREATER_SYDNEY, null);
+    adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_MOUNTAIN_VIEW, null);
     this.setAdapter(adapter);
 
     this.setOnItemClickListener((parent, view, position, id) -> {
@@ -110,7 +109,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   private void enableSuggestions(boolean enabled) {
     setThreshold(enabled ? 1 : 1000);
 
-    if(!enabled) {
+    if (!enabled) {
       this.clearFocus();
     }
   }
