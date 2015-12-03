@@ -36,4 +36,8 @@ public abstract class BaseRxFragment extends RxFragment {
   protected void showToast(Throwable e) {
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
+
+  protected void showToast(String s) {
+    Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+  }
 }

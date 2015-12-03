@@ -39,8 +39,10 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   @Bind(R.id.chosen_time)
   TextView timeTextView;
 
-  @State DateTime dateTime;
-  @State boolean dateSet, timeSet;
+  @State
+  DateTime dateTime;
+  @State
+  boolean dateSet, timeSet;
 
   private DateTimeListener listener;
   private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
@@ -146,13 +148,16 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   void onNextClicked() {
     if (this.dateSet && this.timeSet) {
       this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-      listener.onDateTimeSet(this.dateTime);
+      if (this.dateTime.getDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
+        showToast("Date and time must be in the future.");
+      } else {
+        listener.onDateTimeSet(this.dateTime);
+      }
     }
   }
 
   @Override
   public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-    //TODO: Validate dateTime.
     this.year = year;
     this.monthOfYear = monthOfYear;
     this.dayOfMonth = dayOfMonth;
@@ -163,7 +168,6 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
 
   @Override
   public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-    //TODO: Validate dateTime.
     this.hourOfDay = hourOfDay;
     this.minute = minute;
     this.timeSet = true;

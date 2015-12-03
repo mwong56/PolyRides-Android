@@ -123,6 +123,4 @@ public class PassengerRidesFragment extends BaseRxFragment {
     ButterKnife.bind(this, view);
     return view;
   }
-
-
 }
