@@ -15,6 +15,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.services.LocationService;
+import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.OnActivityResultListener;
 import com.mwong56.polyrides.utils.Utils;
 
@@ -42,6 +44,7 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
   private Activity activity;
   private Fragment fragment;
   private GoogleApiClient apiClient;
+  private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
   private StartEndViewListener listener;
   private Intent placePicker;
@@ -68,7 +71,6 @@ public class StartEndView extends LinearLayout implements OnActivityResultListen
     this.endEditText.setLocation(location);
     if (listener != null)
       listener.onEndListener(location != null ? true : false);
-
   }
 
   /**
