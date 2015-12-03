@@ -339,10 +339,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       Date currentDate = Calendar.getInstance().getTime();
       Date newDate = new Date(date.getTime() + ONE_DAY_BEHIND);
 
-      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
-      // If the date minus 24 hours is greater than current date, update the query.
-      if (currentDate.compareTo(newDate) > 1) {
+      // If the date inputted - 1 day is greater than current date, search for date - 1
+      if (currentDate.compareTo(newDate) <= 0) {
         query.whereGreaterThanOrEqualTo("dateTime", newDate);
+      } else {
+        query.whereGreaterThanOrEqualTo("dateTime", currentDate);
       }
       query.whereLessThanOrEqualTo("dateTime", new Date(date.getTime() + ONE_DAY_AHEAD));
 
