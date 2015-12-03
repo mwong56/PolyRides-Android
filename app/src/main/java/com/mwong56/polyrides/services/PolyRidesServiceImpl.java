@@ -337,15 +337,15 @@ public class PolyRidesServiceImpl implements PolyRidesService {
     Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
-      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
-      if (currentDate.compareTo(date) > 0) {
-        Date newDate = new Date(currentDate.getTime() + ONE_DAY_BEHIND);
+      Date newDate = new Date(date.getTime() + ONE_DAY_BEHIND);
 
-        if (newDate.compareTo(date) < 0) {
-          query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_BEHIND));
-          query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_AHEAD));
-        }
+      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
+      // If the date minus 24 hours is greater than current date, update the query.
+      if (currentDate.compareTo(newDate) > 1) {
+        query.whereGreaterThanOrEqualTo("dateTime", newDate);
       }
+      query.whereLessThanOrEqualTo("dateTime", new Date(date.getTime() + ONE_DAY_AHEAD));
+
       if (myRides) {
         query.whereEqualTo("userId", User.getUserId());
       } else {
