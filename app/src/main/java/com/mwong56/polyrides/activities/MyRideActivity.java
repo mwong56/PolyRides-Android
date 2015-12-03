@@ -77,6 +77,7 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
   @Override
   public void onDetailsButtonClicked(Ride ride) {
     polyRidesService.removeRide(ride).subscribe(onNext -> {
+      showToast("Ride removed");
       Intent i = new Intent(getBaseContext(), MainActivity.class);
       startActivity(i);
       finish();

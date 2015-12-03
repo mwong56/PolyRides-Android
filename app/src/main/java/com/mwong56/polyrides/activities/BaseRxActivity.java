@@ -32,6 +32,10 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
     Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
 
+  protected void showToast(String s) {
+    Toast.makeText(getBaseContext(), s, Toast.LENGTH_SHORT).show();
+  }
+
   protected void replaceFragment(Fragment fragment, String tag) {
     getSupportFragmentManager()
         .beginTransaction()

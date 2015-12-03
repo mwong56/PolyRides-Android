@@ -70,11 +70,15 @@ public class RideDetailsView extends LinearLayout {
     fbService.getUserName(AccessToken.getCurrentAccessToken(), ride.getUserId())
         .subscribe(userName -> nameTextView.setText(userName), error -> showToast(error));
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImageView);
-    locationTextView.setText(ride.getStart().getCity() + " -> " + ride.getEnd().getCity());
+    locationTextView.setText(ride.getStart().getCity() + " → " + ride.getEnd().getCity());
     dateTextView.setText(ride.getDateTime().printDate());
     timeTextView.setText(ride.getDateTime().printTime());
     costTextView.setText("$" + ride.getCost() + " per seat");
-    seatTextView.setText(ride.getSeats() + " seat/s available");
+    if (ride.getSeats() > 1) {
+      seatTextView.setText(ride.getSeats() + " seats available");
+    } else {
+      seatTextView.setText(ride.getSeats() + " seat available");
+    }
     noteTextView.setText(ride.getNote());
   }
 

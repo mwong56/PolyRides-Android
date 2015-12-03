@@ -38,11 +38,16 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   @Bind(R.id.toolbar_title)
   ImageView toolbarTitle;
 
-  @State Location start;
-  @State Location end;
-  @State int cost;
-  @State int seats;
-  @State String note;
+  @State
+  Location start;
+  @State
+  Location end;
+  @State
+  int cost;
+  @State
+  int seats;
+  @State
+  String note;
 
   private Fragment fragment;
   private DateTime dateTime;
@@ -141,8 +146,10 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
   public void onDetailsButtonClicked(Ride ride) {
     polyRidesService.saveNewRide(ride)
         .compose(bindToLifecycle())
-        .subscribe(onNext -> openMainActivity()
-            , error -> showToast(error)
+        .subscribe(onNext -> {
+              showToast("Ride saved!");
+              openMainActivity();
+            }, error -> showToast(error)
         );
   }
 
