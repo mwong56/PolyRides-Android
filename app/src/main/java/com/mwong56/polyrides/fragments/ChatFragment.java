@@ -83,7 +83,7 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
           } else {
             noMessageView.setVisibility(View.GONE);
           }
-        }, error -> showToast(error));
+        }, this::showToast);
   }
 
   @Nullable

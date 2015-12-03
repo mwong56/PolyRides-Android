@@ -81,6 +81,6 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
       Intent i = new Intent(getBaseContext(), MainActivity.class);
       startActivity(i);
       finish();
-    }, onError -> showToast(onError));
+    }, this::showToast);
   }
 }

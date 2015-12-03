@@ -95,7 +95,7 @@ public class PassengerRidesFragment extends BaseRxFragment {
     progressBar.setVisibility(View.VISIBLE);
     noRidesView.setVisibility(View.GONE);
 
-    polyRidesService.getRides(dateTime.getDate(), false)
+    polyRidesService.getRides(dateTime.getDate())
         .compose(bindToLifecycle())
         .subscribe(rides -> {
           rideList.clear();
@@ -113,7 +113,7 @@ public class PassengerRidesFragment extends BaseRxFragment {
           } else {
             noRidesView.setVisibility(View.GONE);
           }
-        }, error -> showToast(error));
+        }, this::showToast);
   }
 
   @Nullable

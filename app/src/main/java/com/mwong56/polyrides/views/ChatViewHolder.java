@@ -63,7 +63,7 @@ public class ChatViewHolder extends ItemViewHolder<Chat> {
   public void onSetValues(Chat chat, PositionInfo positionInfo) {
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(chat.getOtherUserId())).into(avatar);
     facebookService.getUserName(AccessToken.getCurrentAccessToken(), chat.getOtherUserId())
-        .subscribe(userName -> name.setText(userName), error -> showToast(error));
+        .subscribe(name::setText, this::showToast);
     snippet.setText(chat.getLastMessage());
     if (chat.getCounter() > 0) {
       unreadView.setVisibility(View.VISIBLE);

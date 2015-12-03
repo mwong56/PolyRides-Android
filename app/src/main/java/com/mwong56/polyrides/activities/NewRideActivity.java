@@ -149,7 +149,7 @@ public class NewRideActivity extends BaseRxActivity implements DateTimeFragment.
         .subscribe(onNext -> {
               showToast("Ride saved!");
               openMainActivity();
-            }, error -> showToast(error)
+            }, this::showToast
         );
   }
 
