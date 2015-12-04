@@ -53,10 +53,7 @@ public class Location implements Parcelable {
       Address address;
       try {
         address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
-        String addressLine = address.getAddressLine(1);
-        if (addressLine != null && addressLine.length() > 0) {
-          this.address = addressLine;
-        }
+        this.address = address.getLocality() + ", " + address.getAdminArea() + ", " + address.getCountryName();
 
         if (address.getLocality() != null && address.getLocality().length() > 0) {
           this.city = address.getLocality();
