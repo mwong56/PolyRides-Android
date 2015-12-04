@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
@@ -9,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.BaseRxActivity;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
@@ -34,7 +34,7 @@ public class StartEndView extends LinearLayout {
   @Bind(R.id.end)
   PlacesAutoComplete endEditText;
 
-  private Activity activity;
+  private BaseRxActivity activity;
   private Fragment fragment;
   private GoogleApiClient apiClient;
   private LocationService locationService = LocationServiceImpl.instance();
@@ -69,7 +69,7 @@ public class StartEndView extends LinearLayout {
     return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
   }
 
-  public void setup(Activity activity, GoogleApiClient client, Fragment fragment) {
+  public void setup(BaseRxActivity activity, GoogleApiClient client, Fragment fragment) {
     this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;

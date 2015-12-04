@@ -28,11 +28,11 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
 
   }
 
-  protected void showToast(Throwable e) {
+  public void showToast(Throwable e) {
     Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
 
-  protected void showToast(String s) {
+  public void showToast(String s) {
     Toast.makeText(getBaseContext(), s, Toast.LENGTH_SHORT).show();
   }
 

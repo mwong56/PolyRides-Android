@@ -3,7 +3,6 @@ package com.mwong56.polyrides.activities;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,7 +16,7 @@ import com.mwong56.polyrides.adapters.TabAdapter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnConnectionFailedListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
