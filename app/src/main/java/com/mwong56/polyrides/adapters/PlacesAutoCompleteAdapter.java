@@ -88,6 +88,7 @@ public class PlacesAutoCompleteAdapter
     mGoogleApiClient = googleApiClient;
     mBounds = bounds;
     mPlaceFilter = filter;
+    mResultList = new ArrayList<>();
   }
 
   /**
@@ -147,8 +148,9 @@ public class PlacesAutoCompleteAdapter
         // Skip the autocomplete query if no constraints are given.
         if (constraint != null) {
           // Query the autocomplete API for the (constraint) search string.
-          mResultList = getAutocomplete(constraint);
-          if (mResultList != null) {
+          mResultList.clear();
+          mResultList.addAll(getAutocomplete(constraint));
+          if (mResultList.size() > 0) {
             // The API successfully returned results.
             results.values = mResultList;
             results.count = mResultList.size();
