@@ -17,6 +17,7 @@ import com.mwong56.polyrides.services.GooglePlacesService;
 import com.mwong56.polyrides.services.GooglePlacesServiceImpl;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class PlacesAutoCompleteAdapter
@@ -26,7 +27,7 @@ public class PlacesAutoCompleteAdapter
   private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
   private static final GooglePlacesService playService = GooglePlacesServiceImpl.get();
 
-  private ArrayList<GooglePlacesService.AutoCompleteResult> mResultList;
+  private CopyOnWriteArrayList<GooglePlacesService.AutoCompleteResult> mResultList;
   private LatLngBounds mBounds;
   private AutocompleteFilter mPlaceFilter;
 
@@ -35,7 +36,7 @@ public class PlacesAutoCompleteAdapter
     super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
     mBounds = bounds;
     mPlaceFilter = filter;
-    mResultList = new ArrayList<>();
+    mResultList = new CopyOnWriteArrayList<>();
   }
 
 
@@ -81,24 +82,27 @@ public class PlacesAutoCompleteAdapter
       @Override
       protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults results = new FilterResults();
+        ArrayList<GooglePlacesService.AutoCompleteResult> resultsList = new ArrayList<>();
         // Skip the autocomplete query if no constraints are given.
         if (constraint != null) {
           // Query the autocomplete API for the (constraint) search string.
-          mResultList.clear();
-          mResultList.addAll(playService.getAutoComplete(constraint.toString()));
-          if (mResultList.size() > 0) {
+          resultsList.addAll(playService.getAutoComplete(constraint.toString()));
+          if (resultsList.size() > 0) {
             // The API successfully returned results.
-            results.values = mResultList;
-            results.count = mResultList.size();
+            results.values = resultsList;
+            results.count = resultsList.size();
+            return results;
           }
         }
-        return results;
+        return null;
       }
 
       @Override
       protected void publishResults(CharSequence constraint, FilterResults results) {
         if (results != null && results.count > 0) {
           // The API returned at least one result, update the data.
+          mResultList.clear();
+          mResultList.addAll((ArrayList) results.values);
           notifyDataSetChanged();
         } else {
           // The API did not return any results, invalidate the data set.
