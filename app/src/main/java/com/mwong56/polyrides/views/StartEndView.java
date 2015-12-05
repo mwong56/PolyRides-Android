@@ -24,6 +24,7 @@ import com.mwong56.polyrides.utils.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -43,6 +44,9 @@ public class StartEndView extends LinearLayout {
 
   @Bind(R.id.start_from_next_button)
   Button nextButton;
+
+  @Bind(R.id.progress_bar)
+  MaterialProgressBar progressBar;
 
   private StartEndListener listener;
   private MainActivity activity;
@@ -111,7 +115,9 @@ public class StartEndView extends LinearLayout {
               setStartLocation(newLocation);
               startEditText.setText(newLocation.getAddress());
               Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
+            }, error -> {
+              showToast("Could not find location");
+            }));
   }
 
   @OnClick(R.id.end_location)
@@ -123,11 +129,14 @@ public class StartEndView extends LinearLayout {
               setEndLocation(newLocation);
               endEditText.setText(newLocation.getAddress());
               Utils.hideKeyboard(this.activity);
-            }, error -> showToast("Could not find location")));
+            }, error -> {
+              showToast("Could not find location");
+            }));
   }
 
   @OnClick(R.id.start_from_next_button)
   void onNextButton() {
+    showProgress(true);
     Location[] locations = getPlaces();
 
     if (locations[0] == null) {
@@ -139,6 +148,7 @@ public class StartEndView extends LinearLayout {
     }
 
     if (locations[0] != null && locations[1] != null) {
+      showProgress(false);
       if (listener != null) {
         listener.onNext(locations[0], locations[1]);
       }
@@ -171,9 +181,13 @@ public class StartEndView extends LinearLayout {
               places.release();
             });
           } else {
+            showProgress(false);
             showToast("The address you entered is invalid.");
           }
-        }, this.activity::showToast);
+        }, error -> {
+          showToast(error.toString());
+          showProgress(false);
+        });
   }
 
   @Override
@@ -200,6 +214,11 @@ public class StartEndView extends LinearLayout {
 
   private void showToast(String error) {
     Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+  }
+
+  private void showProgress(boolean show) {
+    progressBar.setVisibility(show ? VISIBLE : GONE);
+    nextButton.setVisibility(show ? GONE : VISIBLE);
   }
 
   public interface StartEndListener {

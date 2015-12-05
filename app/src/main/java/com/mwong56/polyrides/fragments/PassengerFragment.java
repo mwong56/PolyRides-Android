@@ -30,8 +30,6 @@ public class PassengerFragment extends BaseRxFragment implements StartEndView.St
   @Bind(R.id.find_ride_button)
   Button findRideButton;
 
-  private MainActivity activity;
-
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
   }
@@ -62,18 +60,6 @@ public class PassengerFragment extends BaseRxFragment implements StartEndView.St
     super.onSaveInstanceState(outState);
     Location[] locations = startEndView.getPlaces();
     outState.putParcelableArray("locations", locations);
-  }
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    this.activity = (MainActivity) context;
-  }
-
-  @Override
-  public void onDetach() {
-    this.activity = null;
-    super.onDetach();
   }
 
   @Nullable
