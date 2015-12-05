@@ -13,7 +13,6 @@ import com.mwong56.polyrides.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
@@ -90,6 +89,6 @@ public class SeatsFragment extends BaseRxFragment {
       return;
     }
     int seats = seatsPicker.getValue();
-    EventBus.getDefault().post(new SeatsEvent(cost, seats));
+    bus.post(new SeatsEvent(cost, seats));
   }
 }

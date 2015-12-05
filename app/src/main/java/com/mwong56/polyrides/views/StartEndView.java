@@ -19,12 +19,13 @@ import com.mwong56.polyrides.services.GooglePlacesService;
 import com.mwong56.polyrides.services.GooglePlacesServiceImpl;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
+import com.mwong56.polyrides.utils.BusHolder;
 import com.mwong56.polyrides.utils.Utils;
+import com.squareup.otto.Bus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -47,9 +48,11 @@ public class StartEndView extends LinearLayout {
 
   private MainActivity activity;
   private BaseRxFragment fragment;
-  private GooglePlacesService placesService = GooglePlacesServiceImpl.get();
-  private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
+
+  private final Bus bus = BusHolder.get();
+  private final GooglePlacesService placesService = GooglePlacesServiceImpl.get();
+  private final LocationService locationService = LocationServiceImpl.instance();
 
   public StartEndView(Context context) {
     super(context);
@@ -135,7 +138,7 @@ public class StartEndView extends LinearLayout {
     }
 
     if (locations[0] != null && locations[1] != null) {
-      EventBus.getDefault().post(new StartEndEvent(locations[0], locations[1]));
+      bus.post(new StartEndEvent(locations[0], locations[1]));
     }
   }
 

@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.utils.DummyEvent;
+import com.mwong56.polyrides.utils.BusHolder;
+import com.squareup.otto.Bus;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 
 /**
@@ -17,7 +17,7 @@ import icepick.Icepick;
  */
 public abstract class BaseRxActivity extends RxAppCompatActivity {
 
-//  protected Bus bus = BusSingleton.get();
+  protected final Bus bus = BusHolder.get();
 
   @Override
   public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -34,12 +34,12 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    EventBus.getDefault().register(this);
+    bus.register(this);
   }
 
   @Override
   protected void onPause() {
-    EventBus.getDefault().unregister(this);
+    bus.unregister(this);
     super.onPause();
   }
 
@@ -59,8 +59,4 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
         .addToBackStack(tag)
         .commit();
   }
-
-
-  public void onEvent(DummyEvent event) { }
-
 }

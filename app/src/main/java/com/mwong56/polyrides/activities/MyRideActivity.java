@@ -14,6 +14,7 @@ import com.mwong56.polyrides.fragments.RideDetailsFragment;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
@@ -74,6 +75,7 @@ public class MyRideActivity extends BaseRxActivity {
     getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
+  @Subscribe
   public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
     polyRidesService.removeRide(rideDetailsEvent.ride).subscribe(onNext -> {
       showToast("Ride removed");

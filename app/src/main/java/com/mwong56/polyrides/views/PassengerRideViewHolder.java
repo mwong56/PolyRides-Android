@@ -5,10 +5,11 @@ import android.widget.TextView;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Ride;
+import com.mwong56.polyrides.utils.BusHolder;
 import com.mwong56.polyrides.utils.Utils;
+import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
-import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
@@ -30,11 +31,12 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
   @ViewId(R.id.time)
   TextView time;
 
+  private Bus bus = BusHolder.get();
 
   public PassengerRideViewHolder(View view) {
     super(view);
     getView().setOnClickListener(v -> {
-      EventBus.getDefault().post(new RideEvent(getItem()));
+      bus.post(new RideEvent(getItem()));
     });
   }
 

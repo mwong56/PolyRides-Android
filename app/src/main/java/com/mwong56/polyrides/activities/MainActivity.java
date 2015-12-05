@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnConnectionFailedListener {
+  private static final String TAG = "MainActivity";
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -29,8 +30,10 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
   @Bind(R.id.tab_layout)
   TabLayout tabLayout;
 
-  private static final String TAG = "MainActivity";
+
   private GoogleApiClient apiClient;
+  private TabAdapter adapter;
+  private int currentPosition = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
     getSupportActionBar().setDisplayShowTitleEnabled(false);
     getSupportActionBar().setElevation(0);
 
-    TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
+    adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
     viewPager.setAdapter(adapter);
     viewPager.addOnPageChangeListener(new OnPageChangeListener() {
       @Override
@@ -51,12 +54,13 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
 
       @Override
       public void onPageSelected(int position) {
-        BaseTabbedFragment[] tabbedFragments = adapter.getFragments();
-        for (int i = 0; i < tabbedFragments.length; i++) {
+        currentPosition = position;
+        BaseTabbedFragment[] fragments = adapter.getFragments();
+        for (int i = 0; i < fragments.length; i++) {
           if (position != i) {
-            adapter.getFragments()[i].onHidden();
+            fragments[i].onHidden();
           } else {
-            adapter.getFragments()[i].onVisible();
+            fragments[i].onVisible();
           }
         }
       }
@@ -73,6 +77,20 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
         .enableAutoManage(this, 0, this)
         .addApi(Places.GEO_DATA_API)
         .build();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    adapter.getFragments()[currentPosition].onVisible();
+  }
+
+  @Override
+  protected void onPause() {
+    for (BaseTabbedFragment fragments : adapter.getFragments()) {
+      fragments.onHidden();
+    }
+    super.onPause();
   }
 
   @Override

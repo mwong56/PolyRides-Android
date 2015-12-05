@@ -11,7 +11,6 @@ import com.mwong56.polyrides.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,7 +39,7 @@ public class NotesFragment extends BaseRxFragment {
 
   @OnClick(R.id.next_button)
   void onNextClicked() {
-    EventBus.getDefault().post(new NotesEvent(noteView.getText().toString()));
+    bus.post(new NotesEvent(noteView.getText().toString()));
   }
 
   public class NotesEvent {

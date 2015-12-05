@@ -21,6 +21,7 @@ import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
+import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
@@ -118,12 +119,14 @@ public class NewRideActivity extends BaseRxActivity {
     Icepick.saveInstanceState(this, outState);
   }
 
+  @Subscribe
   public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
     this.dateTime = dateTimeEvent.datetime;
     fragment = SeatsFragment.newInstance();
     replaceFragment(fragment, "content");
   }
 
+  @Subscribe
   public void onEvent(SeatsFragment.SeatsEvent seatsEvent) {
     this.cost = seatsEvent.cost;
     this.seats = seatsEvent.seats;
@@ -131,6 +134,7 @@ public class NewRideActivity extends BaseRxActivity {
     replaceFragment(fragment, "content");
   }
 
+  @Subscribe
   public void onEvent(NotesFragment.NotesEvent notesEvent) {
     this.note = notesEvent.note;
     Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId(), null);
@@ -138,6 +142,7 @@ public class NewRideActivity extends BaseRxActivity {
     replaceFragment(fragment, "content");
   }
 
+  @Subscribe
   public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
     polyRidesService.saveNewRide(rideDetailsEvent.ride)
         .compose(bindToLifecycle())

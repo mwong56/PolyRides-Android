@@ -17,6 +17,7 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.views.DividerItemDecoration;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
+import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
@@ -102,6 +103,7 @@ public class MyRidesFragment extends BaseTabbedFragment {
     return view;
   }
 
+  @Subscribe
   public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
     Intent i = new Intent(getActivity(), MyRideActivity.class);
     i.putExtra("ride", Parcels.wrap(rideEvent.ride));

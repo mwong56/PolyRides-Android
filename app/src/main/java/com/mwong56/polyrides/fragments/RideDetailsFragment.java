@@ -15,7 +15,6 @@ import org.parceler.Parcels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -80,7 +79,7 @@ public class RideDetailsFragment extends BaseRxFragment {
 
   @OnClick(R.id.ride_details_button)
   void onClick() {
-    EventBus.getDefault().post(new RideDetailsEvent(ride));
+    bus.post(new RideDetailsEvent(ride));
   }
 
   public class RideDetailsEvent{

@@ -12,7 +12,6 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tumblr.remember.Remember;
 
-import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -32,7 +31,6 @@ public class PolyRidesApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    EventBus.builder().throwSubscriberException(false).installDefaultEventBus();
     if (!BuildConfig.DEBUG) {
       Fabric.with(this, new Crashlytics());
     }
@@ -44,7 +42,6 @@ public class PolyRidesApp extends Application {
     FacebookSdk.sdkInitialize(getApplicationContext());
     refWatcher = LeakCanary.install(this);
 
-    // Enable Local Datastore.
     Parse.initialize(this, "tNVCuf8tnZgADqVCuBUegChrNis54koIAqnGzSJ3", "pghidrtoMmpnst4uebxV5oiwtsbnNMZKxs53Yxs6");
     ParseInstallation.getCurrentInstallation().saveInBackground();
   }

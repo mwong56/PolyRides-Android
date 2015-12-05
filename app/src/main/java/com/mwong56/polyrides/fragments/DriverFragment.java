@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -10,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.views.StartEndView;
+import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by micha on 10/9/2015.
@@ -28,7 +26,6 @@ public class DriverFragment extends BaseTabbedFragment {
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
 
-  private MainActivity activity;
 
   public static DriverFragment newInstance() {
     return new DriverFragment();
@@ -63,18 +60,6 @@ public class DriverFragment extends BaseTabbedFragment {
     outState.putParcelableArray("locations", locations);
   }
 
-  @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    this.activity = (MainActivity) activity;
-  }
-
-  @Override
-  public void onDetach() {
-    this.activity = null;
-    super.onDetach();
-  }
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,20 +69,11 @@ public class DriverFragment extends BaseTabbedFragment {
   }
 
 
+  @Subscribe
   public void onEvent(StartEndView.StartEndEvent startEndEvent) {
     Intent i = new Intent(getActivity(), NewRideActivity.class);
     i.putExtra("start", startEndEvent.start);
     i.putExtra("end", startEndEvent.end);
     startActivity(i);
-  }
-
-  @Override
-  public void onHidden() {
-    EventBus.getDefault().unregister(this);
-  }
-
-  @Override
-  public void onVisible() {
-    EventBus.getDefault().register(this);
   }
 }
