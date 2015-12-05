@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.mwong56.polyrides.activities.BaseRxActivity;
 import com.mwong56.polyrides.adapters.PlacesAutoCompleteAdapter;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.services.GooglePlacesService;
 import com.mwong56.polyrides.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -48,13 +48,13 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setup(final GoogleApiClient client, final BaseRxActivity activity) {
-    adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_USA, null);
+    adapter = new PlacesAutoCompleteAdapter(getContext(), BOUNDS_USA, null);
     this.setAdapter(adapter);
     this.activity = new WeakReference<>(activity);
 
     this.setOnItemClickListener((parent, view, position, id) -> {
       Utils.hideKeyboard(activity);
-      final AutocompletePrediction item = adapter.getItem(position);
+      final GooglePlacesService.AutoCompleteResult item = adapter.getItem(position);
       final String placeId = item.getPlaceId();
 
       PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
@@ -104,7 +104,6 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
     this.location = location;
     enableSuggestions(false);
     this.post(() -> {
-      setText(location.getAddress());
       watchText = true;
     });
   }

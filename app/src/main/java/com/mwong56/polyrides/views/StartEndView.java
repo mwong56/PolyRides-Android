@@ -77,6 +77,14 @@ public class StartEndView extends LinearLayout {
     this.endEditText.setup(client, activity);
   }
 
+  public String getStartText() {
+    return this.startEditText.getText().toString();
+  }
+
+  public String getEndText() {
+    return this.endEditText.getText().toString();
+  }
+
   @Override
   protected void onFinishInflate() {
     super.onFinishInflate();
@@ -88,7 +96,9 @@ public class StartEndView extends LinearLayout {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
-              setStartLocation(new Location(place, getContext()));
+              Location newLocation = new Location(place, getContext());
+              setStartLocation(newLocation);
+              startEditText.setText(newLocation.getAddress());
               Utils.hideKeyboard(this.activity);
             }, error -> showToast("Could not find location")));
   }
@@ -98,7 +108,9 @@ public class StartEndView extends LinearLayout {
     compositeSubscription.add(
         locationService.getCurrentLocation(getContext())
             .subscribe(place -> {
-              setEndLocation(new Location(place, getContext()));
+              Location newLocation = new Location(place, getContext());
+              setEndLocation(newLocation);
+              endEditText.setText(newLocation.getAddress());
               Utils.hideKeyboard(this.activity);
             }, error -> showToast("Could not find location")));
   }
