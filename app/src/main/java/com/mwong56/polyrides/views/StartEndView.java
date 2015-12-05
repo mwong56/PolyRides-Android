@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
@@ -48,7 +47,6 @@ public class StartEndView extends LinearLayout {
 
   private MainActivity activity;
   private BaseRxFragment fragment;
-  private GoogleApiClient apiClient;
   private GooglePlacesService placesService = GooglePlacesServiceImpl.get();
   private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
@@ -73,32 +71,23 @@ public class StartEndView extends LinearLayout {
     this.endEditText.setLocation(location);
   }
 
-  /**
-   * Returns an array containing the start and end place.
-   *
-   * @return An array containing start and end place. Index 1 is start, Index 2 is end.
-   */
 
-  public void setup(MainActivity activity, GoogleApiClient client, BaseRxFragment fragment) {
-    this.activity = activity;
-    this.apiClient = client;
+  public void setup(BaseRxFragment fragment) {
+    this.activity = (MainActivity) getContext();
     this.fragment = fragment;
-    this.startEditText.setup(client, activity);
-    this.endEditText.setup(client, activity);
+    this.startEditText.setup(activity.getGoogleApiClient(), activity);
+    this.endEditText.setup(activity.getGoogleApiClient(), activity);
   }
 
   public void setNextButtonTitle(String title) {
     this.nextButton.setText(title);
   }
 
-  private String getStartText() {
-    return this.startEditText.getText().toString();
-  }
-
-  private String getEndText() {
-    return this.endEditText.getText().toString();
-  }
-
+  /**
+   * Returns an array containing the start and end place.
+   *
+   * @return An array containing start and end place. Index 1 is start, Index 2 is end.
+   */
   public Location[] getPlaces() {
     return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
   }
@@ -162,6 +151,7 @@ public class StartEndView extends LinearLayout {
             placeResult.setResultCallback(places -> {
               if (!places.getStatus().isSuccess()) {
                 Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                showToast(places.getStatus().toString());
                 places.release();
                 return;
               }
@@ -189,7 +179,17 @@ public class StartEndView extends LinearLayout {
   @Override
   protected void onDetachedFromWindow() {
     compositeSubscription.unsubscribe();
+    this.activity = null;
+    this.fragment = null;
     super.onDetachedFromWindow();
+  }
+
+  private String getStartText() {
+    return this.startEditText.getText().toString();
+  }
+
+  private String getEndText() {
+    return this.endEditText.getText().toString();
   }
 
   private void showToast(String error) {

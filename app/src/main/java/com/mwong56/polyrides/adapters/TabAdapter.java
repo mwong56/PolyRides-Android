@@ -25,6 +25,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     super(fm);
     this.context = context;
 
+    fragments[0].onVisible();
     for (int i = 1; i < fragments.length; i++) {
       fragments[i].onHidden();
     }

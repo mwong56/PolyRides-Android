@@ -40,7 +40,7 @@ public class PassengerFragment extends BaseTabbedFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    startEndView.setup(activity, activity.getGoogleApiClient(), this);
+    startEndView.setup(this);
     startEndView.setNextButtonTitle("Find Ride");
 
     if (savedInstanceState != null) {

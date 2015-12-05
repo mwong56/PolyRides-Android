@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.adapters.TabAdapter;
+import com.mwong56.polyrides.fragments.BaseTabbedFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +51,8 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
 
       @Override
       public void onPageSelected(int position) {
-        for (int i = 0; i < adapter.getFragments().length; i++) {
+        BaseTabbedFragment[] tabbedFragments = adapter.getFragments();
+        for (int i = 0; i < tabbedFragments.length; i++) {
           if (position != i) {
             adapter.getFragments()[i].onHidden();
           } else {
