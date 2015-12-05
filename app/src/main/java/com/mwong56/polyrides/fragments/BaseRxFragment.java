@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.mwong56.polyrides.application.PolyRidesApp;
-import com.mwong56.polyrides.utils.BusHolder;
+import com.mwong56.polyrides.utils.DummyEvent;
 import com.squareup.leakcanary.RefWatcher;
-import com.squareup.otto.Bus;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 
 /**
@@ -16,8 +16,8 @@ import icepick.Icepick;
  */
 public abstract class BaseRxFragment extends RxFragment {
 
-  protected final Bus bus = BusHolder.get();
-  private Boolean busRegister = true;
+  //  protected Bus bus = BusSingleton.get();
+  private Boolean bus = true;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public abstract class BaseRxFragment extends RxFragment {
   }
 
   public void setRegisterEvents(boolean register) {
-    this.busRegister = register;
+    this.bus = register;
   }
 
   @Override
@@ -38,15 +38,15 @@ public abstract class BaseRxFragment extends RxFragment {
   @Override
   public void onResume() {
     super.onResume();
-    if (busRegister) {
-      bus.register(this);
+    if (bus) {
+      EventBus.getDefault().register(this);
     }
   }
 
   @Override
   public void onPause() {
-    if (busRegister) {
-      bus.unregister(this);
+    if (bus) {
+      EventBus.getDefault().unregister(this);
     }
     super.onPause();
   }
@@ -65,4 +65,8 @@ public abstract class BaseRxFragment extends RxFragment {
   protected void showToast(String s) {
     Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
   }
+
+  public void onEvent(DummyEvent event) {
+  }
+
 }

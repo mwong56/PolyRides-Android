@@ -21,6 +21,7 @@ import java.util.Calendar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
@@ -141,7 +142,7 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
         showToast("Date and time must be in the future.");
       } else {
         DateTimeEvent dateTimeEvent = new DateTimeEvent(dateTime);
-        bus.post(dateTimeEvent);
+        EventBus.getDefault().post(dateTimeEvent);
       }
     }
   }

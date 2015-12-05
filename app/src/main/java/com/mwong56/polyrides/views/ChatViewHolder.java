@@ -10,11 +10,10 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Chat;
 import com.mwong56.polyrides.services.FacebookService;
 import com.mwong56.polyrides.services.FacebookServiceImpl;
-import com.mwong56.polyrides.utils.BusHolder;
 import com.mwong56.polyrides.utils.Utils;
-import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
@@ -45,14 +44,13 @@ public class ChatViewHolder extends ItemViewHolder<Chat> {
   @ViewId(R.id.conversation_list_badges)
   LinearLayout unreadView;
 
-  private final Bus bus = BusHolder.get();
   private final FacebookService facebookService = FacebookServiceImpl.get();
 
   public ChatViewHolder(View view) {
     super(view);
     getView().setOnClickListener(v -> {
       ChatListenerEvent event = new ChatListenerEvent(getItem());
-      bus.post(event);
+      EventBus.getDefault().post(event);
     });
   }
 

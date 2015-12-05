@@ -18,7 +18,6 @@ import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
-import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -94,20 +93,17 @@ public class FindRideActivity extends BaseRxActivity {
     getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
-  @Subscribe
   public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
     this.dateTime = dateTimeEvent.datetime;
     this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
     replaceFragment(fragment, "content");
   }
 
-  @Subscribe
   public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
     this.fragment = RideDetailsFragment.newInstance(rideEvent.ride, RideDetailsFragment.MESSAGE);
     replaceFragment(fragment, "content");
   }
 
-  @Subscribe
   public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
     String groupId = rideDetailsEvent.ride.getUserId().compareTo(User.getUserId()) > 0 ?
         User.getUserId() + rideDetailsEvent.ride.getUserId()

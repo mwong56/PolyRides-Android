@@ -17,7 +17,6 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.mwong56.polyrides.views.ChatViewHolder;
 import com.mwong56.polyrides.views.DividerItemDecoration;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,6 @@ public class ChatFragment extends BaseTabbedFragment {
     return view;
   }
 
-  @Subscribe
   public void onEvent(ChatViewHolder.ChatListenerEvent chatEvent) {
     Intent i = new Intent(getActivity(), MessageActivity.class);
     i.putExtra("groupId", chatEvent.chat.getGroupId());

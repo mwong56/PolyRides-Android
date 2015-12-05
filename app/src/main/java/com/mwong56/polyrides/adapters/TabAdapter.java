@@ -17,8 +17,8 @@ import com.mwong56.polyrides.fragments.PassengerFragment;
 public class TabAdapter extends FragmentStatePagerAdapter {
 
   private static final String[] items = {"Driver", "Passenger", "My Rides", "Chat"};
-  private static final BaseTabbedFragment[] fragments = { DriverFragment.newInstance(),
-      PassengerFragment.newInstance(), MyRidesFragment.newInstance(), ChatFragment.newInstance()};
+  private static final BaseTabbedFragment[] fragments = {DriverFragment.newInstance(), PassengerFragment.newInstance(),
+      MyRidesFragment.newInstance(), ChatFragment.newInstance()};
   private Context context;
 
   public TabAdapter(FragmentManager fm, Context context) {

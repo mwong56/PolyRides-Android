@@ -7,34 +7,17 @@ import android.os.Bundle;
  */
 public abstract class BaseTabbedFragment extends BaseRxFragment {
 
-  private boolean registered = false;
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRegisterEvents(false);
   }
 
-  public void onVisible() {
-    registerBus();
-  }
-
-
   public void onHidden() {
-    unregisterBus();
   }
 
-  void registerBus() {
-    if (!registered) {
-      registered = true;
-      bus.register(this);
-    }
+
+  public void onVisible() {
   }
 
-  void unregisterBus() {
-    if (registered) {
-      registered = false;
-      bus.unregister(this);
-    }
-  }
 }
