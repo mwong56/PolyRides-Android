@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
+import com.mwong56.polyrides.BuildConfig;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.squareup.leakcanary.LeakCanary;
@@ -32,7 +33,9 @@ public class PolyRidesApp extends Application {
   public void onCreate() {
     super.onCreate();
     EventBus.builder().throwSubscriberException(false).installDefaultEventBus();
-    Fabric.with(this, new Crashlytics());
+    if (!BuildConfig.DEBUG) {
+      Fabric.with(this, new Crashlytics());
+    }
     if (INSTANCE == null) {
       INSTANCE = this;
     }

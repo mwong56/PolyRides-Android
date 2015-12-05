@@ -97,7 +97,7 @@ dependencies {
     provided "frankiesardo:icepick-processor:3.1.0-SNAPSHOT"
     compile "org.parceler:parceler-api:1.0.3"
     apt "org.parceler:parceler:1.0.3"
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.3@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
