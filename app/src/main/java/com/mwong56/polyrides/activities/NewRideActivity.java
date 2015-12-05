@@ -26,12 +26,10 @@ import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
-public class NewRideActivity extends BaseRxActivity implements
-    SeatsFragment.SeatsListener, NotesFragment.NotesListener, RideDetailsFragment.RideDetailsListener {
+public class NewRideActivity extends BaseRxActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -53,7 +51,6 @@ public class NewRideActivity extends BaseRxActivity implements
   private Fragment fragment;
   private DateTime dateTime;
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
-  private final EventBus bus = EventBus.getDefault();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +76,6 @@ public class NewRideActivity extends BaseRxActivity implements
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
     }
-
-    bus.register(this);
   }
 
   @Override
@@ -107,12 +102,6 @@ public class NewRideActivity extends BaseRxActivity implements
   }
 
   @Override
-  protected void onDestroy() {
-    bus.unregister(this);
-    super.onDestroy();
-  }
-
-  @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     Icepick.restoreInstanceState(this, savedInstanceState);
     if (savedInstanceState != null) {
@@ -135,25 +124,22 @@ public class NewRideActivity extends BaseRxActivity implements
     replaceFragment(fragment, "content");
   }
 
-  @Override
-  public void onSeatsSet(int cost, int seats) {
-    this.cost = cost;
-    this.seats = seats;
+  public void onEvent(SeatsFragment.SeatsEvent seatsEvent) {
+    this.cost = seatsEvent.cost;
+    this.seats = seatsEvent.seats;
     fragment = NotesFragment.newInstance();
     replaceFragment(fragment, "content");
   }
 
-  @Override
-  public void onNotesSet(String string) {
-    this.note = string;
+  public void onEvent(NotesFragment.NotesEvent notesEvent) {
+    this.note = notesEvent.note;
     Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId(), null);
     fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
     replaceFragment(fragment, "content");
   }
 
-  @Override
-  public void onDetailsButtonClicked(Ride ride) {
-    polyRidesService.saveNewRide(ride)
+  public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
+    polyRidesService.saveNewRide(rideDetailsEvent.ride)
         .compose(bindToLifecycle())
         .subscribe(onNext -> {
               showToast("Ride saved!");

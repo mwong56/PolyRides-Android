@@ -16,7 +16,6 @@ import com.mwong56.polyrides.fragments.PassengerRidesFragment;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
 import com.mwong56.polyrides.models.DateTime;
 import com.mwong56.polyrides.models.Location;
-import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
@@ -24,8 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
-public class FindRideActivity extends BaseRxActivity implements
-    PassengerRideViewHolder.RideListener, RideDetailsFragment.RideDetailsListener {
+public class FindRideActivity extends BaseRxActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -103,16 +101,15 @@ public class FindRideActivity extends BaseRxActivity implements
     replaceFragment(fragment, "content");
   }
 
-  @Override
-  public void onRideClicked(Ride ride) {
-    this.fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.MESSAGE);
+  public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
+    this.fragment = RideDetailsFragment.newInstance(rideEvent.ride, RideDetailsFragment.MESSAGE);
     replaceFragment(fragment, "content");
   }
 
-  @Override
-  public void onDetailsButtonClicked(Ride ride) {
-    String groupId = ride.getUserId().compareTo(User.getUserId()) > 0 ? User.getUserId() +
-        ride.getUserId() : ride.getUserId() + User.getUserId();
+  public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
+    String groupId = rideDetailsEvent.ride.getUserId().compareTo(User.getUserId()) > 0 ?
+        User.getUserId() + rideDetailsEvent.ride.getUserId()
+        : rideDetailsEvent.ride.getUserId() + User.getUserId();
 
     Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
     i.putExtra("groupId", groupId);

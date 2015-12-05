@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.mwong56.polyrides.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.State;
 
@@ -28,14 +28,19 @@ public class SeatsFragment extends BaseRxFragment {
   @Bind(R.id.seats)
   NumberPicker seatsPicker;
 
-  private SeatsListener listener;
   @State
   int cost;
   @State
   int seats;
 
-  public interface SeatsListener {
-    void onSeatsSet(int cost, int seats);
+  public class SeatsEvent {
+    public int cost;
+    public int seats;
+
+    public SeatsEvent(int cost, int seats) {
+      this.cost = cost;
+      this.seats = seats;
+    }
   }
 
   public static SeatsFragment newInstance() {
@@ -76,23 +81,6 @@ public class SeatsFragment extends BaseRxFragment {
     return view;
   }
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    try {
-      listener = (SeatsListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(context.toString() + " must implement SeatsListener");
-    }
-  }
-
-  @Override
-  public void onDetach() {
-    listener = null;
-    super.onDetach();
-  }
-
-
   @OnClick(R.id.next_button)
   void onNextClicked() {
     try {
@@ -102,6 +90,6 @@ public class SeatsFragment extends BaseRxFragment {
       return;
     }
     int seats = seatsPicker.getValue();
-    listener.onSeatsSet(cost, seats);
+    EventBus.getDefault().post(new SeatsEvent(cost, seats));
   }
 }

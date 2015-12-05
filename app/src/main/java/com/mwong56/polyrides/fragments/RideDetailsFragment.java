@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import org.parceler.Parcels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,7 +36,6 @@ public class RideDetailsFragment extends BaseRxFragment {
 
   private Ride ride;
   private int type;
-  private RideDetailsListener listener;
 
   public static RideDetailsFragment newInstance(Ride ride, int type) {
     Bundle bundle = new Bundle();
@@ -79,31 +78,16 @@ public class RideDetailsFragment extends BaseRxFragment {
     return view;
   }
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    try {
-      listener = (RideDetailsListener) context;
-    } catch (ClassCastException e) {
-      throw new ClassCastException(context.toString() + " must implement DateTimeListener");
-    }
-  }
-
-  @Override
-  public void onDetach() {
-    listener = null;
-    super.onDetach();
-  }
-
-
   @OnClick(R.id.ride_details_button)
   void onClick() {
-    if (listener != null) {
-      listener.onDetailsButtonClicked(ride);
-    }
+    EventBus.getDefault().post(new RideDetailsEvent(ride));
   }
 
-  public interface RideDetailsListener {
-    void onDetailsButtonClicked(Ride ride);
+  public class RideDetailsEvent{
+    public Ride ride;
+
+    public RideDetailsEvent(Ride ride) {
+      this.ride = ride;
+    }
   }
 }

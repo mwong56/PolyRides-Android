@@ -8,6 +8,7 @@ import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
@@ -32,15 +33,8 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
 
   public PassengerRideViewHolder(View view) {
     super(view);
-  }
-
-  @Override
-  public void onSetListeners() {
-    this.getView().setOnClickListener(v -> {
-      RideListener listener = getListener(RideListener.class);
-      if (listener != null) {
-        listener.onRideClicked(getItem());
-      }
+    getView().setOnClickListener(v -> {
+      EventBus.getDefault().post(new RideEvent(getItem()));
     });
   }
 
@@ -51,8 +45,11 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
     time.setText(ride.getDateTime().printDate() + " at " + ride.getDateTime().printTime());
   }
 
-  public interface RideListener {
-    void onRideClicked(Ride ride);
-  }
+  public class RideEvent {
+    public Ride ride;
 
+    public RideEvent(Ride ride) {
+      this.ride = ride;
+    }
+  }
 }

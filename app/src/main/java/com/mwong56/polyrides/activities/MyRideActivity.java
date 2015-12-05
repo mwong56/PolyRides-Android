@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by micha on 10/22/2015.
  */
-public class MyRideActivity extends BaseRxActivity implements RideDetailsFragment.RideDetailsListener{
+public class MyRideActivity extends BaseRxActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -74,9 +74,8 @@ public class MyRideActivity extends BaseRxActivity implements RideDetailsFragmen
     getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
-  @Override
-  public void onDetailsButtonClicked(Ride ride) {
-    polyRidesService.removeRide(ride).subscribe(onNext -> {
+  public void onEvent(RideDetailsFragment.RideDetailsEvent rideDetailsEvent) {
+    polyRidesService.removeRide(rideDetailsEvent.ride).subscribe(onNext -> {
       showToast("Ride removed");
       Intent i = new Intent(getBaseContext(), MainActivity.class);
       startActivity(i);

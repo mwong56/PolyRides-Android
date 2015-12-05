@@ -31,7 +31,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class MyRidesFragment extends BaseRxFragment implements PassengerRideViewHolder.RideListener {
+public class MyRidesFragment extends BaseRxFragment {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -102,10 +102,9 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
     return view;
   }
 
-  @Override
-  public void onRideClicked(Ride ride) {
+  public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
     Intent i = new Intent(getActivity(), MyRideActivity.class);
-    i.putExtra("ride", Parcels.wrap(ride));
+    i.putExtra("ride", Parcels.wrap(rideEvent.ride));
     startActivity(i);
   }
 }
