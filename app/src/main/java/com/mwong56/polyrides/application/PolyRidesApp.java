@@ -45,10 +45,8 @@ public class PolyRidesApp extends Application {
     refWatcher = LeakCanary.install(this);
 
     // Enable Local Datastore.
-    Parse.enableLocalDatastore(this);
     Parse.initialize(this, "tNVCuf8tnZgADqVCuBUegChrNis54koIAqnGzSJ3", "pghidrtoMmpnst4uebxV5oiwtsbnNMZKxs53Yxs6");
     ParseInstallation.getCurrentInstallation().saveInBackground();
-    Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
   }
 
   public void setMessageGroupIdInForeground(String groupId) {

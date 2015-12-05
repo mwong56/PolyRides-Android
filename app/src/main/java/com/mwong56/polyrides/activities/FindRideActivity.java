@@ -21,7 +21,6 @@ import com.mwong56.polyrides.views.PassengerRideViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 public class FindRideActivity extends BaseRxActivity {
 
@@ -35,7 +34,6 @@ public class FindRideActivity extends BaseRxActivity {
   private Location start;
   private Location end;
   private DateTime dateTime;
-  private final EventBus bus = EventBus.getDefault();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
