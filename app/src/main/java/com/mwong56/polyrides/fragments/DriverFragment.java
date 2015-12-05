@@ -12,7 +12,6 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.NewRideActivity;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.views.StartEndView;
-import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,12 +19,11 @@ import butterknife.ButterKnife;
 /**
  * Created by micha on 10/9/2015.
  */
-public class DriverFragment extends BaseTabbedFragment {
+public class DriverFragment extends BaseRxFragment implements StartEndView.StartEndListener {
   private static final String TAG = DriverFragment.TAG;
 
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
-
 
   public static DriverFragment newInstance() {
     return new DriverFragment();
@@ -35,6 +33,7 @@ public class DriverFragment extends BaseTabbedFragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     startEndView.setup(this);
+    startEndView.setListener(this);
     startEndView.setNextButtonTitle("Create Ride");
 
     if (savedInstanceState != null) {
@@ -50,7 +49,6 @@ public class DriverFragment extends BaseTabbedFragment {
       }
     }
   }
-
 
   //TODO: Save instance state in the view instead of in fragment.
   @Override
@@ -68,12 +66,11 @@ public class DriverFragment extends BaseTabbedFragment {
     return view;
   }
 
-
-  @Subscribe
-  public void onEvent(StartEndView.StartEndEvent startEndEvent) {
+  @Override
+  public void onNext(Location start, Location end) {
     Intent i = new Intent(getActivity(), NewRideActivity.class);
-    i.putExtra("start", startEndEvent.start);
-    i.putExtra("end", startEndEvent.end);
+    i.putExtra("start", start);
+    i.putExtra("end", end);
     startActivity(i);
   }
 }

@@ -25,10 +25,6 @@ public abstract class BaseRxFragment extends RxFragment {
     Icepick.restoreInstanceState(this, savedInstanceState);
   }
 
-  public void setRegisterEvents(boolean register) {
-    this.busRegister = register;
-  }
-
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);

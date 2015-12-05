@@ -19,9 +19,7 @@ import com.mwong56.polyrides.services.GooglePlacesService;
 import com.mwong56.polyrides.services.GooglePlacesServiceImpl;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
-import com.mwong56.polyrides.utils.BusHolder;
 import com.mwong56.polyrides.utils.Utils;
-import com.squareup.otto.Bus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,13 +44,12 @@ public class StartEndView extends LinearLayout {
   @Bind(R.id.start_from_next_button)
   Button nextButton;
 
+  private StartEndListener listener;
   private MainActivity activity;
   private BaseRxFragment fragment;
+  private GooglePlacesService placesService = GooglePlacesServiceImpl.get();
+  private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
-
-  private final Bus bus = BusHolder.get();
-  private final GooglePlacesService placesService = GooglePlacesServiceImpl.get();
-  private final LocationService locationService = LocationServiceImpl.instance();
 
   public StartEndView(Context context) {
     super(context);
@@ -80,6 +77,10 @@ public class StartEndView extends LinearLayout {
     this.fragment = fragment;
     this.startEditText.setup(activity.getGoogleApiClient(), activity);
     this.endEditText.setup(activity.getGoogleApiClient(), activity);
+  }
+
+  public void setListener(StartEndListener listener) {
+    this.listener = listener;
   }
 
   public void setNextButtonTitle(String title) {
@@ -138,7 +139,9 @@ public class StartEndView extends LinearLayout {
     }
 
     if (locations[0] != null && locations[1] != null) {
-      bus.post(new StartEndEvent(locations[0], locations[1]));
+      if (listener != null) {
+        listener.onNext(locations[0], locations[1]);
+      }
     }
   }
 
@@ -199,13 +202,7 @@ public class StartEndView extends LinearLayout {
     Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
   }
 
-  public class StartEndEvent {
-    public Location start;
-    public Location end;
-
-    public StartEndEvent(Location start, Location end) {
-      this.start = start;
-      this.end = end;
-    }
+  public interface StartEndListener {
+    void onNext(Location start, Location end);
   }
 }

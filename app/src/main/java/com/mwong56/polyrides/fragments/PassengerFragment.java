@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,9 +12,9 @@ import android.widget.Button;
 
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.activities.FindRideActivity;
+import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.views.StartEndView;
-import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,14 +22,15 @@ import butterknife.ButterKnife;
 /**
  * Created by micha on 10/9/2015.
  */
-public class PassengerFragment extends BaseTabbedFragment {
-
+public class PassengerFragment extends BaseRxFragment implements StartEndView.StartEndListener {
 
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
 
   @Bind(R.id.find_ride_button)
   Button findRideButton;
+
+  private MainActivity activity;
 
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
@@ -38,6 +40,7 @@ public class PassengerFragment extends BaseTabbedFragment {
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     startEndView.setup(this);
+    startEndView.setListener(this);
     startEndView.setNextButtonTitle("Find Ride");
 
     if (savedInstanceState != null) {
@@ -61,6 +64,18 @@ public class PassengerFragment extends BaseTabbedFragment {
     outState.putParcelableArray("locations", locations);
   }
 
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    this.activity = (MainActivity) context;
+  }
+
+  @Override
+  public void onDetach() {
+    this.activity = null;
+    super.onDetach();
+  }
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,11 +84,11 @@ public class PassengerFragment extends BaseTabbedFragment {
     return view;
   }
 
-  @Subscribe
-  public void onEvent(StartEndView.StartEndEvent startEndEvent) {
+  @Override
+  public void onNext(Location start, Location end) {
     Intent i = new Intent(getActivity(), FindRideActivity.class);
-    i.putExtra("start", startEndEvent.start);
-    i.putExtra("end", startEndEvent.end);
+    i.putExtra("start", start);
+    i.putExtra("end", end);
     startActivity(i);
   }
 }
