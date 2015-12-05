@@ -28,7 +28,8 @@ import icepick.State;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog.OnTimeSetListener,
+    DatePickerDialog.OnDateSetListener {
 
   @Bind(R.id.header_image)
   ImageView headerImageView;
@@ -137,13 +138,17 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   void onNextClicked() {
     if (this.dateSet && this.timeSet) {
       this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-      EventBus.getDefault().post(new DateTimeEvent().datetime = this.dateTime);
+      if (this.dateTime.getDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
+        showToast("Date and time must be in the future.");
+      } else {
+        DateTimeEvent dateTimeEvent = new DateTimeEvent(dateTime);
+        EventBus.getDefault().post(dateTimeEvent);
+      }
     }
   }
 
   @Override
   public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-    //TODO: Validate dateTime.
     this.year = year;
     this.monthOfYear = monthOfYear;
     this.dayOfMonth = dayOfMonth;
@@ -154,7 +159,6 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
 
   @Override
   public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-    //TODO: Validate dateTime.
     this.hourOfDay = hourOfDay;
     this.minute = minute;
     this.timeSet = true;
@@ -162,8 +166,11 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
     timeTextView.setText(dateTime.printTime());
   }
 
-
   public class DateTimeEvent {
     public DateTime datetime;
+
+    public DateTimeEvent(DateTime datetime) {
+      this.datetime = datetime;
+    }
   }
 }

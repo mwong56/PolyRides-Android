@@ -29,7 +29,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatListener {
+public class ChatFragment extends BaseRxFragment {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -51,7 +51,7 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    this.adapter = new EasyRecyclerAdapter<>(getContext(), ChatViewHolder.class, chatList, this);
+    this.adapter = new EasyRecyclerAdapter<>(getContext(), ChatViewHolder.class, chatList);
     this.recyclerView.setAdapter(adapter);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -83,7 +83,7 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
           } else {
             noMessageView.setVisibility(View.GONE);
           }
-        }, error -> showToast(error));
+        }, this::showToast);
   }
 
   @Nullable
@@ -94,10 +94,9 @@ public class ChatFragment extends BaseRxFragment implements ChatViewHolder.ChatL
     return view;
   }
 
-  @Override
-  public void onChatClicked(Chat chat) {
+  public void onEvent(ChatViewHolder.ChatListenerEvent chatEvent) {
     Intent i = new Intent(getActivity(), MessageActivity.class);
-    i.putExtra("groupId", chat.getGroupId());
+    i.putExtra("groupId", chatEvent.chat.getGroupId());
     startActivity(i);
   }
 }

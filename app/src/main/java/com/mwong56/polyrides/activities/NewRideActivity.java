@@ -155,8 +155,10 @@ public class NewRideActivity extends BaseRxActivity implements
   public void onDetailsButtonClicked(Ride ride) {
     polyRidesService.saveNewRide(ride)
         .compose(bindToLifecycle())
-        .subscribe(onNext -> openMainActivity()
-            , error -> showToast(error)
+        .subscribe(onNext -> {
+              showToast("Ride saved!");
+              openMainActivity();
+            }, this::showToast
         );
   }
 

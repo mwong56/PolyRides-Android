@@ -61,8 +61,6 @@ public class FindRideActivity extends BaseRxActivity implements
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
     }
-
-    bus.register(this);
   }
 
   @Override
@@ -89,11 +87,9 @@ public class FindRideActivity extends BaseRxActivity implements
   }
 
   @Override
-  protected void onDestroy() {
-    bus.unregister(this);
-    super.onDestroy();
+  protected void onPause() {
+    super.onPause();
   }
-
 
   @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {

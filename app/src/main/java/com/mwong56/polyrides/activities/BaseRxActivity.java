@@ -6,8 +6,10 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.utils.DummyEvent;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 
 /**
@@ -32,17 +34,21 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-//    bus.register(this);
+    EventBus.getDefault().register(this);
   }
 
   @Override
   protected void onPause() {
+    EventBus.getDefault().unregister(this);
     super.onPause();
-//    bus.unregister(this);
   }
 
-  protected void showToast(Throwable e) {
+  public void showToast(Throwable e) {
     Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
+  }
+
+  public void showToast(String s) {
+    Toast.makeText(getBaseContext(), s, Toast.LENGTH_SHORT).show();
   }
 
   protected void replaceFragment(Fragment fragment, String tag) {
@@ -53,4 +59,8 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
         .addToBackStack(tag)
         .commit();
   }
+
+
+  public void onEvent(DummyEvent event) { }
+
 }

@@ -1,12 +1,10 @@
 package com.mwong56.polyrides.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,7 @@ import butterknife.OnClick;
 /**
  * Created by micha on 10/9/2015.
  */
-public class PassengerFragment extends Fragment implements StartEndView.StartEndViewListener {
+public class PassengerFragment extends BaseRxFragment {
 
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
@@ -34,7 +32,6 @@ public class PassengerFragment extends Fragment implements StartEndView.StartEnd
   Button findRideButton;
 
   private MainActivity activity;
-  private boolean startSet, endSet;
 
   public static PassengerFragment newInstance() {
     return new PassengerFragment();
@@ -45,7 +42,6 @@ public class PassengerFragment extends Fragment implements StartEndView.StartEnd
     super.onActivityCreated(savedInstanceState);
 
     startEndView.setup(activity, activity.getGoogleApiClient(), this);
-    startEndView.setListener(this);
 
     if (savedInstanceState != null) {
       Parcelable[] parcelables = savedInstanceState.getParcelableArray("locations");
@@ -80,7 +76,6 @@ public class PassengerFragment extends Fragment implements StartEndView.StartEnd
     super.onDetach();
   }
 
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,41 +92,8 @@ public class PassengerFragment extends Fragment implements StartEndView.StartEnd
       i.putExtra("start", locations[0]);
       i.putExtra("end", locations[1]);
       startActivity(i);
-    }
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    if (resultCode == Activity.RESULT_OK) {
-      startEndView.onActivityResultCalled(requestCode, data);
-    }
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    validateNextButton();
-  }
-
-  private void validateNextButton() {
-    if (!startSet || !endSet) {
-      findRideButton.setTextColor(getResources().getColor(R.color.PrimaryAccent));
     } else {
-      findRideButton.setTextColor(getResources().getColor(R.color.PrimaryColor));
+      showToast("Start and end location must be entered.");
     }
-  }
-
-
-  @Override
-  public void onStartListener(boolean set) {
-    startSet = set;
-    validateNextButton();
-  }
-
-  @Override
-  public void onEndListener(boolean set) {
-    endSet = set;
-    validateNextButton();
   }
 }

@@ -10,6 +10,8 @@ import com.parse.ParseInstallation;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tumblr.remember.Remember;
+
+import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -29,6 +31,7 @@ public class PolyRidesApp extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    EventBus.builder().throwSubscriberException(false).installDefaultEventBus();
     Fabric.with(this, new Crashlytics());
     if (INSTANCE == null) {
       INSTANCE = this;

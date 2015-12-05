@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.mwong56.polyrides.application.PolyRidesApp;
+import com.mwong56.polyrides.utils.DummyEvent;
 import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 
 /**
@@ -31,13 +33,13 @@ public abstract class BaseRxFragment extends RxFragment {
   @Override
   public void onResume() {
     super.onResume();
-//    bus.register(this);
+    EventBus.getDefault().register(this);
   }
 
   @Override
   public void onPause() {
+    EventBus.getDefault().unregister(this);
     super.onPause();
-//    bus.unregister(this);
   }
 
   @Override
@@ -50,4 +52,12 @@ public abstract class BaseRxFragment extends RxFragment {
   protected void showToast(Throwable e) {
     Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
   }
+
+  protected void showToast(String s) {
+    Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+  }
+
+  public void onEvent(DummyEvent event) {
+  }
+
 }

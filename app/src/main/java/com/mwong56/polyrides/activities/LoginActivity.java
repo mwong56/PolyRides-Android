@@ -59,13 +59,13 @@ public class LoginActivity extends BaseRxActivity {
         getUserIdAndUsername()
             .subscribe(pair -> {
               polyRidesService.saveUserId(pair.first)
-                  .subscribe(new DoNothingOnNextAction(), error -> showToast(error));
+                  .subscribe(new DoNothingOnNextAction(), LoginActivity.this::showToast);
               User.setUserId(pair.first);
               User.setUserName(pair.second);
               Crashlytics.setUserIdentifier(pair.first);
               Crashlytics.setUserName(pair.second);
               startMainActivity();
-            }, error -> showToast(error));
+            }, LoginActivity.this::showToast);
       }
 
       @Override
@@ -94,7 +94,7 @@ public class LoginActivity extends BaseRxActivity {
 
   Observable<Pair<String, String>> getUserIdAndUsername() {
     return Observable.zip(fbService.getMyUserId(AccessToken.getCurrentAccessToken()),
-        fbService.getMyUserName(AccessToken.getCurrentAccessToken()), (s, s2) -> Pair.create(s, s2))
+        fbService.getMyUserName(AccessToken.getCurrentAccessToken()), Pair::create)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.newThread())
         .compose(bindToLifecycle());

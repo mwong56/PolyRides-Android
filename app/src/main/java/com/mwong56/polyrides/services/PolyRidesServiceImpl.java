@@ -317,6 +317,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("notes", ride.getNote());
           newRide.put("userId", ride.getUserId());
           newRide.put("name", User.getUserName());
+          newRide.put("email", "");
           newRide.saveInBackground(e -> {
             if (e != null) {
               subscriber.onError(e);
@@ -333,24 +334,46 @@ public class PolyRidesServiceImpl implements PolyRidesService {
   }
 
   @Override
-  public Observable<List<Ride>> getRides(Date date, boolean myRides) {
+  public Observable<List<Ride>> getRides(Date date) {
     Observable toReturn = Observable.create(subscriber -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
-      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
-      if (currentDate.compareTo(date) > 0) {
-        Date newDate = new Date(currentDate.getTime() + ONE_DAY_BEHIND);
+      Date newDate = new Date(date.getTime() + ONE_DAY_BEHIND);
+      query.whereNotEqualTo("userId", User.getUserId());
 
-        if (newDate.compareTo(date) < 0) {
-          query.whereGreaterThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_BEHIND));
-          query.whereLessThanOrEqualTo("dateTime", new Date(currentDate.getTime() + ONE_DAY_AHEAD));
-        }
-      }
-      if (myRides) {
-        query.whereEqualTo("userId", User.getUserId());
+      // If the date inputted - 1 day is greater than current date, search for date - 1
+      if (currentDate.compareTo(newDate) <= 0) {
+        query.whereGreaterThanOrEqualTo("dateTime", newDate);
       } else {
-        query.whereNotEqualTo("userId", User.getUserId());
+        query.whereGreaterThanOrEqualTo("dateTime", currentDate);
       }
+      query.whereLessThanOrEqualTo("dateTime", new Date(date.getTime() + ONE_DAY_AHEAD));
+
+      try {
+        List<Ride> rides = new ArrayList<>();
+
+        for (ParseObject object : query.find()) {
+          rides.add(Ride.parseToRide(object));
+        }
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(rides);
+          subscriber.onCompleted();
+        }
+      } catch (Exception e) {
+        subscriber.onError(e);
+      }
+    });
+
+    return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
+  }
+
+  @Override
+  public Observable<List<Ride>> getMyRides() {
+    Observable toReturn = Observable.create(subscriber -> {
+      ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
+      Date currentDate = Calendar.getInstance().getTime();
+      query.whereEqualTo("userId", User.getUserId());
+      query.whereGreaterThanOrEqualTo("dateTime", currentDate);
 
       try {
         List<Ride> rides = new ArrayList<>();

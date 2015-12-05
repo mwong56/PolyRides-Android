@@ -21,7 +21,6 @@ import com.mwong56.polyrides.views.PassengerRideViewHolder;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -32,7 +31,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class MyRidesFragment extends BaseRxFragment implements PassengerRideViewHolder.RideListener{
+public class MyRidesFragment extends BaseRxFragment implements PassengerRideViewHolder.RideListener {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;
@@ -79,7 +78,7 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
     progressBar.setVisibility(View.VISIBLE);
     noRidesView.setVisibility(View.GONE);
 
-    polyRidesService.getRides(Calendar.getInstance().getTime(), true)
+    polyRidesService.getMyRides()
         .compose(bindToLifecycle())
         .subscribe(rides -> {
           rideList.clear();
@@ -92,7 +91,7 @@ public class MyRidesFragment extends BaseRxFragment implements PassengerRideView
           } else {
             noRidesView.setVisibility(View.GONE);
           }
-        }, error -> showToast(error));
+        }, this::showToast);
   }
 
   @Nullable
