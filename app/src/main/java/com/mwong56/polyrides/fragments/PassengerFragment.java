@@ -18,12 +18,12 @@ import com.mwong56.polyrides.views.StartEndView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by micha on 10/9/2015.
  */
-public class PassengerFragment extends BaseRxFragment {
+public class PassengerFragment extends BaseTabbedFragment {
 
   @Bind(R.id.start_from_view)
   StartEndView startEndView;
@@ -40,8 +40,8 @@ public class PassengerFragment extends BaseRxFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-
     startEndView.setup(activity, activity.getGoogleApiClient(), this);
+    startEndView.setNextButtonTitle("Find Ride");
 
     if (savedInstanceState != null) {
       Parcelable[] parcelables = savedInstanceState.getParcelableArray("locations");
@@ -84,16 +84,20 @@ public class PassengerFragment extends BaseRxFragment {
     return view;
   }
 
-  @OnClick(R.id.find_ride_button)
-  void findRide() {
-    Location[] locations = startEndView.getPlaces();
-    if (locations[0] != null && locations[1] != null) {
-      Intent i = new Intent(getActivity(), FindRideActivity.class);
-      i.putExtra("start", locations[0]);
-      i.putExtra("end", locations[1]);
-      startActivity(i);
-    } else {
-      showToast("Start and end location must be entered.");
-    }
+  public void onEvent(StartEndView.StartEndEvent startEndEvent) {
+    Intent i = new Intent(getActivity(), FindRideActivity.class);
+    i.putExtra("start", startEndEvent.start);
+    i.putExtra("end", startEndEvent.end);
+    startActivity(i);
+  }
+
+  @Override
+  public void onHidden() {
+    EventBus.getDefault().unregister(this);
+  }
+
+  @Override
+  public void onVisible() {
+    EventBus.getDefault().register(this);
   }
 }

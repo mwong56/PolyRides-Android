@@ -1,15 +1,23 @@
 package com.mwong56.polyrides.views;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.mwong56.polyrides.R;
-import com.mwong56.polyrides.activities.BaseRxActivity;
+import com.mwong56.polyrides.activities.MainActivity;
+import com.mwong56.polyrides.fragments.BaseRxFragment;
 import com.mwong56.polyrides.models.Location;
+import com.mwong56.polyrides.services.GooglePlacesService;
+import com.mwong56.polyrides.services.GooglePlacesServiceImpl;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.Utils;
@@ -17,6 +25,7 @@ import com.mwong56.polyrides.utils.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -34,9 +43,13 @@ public class StartEndView extends LinearLayout {
   @Bind(R.id.end)
   PlacesAutoComplete endEditText;
 
-  private BaseRxActivity activity;
-  private Fragment fragment;
+  @Bind(R.id.start_from_next_button)
+  Button nextButton;
+
+  private MainActivity activity;
+  private BaseRxFragment fragment;
   private GoogleApiClient apiClient;
+  private GooglePlacesService placesService = GooglePlacesServiceImpl.get();
   private LocationService locationService = LocationServiceImpl.instance();
   private CompositeSubscription compositeSubscription = new CompositeSubscription();
 
@@ -65,11 +78,8 @@ public class StartEndView extends LinearLayout {
    *
    * @return An array containing start and end place. Index 1 is start, Index 2 is end.
    */
-  public Location[] getPlaces() {
-    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
-  }
 
-  public void setup(BaseRxActivity activity, GoogleApiClient client, Fragment fragment) {
+  public void setup(MainActivity activity, GoogleApiClient client, BaseRxFragment fragment) {
     this.activity = activity;
     this.apiClient = client;
     this.fragment = fragment;
@@ -77,12 +87,20 @@ public class StartEndView extends LinearLayout {
     this.endEditText.setup(client, activity);
   }
 
-  public String getStartText() {
+  public void setNextButtonTitle(String title) {
+    this.nextButton.setText(title);
+  }
+
+  private String getStartText() {
     return this.startEditText.getText().toString();
   }
 
-  public String getEndText() {
+  private String getEndText() {
     return this.endEditText.getText().toString();
+  }
+
+  public Location[] getPlaces() {
+    return new Location[]{startEditText.getLocation(), endEditText.getLocation()};
   }
 
   @Override
@@ -115,6 +133,53 @@ public class StartEndView extends LinearLayout {
             }, error -> showToast("Could not find location")));
   }
 
+  @OnClick(R.id.start_from_next_button)
+  void onNextButton() {
+    Location[] locations = getPlaces();
+
+    if (locations[0] == null) {
+      findAddress(getStartText(), true);
+    }
+
+    if (locations[1] == null) {
+      findAddress(getEndText(), false);
+    }
+
+    if (locations[0] != null && locations[1] != null) {
+      EventBus.getDefault().post(new StartEndEvent(locations[0], locations[1]));
+    }
+  }
+
+  private void findAddress(String address, boolean start) {
+    placesService.getAutoCompleteAsync(address)
+        .compose(fragment.bindToLifecycle())
+        .subscribe(predictions -> {
+          if (predictions.size() > 0) {
+            final String placeId = predictions.get(0).getPlaceId();
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                .getPlaceById(activity.getGoogleApiClient(), placeId);
+            placeResult.setResultCallback(places -> {
+              if (!places.getStatus().isSuccess()) {
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+              }
+              final Place place1 = places.get(0);
+              if (start) {
+                setStartLocation(new Location(place1, getContext()));
+              } else {
+                setEndLocation(new Location(place1, getContext()));
+              }
+              onNextButton();
+              places.release();
+            });
+          } else {
+            showToast("The address you entered is invalid.");
+          }
+        }, this.activity::showToast);
+  }
+
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
@@ -129,5 +194,15 @@ public class StartEndView extends LinearLayout {
 
   private void showToast(String error) {
     Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+  }
+
+  public class StartEndEvent {
+    public Location start;
+    public Location end;
+
+    public StartEndEvent(Location start, Location end) {
+      this.start = start;
+      this.end = end;
+    }
   }
 }

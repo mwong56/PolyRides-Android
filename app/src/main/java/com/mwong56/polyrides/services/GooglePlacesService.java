@@ -26,7 +26,7 @@ public interface GooglePlacesService {
     public AutoCompleteResult(String description, String placeId) {
       this.description = description;
       this.placeId = placeId;
-      String[] split = this.description.split(",", 2);
+      String[] split = this.description.split(", ", 2);
       primaryText = split[0];
       secondaryText = split[1];
     }
@@ -47,7 +47,9 @@ public interface GooglePlacesService {
 
     public CharSequence getSecondaryText(CharacterStyle characterStyle) {
       SpannableString str = new SpannableString(this.secondaryText);
-      str.setSpan(characterStyle, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      if (characterStyle != null) {
+        str.setSpan(characterStyle, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      }
       return str;
     }
   }

@@ -3,6 +3,7 @@ package com.mwong56.polyrides.activities;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
@@ -41,6 +42,28 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
 
     TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), getBaseContext());
     viewPager.setAdapter(adapter);
+    viewPager.addOnPageChangeListener(new OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override
+      public void onPageSelected(int position) {
+        for (int i = 0; i < adapter.getFragments().length; i++) {
+          if (position != i) {
+            adapter.getFragments()[i].onHidden();
+          } else {
+            adapter.getFragments()[i].onVisible();
+          }
+        }
+      }
+
+      @Override
+      public void onPageScrollStateChanged(int state) {
+
+      }
+    });
 
     tabLayout.setupWithViewPager(viewPager);
 

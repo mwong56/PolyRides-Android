@@ -57,7 +57,7 @@ public class PlacesAutoCompleteAdapter
     // Note that getPrimaryText() and getSecondaryText() return a CharSequence that may contain
     // styling based on the given CharacterStyle.
 
-    //TODO: This .size() is a hacky fix.
+    //TODO: This .size() == 0 is attempting to fix a crash.
     if (this.mResultList.size() == 0 || position > this.mResultList.size()) {
       return row;
     }
@@ -67,7 +67,7 @@ public class PlacesAutoCompleteAdapter
     TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
     TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
     textView1.setText(item.getPrimaryText(STYLE_BOLD));
-    textView2.setText(item.getSecondaryText(STYLE_BOLD));
+    textView2.setText(item.getSecondaryText(null));
 
     return row;
   }

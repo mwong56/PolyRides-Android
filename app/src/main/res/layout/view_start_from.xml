@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -21,8 +21,8 @@
           android:id="@+id/start"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:inputType="textFilter|textNoSuggestions"
           android:hint="From where?"
+          android:inputType="textFilter|textNoSuggestions"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -58,8 +58,8 @@
           android:id="@+id/end"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:inputType="textFilter|textNoSuggestions"
           android:hint="To where?"
+          android:inputType="textFilter|textNoSuggestions"
           android:textSize="13sp"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -79,4 +79,24 @@
           android:background="@drawable/ic_communication_location_on"/>
     </com.andexert.library.RippleView>
   </LinearLayout>
+
+  <Button
+      android:id="@+id/start_from_next_button"
+      style="?android:attr/borderlessButtonStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="20dp"
+      android:text="Create New Ride"
+      android:textColor="@color/PrimaryColor"/>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"/>
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:src="@drawable/powered_by_google_on_white"/>
 </com.mwong56.polyrides.views.StartEndView>

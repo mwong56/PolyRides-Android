@@ -29,7 +29,7 @@ import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 /**
  * Created by micha on 10/9/2015.
  */
-public class ChatFragment extends BaseRxFragment {
+public class ChatFragment extends BaseTabbedFragment {
 
   @Bind(R.id.recycler_view)
   RecyclerView recyclerView;

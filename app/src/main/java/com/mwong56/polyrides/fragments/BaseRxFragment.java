@@ -16,12 +16,17 @@ import icepick.Icepick;
  */
 public abstract class BaseRxFragment extends RxFragment {
 
-//  protected Bus bus = BusSingleton.get();
+  //  protected Bus bus = BusSingleton.get();
+  private Boolean bus = true;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Icepick.restoreInstanceState(this, savedInstanceState);
+  }
+
+  public void setRegisterEvents(boolean register) {
+    this.bus = register;
   }
 
   @Override
@@ -33,12 +38,16 @@ public abstract class BaseRxFragment extends RxFragment {
   @Override
   public void onResume() {
     super.onResume();
-    EventBus.getDefault().register(this);
+    if (bus) {
+      EventBus.getDefault().register(this);
+    }
   }
 
   @Override
   public void onPause() {
-    EventBus.getDefault().unregister(this);
+    if (bus) {
+      EventBus.getDefault().unregister(this);
+    }
     super.onPause();
   }
 

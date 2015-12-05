@@ -82,6 +82,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.5/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.6.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.mwong56/RippleEffect/52ea2a0ab6/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.1.0/jars" />
@@ -120,6 +121,7 @@
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="android-reactive-location-0.8" level="project" />
     <orderEntry type="library" exported="" name="RippleEffect-52ea2a0ab6" level="project" />
+    <orderEntry type="library" exported="" name="play-services-appindexing-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="data.priority-map-0.0.2" level="project" />
     <orderEntry type="library" exported="" name="icepick-3.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="parse-android-1.11.0" level="project" />
