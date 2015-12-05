@@ -228,7 +228,13 @@ public class PlacesAutoCompleteAdapter
           + " predictions.");
 
       // Freeze the results immutable representation that can be stored safely.
-      return DataBufferUtils.freezeAndClose(autocompletePredictions);
+      ArrayList<AutocompletePrediction> toReturn = new ArrayList<>();
+      for (AutocompletePrediction prediction : DataBufferUtils.freezeAndClose(autocompletePredictions)) {
+        if (prediction.getFullText(null).toString().contains("United States")) {
+          toReturn.add(prediction);
+        }
+      }
+      return toReturn;
     }
     Log.e(TAG, "Google API client is not connected for autocomplete query.");
     return null;

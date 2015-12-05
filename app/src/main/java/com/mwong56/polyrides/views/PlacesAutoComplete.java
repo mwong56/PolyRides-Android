@@ -1,8 +1,6 @@
 package com.mwong56.polyrides.views;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,7 +20,7 @@ import com.mwong56.polyrides.adapters.PlacesAutoCompleteAdapter;
 import com.mwong56.polyrides.models.Location;
 import com.mwong56.polyrides.utils.Utils;
 
-import java.util.Locale;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by micha on 10/9/2015.
@@ -33,12 +31,9 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   private PlacesAutoCompleteAdapter adapter;
   private Location location;
   private boolean watchText;
-  private BaseRxActivity activity;
+  private WeakReference<BaseRxActivity> activity;
 
-  private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-      new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
-  private static final LatLngBounds BOUNDS_TEST = new LatLngBounds(new LatLng(32.6393, -117.004304), new LatLng(44.901184, -67.32254));
+  private static final LatLngBounds BOUNDS_USA = new LatLngBounds(new LatLng(32.6393, -117.004304), new LatLng(44.901184, -67.32254));
 
   public PlacesAutoComplete(Context context) {
     super(context);
@@ -53,9 +48,9 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
   }
 
   public void setup(final GoogleApiClient client, final BaseRxActivity activity) {
-    adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_TEST, null);
+    adapter = new PlacesAutoCompleteAdapter(getContext(), client, BOUNDS_USA, null);
     this.setAdapter(adapter);
-    this.activity = activity;
+    this.activity = new WeakReference<>(activity);
 
     this.setOnItemClickListener((parent, view, position, id) -> {
       Utils.hideKeyboard(activity);
@@ -71,12 +66,7 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
           return;
         }
         final Place place1 = places.get(0);
-        if (isUsa(place1)) {
-          setLocation(new Location(place1, getContext()));
-        } else {
-          activity.showToast("Place must be in USA.");
-          setText("");
-        }
+        setLocation(new Location(place1, getContext()));
         places.release();
       });
     });
@@ -103,23 +93,6 @@ public class PlacesAutoComplete extends AppCompatAutoCompleteTextView {
       public void afterTextChanged(Editable s) {
       }
     });
-  }
-
-  private boolean isUsa(Place place) {
-    Geocoder geocoder = new Geocoder(getContext(), Locale.ENGLISH);
-    if (geocoder != null) {
-      LatLng temp = place.getLatLng();
-      Address address;
-      try {
-        address = geocoder.getFromLocation(temp.latitude, temp.longitude, 1).get(0);
-        if (!address.getCountryCode().equals(Locale.US.getCountry())) {
-          return false;
-        }
-      } catch (Exception e) {
-        activity.showToast("Geocoder not found");
-      }
-    }
-    return true;
   }
 
   public Location getLocation() {
