@@ -2,7 +2,6 @@ package com.mwong56.polyrides.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -112,8 +111,8 @@ public class NewRideActivity extends BaseRxActivity {
 
 
   @Override
-  public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-    super.onSaveInstanceState(outState, outPersistentState);
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
     getSupportFragmentManager().putFragment(outState, "content", fragment);
     outState.putParcelable("dateTime", Parcels.wrap(this.dateTime));
     Icepick.saveInstanceState(this, outState);

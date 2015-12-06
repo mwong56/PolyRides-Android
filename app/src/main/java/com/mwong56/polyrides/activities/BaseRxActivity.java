@@ -1,7 +1,6 @@
 package com.mwong56.polyrides.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -20,14 +19,14 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
   protected final Bus bus = BusHolder.get();
 
   @Override
-  public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-    super.onCreate(savedInstanceState, persistentState);
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     Icepick.restoreInstanceState(this, savedInstanceState);
   }
 
   @Override
-  public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-    super.onSaveInstanceState(outState, outPersistentState);
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
     Icepick.saveInstanceState(this, outState);
   }
 
@@ -57,6 +56,6 @@ public abstract class BaseRxActivity extends RxAppCompatActivity {
         .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
         .replace(R.id.frame_layout, fragment, tag)
         .addToBackStack(tag)
-        .commit();
+        .commitAllowingStateLoss();
   }
 }
