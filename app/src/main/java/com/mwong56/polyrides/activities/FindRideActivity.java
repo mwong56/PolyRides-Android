@@ -90,7 +90,6 @@ public class FindRideActivity extends BaseRxActivity {
 
   @Override
   public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-    super.onSaveInstanceState(outState, outPersistentState);
     getSupportFragmentManager().putFragment(outState, "content", fragment);
   }
 
