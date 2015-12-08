@@ -317,7 +317,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("notes", ride.getNote());
           newRide.put("userId", ride.getUserId());
           newRide.put("name", User.getUserName());
-          newRide.put("email", "");
+          newRide.put("email", "\"\"");
           newRide.saveInBackground(e -> {
             if (e != null) {
               subscriber.onError(e);

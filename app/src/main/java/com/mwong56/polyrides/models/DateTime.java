@@ -66,27 +66,6 @@ public class DateTime implements Parcelable {
     }
   };
 
-  public int getYear() {
-    return year;
-  }
-
-  public int getMonth() {
-    return month;
-  }
-
-  public int getDay() {
-    return day;
-  }
-
-  public int getHour() {
-    return hour;
-  }
-
-  public int getMinute() {
-    return minute;
-  }
-
-
   public String printDate() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     return dateFormat.format(getDate());

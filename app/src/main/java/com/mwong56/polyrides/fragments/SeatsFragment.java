@@ -13,7 +13,6 @@ import com.mwong56.polyrides.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import icepick.Icepick;
 import icepick.State;
 
 /**
@@ -49,7 +48,6 @@ public class SeatsFragment extends BaseRxFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    Icepick.restoreInstanceState(this, savedInstanceState);
     seatsPicker.setMinValue(1);
     seatsPicker.setMaxValue(100);
     seatsPicker.setWrapSelectorWheel(false);
@@ -61,15 +59,14 @@ public class SeatsFragment extends BaseRxFragment {
   }
 
   @Override
-  public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
+  public void onPause() {
     try {
       cost = Integer.parseInt(costEditText.getText().toString());
     } catch (Exception e) {
       cost = 0;
     }
     seats = seatsPicker.getValue();
-    Icepick.saveInstanceState(this, outState);
+    super.onPause();
   }
 
   @Override

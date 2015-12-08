@@ -30,7 +30,6 @@ public class FindRideActivity extends BaseRxActivity {
   @Bind(R.id.toolbar_title)
   ImageView toolbarTitle;
 
-  private Fragment fragment;
   private Location start;
   private Location end;
   private DateTime dateTime;
@@ -49,10 +48,8 @@ public class FindRideActivity extends BaseRxActivity {
     this.start = (Location) getIntent().getExtras().get("start");
     this.end = (Location) getIntent().getExtras().get("end");
 
-    if (savedInstanceState != null) {
-      fragment = getSupportFragmentManager().getFragment(savedInstanceState, "content");
-    } else {
-      fragment = DateTimeFragment.newInstance();
+    if (savedInstanceState == null) {
+      Fragment fragment = DateTimeFragment.newInstance();
       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
@@ -70,39 +67,16 @@ public class FindRideActivity extends BaseRxActivity {
     }
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    //TODO: Dumb hack for skipping state restoration. Activities onSaveInstanceState aren't guaranteed
-    // need to save in onPause/onResume but don't have bundle.. Use shared preferences later.
-    if (!(fragment instanceof DateTimeFragment)) {
-      if (this.dateTime == null) {
-        openMainActivity();
-      }
-    }
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    getSupportFragmentManager().putFragment(outState, "content", fragment);
-  }
-
   @Subscribe
   public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
     this.dateTime = dateTimeEvent.datetime;
-    this.fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
+    Fragment fragment = PassengerRidesFragment.newInstance(start, end, dateTime);
     replaceFragment(fragment, "content");
   }
 
   @Subscribe
   public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
-    this.fragment = RideDetailsFragment.newInstance(rideEvent.ride, RideDetailsFragment.MESSAGE);
+    Fragment fragment = RideDetailsFragment.newInstance(rideEvent.ride, RideDetailsFragment.MESSAGE);
     replaceFragment(fragment, "content");
   }
 
@@ -115,11 +89,5 @@ public class FindRideActivity extends BaseRxActivity {
     Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
     i.putExtra("groupId", groupId);
     startActivity(i);
-  }
-
-  private void openMainActivity() {
-    Intent i = new Intent(FindRideActivity.this, MainActivity.class);
-    startActivity(i);
-    finish();
   }
 }

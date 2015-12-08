@@ -20,8 +20,8 @@ public abstract class BaseRxFragment extends RxFragment {
   private Boolean busRegister = true;
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
     Icepick.restoreInstanceState(this, savedInstanceState);
   }
 

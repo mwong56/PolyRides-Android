@@ -13,6 +13,7 @@ import com.squareup.leakcanary.RefWatcher;
 import com.tumblr.remember.Remember;
 
 import io.fabric.sdk.android.Fabric;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/13/2015.
@@ -44,6 +45,7 @@ public class PolyRidesApp extends Application {
 
     Parse.initialize(this, "tNVCuf8tnZgADqVCuBUegChrNis54koIAqnGzSJ3", "pghidrtoMmpnst4uebxV5oiwtsbnNMZKxs53Yxs6");
     ParseInstallation.getCurrentInstallation().saveInBackground();
+    Timber.plant(new Timber.DebugTree());
   }
 
   public void setMessageGroupIdInForeground(String groupId) {

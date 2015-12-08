@@ -22,11 +22,8 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.squareup.otto.Subscribe;
 
-import org.parceler.Parcels;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import icepick.Icepick;
 import icepick.State;
 
 public class NewRideActivity extends BaseRxActivity {
@@ -39,17 +36,22 @@ public class NewRideActivity extends BaseRxActivity {
 
   @State
   Location start;
+
   @State
   Location end;
+
   @State
   int cost;
+
   @State
   int seats;
+
   @State
   String note;
 
-  private Fragment fragment;
-  private DateTime dateTime;
+  @State
+  DateTime dateTime;
+
   private PolyRidesService polyRidesService = PolyRidesServiceImpl.get();
 
   @Override
@@ -57,8 +59,6 @@ public class NewRideActivity extends BaseRxActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.toolbar_frame_layout);
     ButterKnife.bind(this);
-
-    onRestoreInstanceState(savedInstanceState);
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,10 +68,8 @@ public class NewRideActivity extends BaseRxActivity {
     this.start = (Location) getIntent().getExtras().get("start");
     this.end = (Location) getIntent().getExtras().get("end");
 
-    if (savedInstanceState != null) {
-      fragment = getSupportFragmentManager().findFragmentByTag("content");
-    } else {
-      fragment = DateTimeFragment.newInstance();
+    if (savedInstanceState == null) {
+      Fragment fragment = DateTimeFragment.newInstance();
       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
       fragmentTransaction.add(R.id.frame_layout, fragment, "content");
       fragmentTransaction.commit();
@@ -89,39 +87,10 @@ public class NewRideActivity extends BaseRxActivity {
     }
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    //TODO: Dumb hack for skipping state restoration. Activities onSaveInstanceState aren't guaranteed
-    // need to save in onPause/onResume but don't have bundle.. Use shared preferences later.
-    if (!(fragment instanceof DateTimeFragment)) {
-      if (this.dateTime == null) {
-        openMainActivity();
-      }
-    }
-  }
-
-  @Override
-  protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    Icepick.restoreInstanceState(this, savedInstanceState);
-    if (savedInstanceState != null) {
-      this.dateTime = Parcels.unwrap(savedInstanceState.getParcelable("dateTime"));
-    }
-  }
-
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    getSupportFragmentManager().putFragment(outState, "content", fragment);
-    outState.putParcelable("dateTime", Parcels.wrap(this.dateTime));
-    Icepick.saveInstanceState(this, outState);
-  }
-
   @Subscribe
   public void onEvent(DateTimeFragment.DateTimeEvent dateTimeEvent) {
     this.dateTime = dateTimeEvent.datetime;
-    fragment = SeatsFragment.newInstance();
+    Fragment fragment = SeatsFragment.newInstance();
     replaceFragment(fragment, "content");
   }
 
@@ -129,7 +98,7 @@ public class NewRideActivity extends BaseRxActivity {
   public void onEvent(SeatsFragment.SeatsEvent seatsEvent) {
     this.cost = seatsEvent.cost;
     this.seats = seatsEvent.seats;
-    fragment = NotesFragment.newInstance();
+    Fragment fragment = NotesFragment.newInstance();
     replaceFragment(fragment, "content");
   }
 
@@ -137,7 +106,7 @@ public class NewRideActivity extends BaseRxActivity {
   public void onEvent(NotesFragment.NotesEvent notesEvent) {
     this.note = notesEvent.note;
     Ride ride = new Ride(start, end, dateTime, cost, seats, note, User.getUserId(), null);
-    fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
+    Fragment fragment = RideDetailsFragment.newInstance(ride, RideDetailsFragment.SUBMIT);
     replaceFragment(fragment, "content");
   }
 
