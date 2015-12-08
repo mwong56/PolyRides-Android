@@ -118,7 +118,7 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   void onNextClicked() {
     if (this.dateSet && this.timeSet) {
       this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-      if (this.dateTime.getDate().compareTo(Calendar.getInstance().getTime()) <= 0) {
+      if (this.dateTime.getDate().compareTo(Calendar.getInstance().getTime()) < 0) {
         showToast("Date and time must be in the future.");
       } else {
         DateTimeEvent dateTimeEvent = new DateTimeEvent(dateTime);
