@@ -48,8 +48,11 @@ public class RideDetailsFragment extends BaseRxFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    Bundle args = savedInstanceState != null ? savedInstanceState : getArguments();
+    if (args == null) {
+      getActivity().finish();
+    }
 
-    Bundle args = getArguments();
     this.ride = Parcels.unwrap(args.getParcelable("ride"));
     this.type = args.getInt("type");
 
@@ -68,6 +71,12 @@ public class RideDetailsFragment extends BaseRxFragment {
     rideDetailsView.setup(ride);
   }
 
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable("ride", Parcels.wrap(this.ride));
+    outState.putInt("tye", this.type);
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +91,7 @@ public class RideDetailsFragment extends BaseRxFragment {
     bus.post(new RideDetailsEvent(ride));
   }
 
-  public class RideDetailsEvent{
+  public class RideDetailsEvent {
     public Ride ride;
 
     public RideDetailsEvent(Ride ride) {

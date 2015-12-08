@@ -22,11 +22,8 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.squareup.otto.Subscribe;
 
-import org.parceler.Parcels;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import icepick.Icepick;
 import icepick.State;
 
 public class NewRideActivity extends BaseRxActivity {
@@ -39,12 +36,16 @@ public class NewRideActivity extends BaseRxActivity {
 
   @State
   Location start;
+
   @State
   Location end;
+
   @State
   int cost;
+
   @State
   int seats;
+
   @State
   String note;
 
@@ -57,8 +58,6 @@ public class NewRideActivity extends BaseRxActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.toolbar_frame_layout);
     ButterKnife.bind(this);
-
-    onRestoreInstanceState(savedInstanceState);
 
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,28 +93,17 @@ public class NewRideActivity extends BaseRxActivity {
     super.onResume();
     //TODO: Dumb hack for skipping state restoration. Activities onSaveInstanceState aren't guaranteed
     // need to save in onPause/onResume but don't have bundle.. Use shared preferences later.
-    if (!(fragment instanceof DateTimeFragment)) {
+    /* if (!(fragment instanceof DateTimeFragment)) {
       if (this.dateTime == null) {
         openMainActivity();
       }
-    }
+    }*/
   }
-
-  @Override
-  protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    Icepick.restoreInstanceState(this, savedInstanceState);
-    if (savedInstanceState != null) {
-      this.dateTime = Parcels.unwrap(savedInstanceState.getParcelable("dateTime"));
-    }
-  }
-
 
   @Override
   public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
     getSupportFragmentManager().putFragment(outState, "content", fragment);
-    outState.putParcelable("dateTime", Parcels.wrap(this.dateTime));
-    Icepick.saveInstanceState(this, outState);
+    super.onSaveInstanceState(outState);
   }
 
   @Subscribe

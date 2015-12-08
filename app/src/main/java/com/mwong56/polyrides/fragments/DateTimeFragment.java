@@ -21,7 +21,6 @@ import java.util.Calendar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import icepick.Icepick;
 import icepick.State;
 
 /**
@@ -41,10 +40,12 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
 
   @State
   DateTime dateTime;
+
   @State
   boolean dateSet, timeSet;
 
-  private int year, monthOfYear, dayOfMonth, hourOfDay, minute;
+  @State
+  int year, monthOfYear, dayOfMonth, hourOfDay, minute;
 
   public static DateTimeFragment newInstance() {
     return new DateTimeFragment();
@@ -53,9 +54,7 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    Icepick.restoreInstanceState(this, savedInstanceState);
     setTime();
-
     if (getActivity() instanceof FindRideActivity) {
       headerImageView.setImageResource(R.drawable.car_progress_passenger2);
     } else if (getActivity() instanceof NewRideActivity) {
@@ -69,16 +68,6 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
     View view = inflater.inflate(R.layout.fragment_date_time, container, false);
     ButterKnife.bind(this, view);
     return view;
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
   }
 
   @OnClick(R.id.dateButton)
@@ -121,16 +110,8 @@ public class DateTimeFragment extends BaseRxFragment implements TimePickerDialog
 
   @Override
   public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
     this.dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-    Icepick.saveInstanceState(this, outState);
-  }
-
-
-  @Override
-  public void onViewStateRestored(Bundle savedInstanceState) {
-    super.onViewStateRestored(savedInstanceState);
-    setTime();
+    super.onSaveInstanceState(outState);
   }
 
   @OnClick(R.id.next_button)
