@@ -78,7 +78,7 @@ public class MessageReceiver extends BroadcastReceiver {
       mNotificationManager.notify(0, builder.build());
 
     } catch (JSONException e) {
-      Timber.e(e, "Exception in MessageReceiver");
+      Timber.e(e, "Data: %s", intent.getDataString());
     }
   }
 }

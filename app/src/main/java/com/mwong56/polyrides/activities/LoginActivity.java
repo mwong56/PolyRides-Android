@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/13/2015.
@@ -75,6 +76,7 @@ public class LoginActivity extends BaseRxActivity {
 
       @Override
       public void onError(FacebookException exception) {
+        Timber.e(exception, "Facebook login error");
         showToast(exception);
       }
     });

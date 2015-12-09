@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -40,6 +39,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/25/2015.
@@ -95,7 +95,7 @@ public class MessageActivity extends BaseRxActivity {
         }
 
       } catch (Exception e) {
-        Log.e(TAG, e.toString());
+        Timber.e(e, e.toString());
       }
     }
   };
