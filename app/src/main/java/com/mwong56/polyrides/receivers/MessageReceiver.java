@@ -29,7 +29,12 @@ public class MessageReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
 
     try {
-      JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+      String data = intent.getExtras().getString("com.parse.Data");
+      if (data == null || data.length() == 0) {
+        return;
+      }
+
+      JSONObject json = new JSONObject(data);
 
       String alert = json.getString("alert");
       String groupId = json.getString("groupId");
