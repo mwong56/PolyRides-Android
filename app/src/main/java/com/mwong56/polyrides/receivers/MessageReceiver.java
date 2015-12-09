@@ -9,14 +9,16 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.mwong56.polyrides.R;
+import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.MessageActivity;
 import com.mwong56.polyrides.application.PolyRidesApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import timber.log.Timber;
 
 /**
  * Created by micha on 11/4/2015.
@@ -52,16 +54,20 @@ public class MessageReceiver extends BroadcastReceiver {
 
       Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-      NotificationCompat .Builder builder = new NotificationCompat.Builder(context)
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
           .setLargeIcon(
               BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
           .setSmallIcon(R.mipmap.ic_launcher).setContentTitle(userName)
           .setContentText(message).setAutoCancel(true).setSound(soundUri)
-          .setVibrate(new long[] { 0, 100, 200, 300 });
+          .setVibrate(new long[]{0, 100, 200, 300});
 
-      Intent i = new Intent(context, MessageActivity.class);
-      i.putExtra("groupId", groupId);
-
+      Intent i;
+      if (groupId == null) {
+        i = new Intent(context, MainActivity.class);
+      } else {
+        i = new Intent(context, MessageActivity.class);
+        i.putExtra("groupId", groupId);
+      }
       PendingIntent pIntent = PendingIntent.getActivity(context, 0, i,
           PendingIntent.FLAG_CANCEL_CURRENT);
       builder.setContentIntent(pIntent);
@@ -72,9 +78,7 @@ public class MessageReceiver extends BroadcastReceiver {
       mNotificationManager.notify(0, builder.build());
 
     } catch (JSONException e) {
-      Log.d(TAG, "JSONException: " + e.getMessage());
+      Timber.e(e, "Exception in MessageReceiver");
     }
   }
-
-
 }
