@@ -15,7 +15,6 @@ import com.mwong56.polyrides.activities.MainActivity;
 import com.mwong56.polyrides.activities.MessageActivity;
 import com.mwong56.polyrides.application.PolyRidesApp;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import timber.log.Timber;
@@ -39,14 +38,18 @@ public class MessageReceiver extends BroadcastReceiver {
       JSONObject json = new JSONObject(data);
 
       String alert = json.getString("alert");
-      String groupId = json.getString("groupId");
+      String groupId = null;
+      if (json.has("groupId")) {
+        json.getString("groupId");
 
-      String applicationGroupId = ((PolyRidesApp) context.getApplicationContext()).getMessageGroupIdInForeground();
-      if (applicationGroupId != null) {
-        if (applicationGroupId.equals(groupId)) {
-          return;
+        String applicationGroupId = ((PolyRidesApp) context.getApplicationContext()).getMessageGroupIdInForeground();
+        if (applicationGroupId != null) {
+          if (applicationGroupId.equals(groupId)) {
+            return;
+          }
         }
       }
+
 
       String[] alertArray = alert.split("\n");
       String userName = alertArray[0];
@@ -77,7 +80,7 @@ public class MessageReceiver extends BroadcastReceiver {
 
       mNotificationManager.notify(0, builder.build());
 
-    } catch (JSONException e) {
+    } catch (Exception e) {
       Timber.e(e, "Data: %s", intent.getDataString());
     }
   }

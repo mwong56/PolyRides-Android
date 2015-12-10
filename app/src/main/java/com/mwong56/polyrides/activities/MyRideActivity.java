@@ -19,6 +19,7 @@ import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/22/2015.
@@ -46,6 +47,7 @@ public class MyRideActivity extends BaseRxActivity {
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     ride = Parcels.unwrap(getIntent().getExtras().getParcelable("ride"));
+    Timber.d(ride.toString());
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().findFragmentByTag("content");

@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/22/2015.
@@ -67,6 +68,7 @@ public class RideDetailsView extends LinearLayout {
   }
 
   public void setup(Ride ride) {
+    Timber.d(ride.toString());
     fbService.getUserName(AccessToken.getCurrentAccessToken(), ride.getUserId())
         .subscribe(nameTextView::setText, this::showToast);
     Picasso.with(getContext()).load(Utils.getProfileImageUrl(ride.getUserId())).into(profileImageView);

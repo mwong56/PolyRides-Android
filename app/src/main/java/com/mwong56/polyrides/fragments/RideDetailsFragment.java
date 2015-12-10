@@ -15,6 +15,7 @@ import org.parceler.Parcels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -54,7 +55,9 @@ public class RideDetailsFragment extends BaseRxFragment {
     }
 
     this.ride = Parcels.unwrap(args.getParcelable("ride"));
+    Timber.d(ride.toString());
     this.type = args.getInt("type");
+    Timber.d("Type : %s", this.type);
 
     switch (type) {
       case SUBMIT:

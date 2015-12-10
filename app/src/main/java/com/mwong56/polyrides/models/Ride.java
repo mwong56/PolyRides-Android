@@ -1,6 +1,7 @@
 package com.mwong56.polyrides.models;
 
 import com.parse.ParseObject;
+
 import org.parceler.Parcel;
 
 import java.util.Date;
@@ -39,7 +40,8 @@ public class Ride {
     return new Ride(start, end, DateTime.dateToDateTime(date), cost, seats, notes, userId, objectId);
   }
 
-  public Ride() {}
+  public Ride() {
+  }
 
   public Ride(Location start, Location end, DateTime dateTime, int cost, int seats, String note, String userId, String objectId) {
     this.start = start;
@@ -86,5 +88,19 @@ public class Ride {
 
   public String getNote() {
     return note;
+  }
+
+  @Override
+  public String toString() {
+    return "Ride{" +
+        "start=" + start +
+        ", end=" + end +
+        ", dateTime=" + dateTime +
+        ", cost=" + cost +
+        ", seats=" + seats +
+        ", note='" + note + '\'' +
+        ", userId='" + userId + '\'' +
+        ", objectId='" + objectId + '\'' +
+        '}';
   }
 }

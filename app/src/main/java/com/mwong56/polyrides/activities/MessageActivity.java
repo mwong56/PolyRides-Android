@@ -84,11 +84,11 @@ public class MessageActivity extends BaseRxActivity {
         }
 
         JSONObject json = new JSONObject(data);
-        String groupId = json.getString("groupId");
-
-        if (groupId == null) {
+        if (!json.has("groupId")) {
           return;
         }
+
+        String groupId = json.getString("groupId");
 
         if (MessageActivity.this.groupId.equals(groupId)) {
           refreshMessages();
