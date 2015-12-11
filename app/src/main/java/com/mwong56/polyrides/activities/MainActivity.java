@@ -7,11 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.adapters.TabAdapter;
+import com.mwong56.polyrides.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +38,8 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
+    Crashlytics.setUserName(User.getUserName());
+    Crashlytics.setUserIdentifier(User.getUserId());
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
     getSupportActionBar().setElevation(0);
