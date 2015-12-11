@@ -19,6 +19,7 @@ import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/13/2015.
@@ -386,6 +387,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           subscriber.onCompleted();
         }
       } catch (Exception e) {
+        Timber.e(e, "Exception at getMyRides");
         subscriber.onError(e);
       }
     });

@@ -14,7 +14,7 @@ public class CrashlyticsTree extends Timber.Tree {
 
   @Override
   protected void log(int priority, @Nullable String tag, @Nullable String message, @Nullable Throwable t) {
-    if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+    if (priority == Log.VERBOSE || priority == Log.INFO) {
       return;
     }
 
@@ -27,5 +27,6 @@ public class CrashlyticsTree extends Timber.Tree {
     } else {
       Crashlytics.logException(t);
     }
+    Crashlytics.log(priority, tag, message);
   }
 }
