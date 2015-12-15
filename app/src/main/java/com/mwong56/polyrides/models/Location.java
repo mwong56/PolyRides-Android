@@ -23,6 +23,10 @@ public class Location implements Parcelable {
   private String name;
   private String city;
 
+  private Location() {
+
+  }
+  
   public Location(double lat, double lng, String city) {
     latLng = new LatLng(lat, lng);
     this.city = city;

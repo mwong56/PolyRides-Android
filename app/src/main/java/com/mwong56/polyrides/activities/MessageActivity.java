@@ -78,7 +78,12 @@ public class MessageActivity extends BaseRxActivity {
     @Override
     public void onReceive(Context context, Intent intent) {
       try {
-        String data = intent.getExtras().getString("com.parse.Data");
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) {
+          return;
+        }
+
+        String data = bundle.getString("com.parse.Data");
         if (data == null || data.length() == 0) {
           return;
         }

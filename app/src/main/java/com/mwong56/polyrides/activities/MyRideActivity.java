@@ -15,7 +15,6 @@ import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.squareup.otto.Subscribe;
 
-import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,7 +45,7 @@ public class MyRideActivity extends BaseRxActivity {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    ride = Parcels.unwrap(getIntent().getExtras().getParcelable("ride"));
+    ride = getIntent().getExtras().getParcelable("ride");
     Timber.d(ride.toString());
 
     if (savedInstanceState != null) {

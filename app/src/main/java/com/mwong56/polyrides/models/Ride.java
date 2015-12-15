@@ -1,24 +1,65 @@
 package com.mwong56.polyrides.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.parse.ParseObject;
 
-import org.parceler.Parcel;
 
 import java.util.Date;
 
 /**
  * Created by micha on 10/17/2015.
  */
-@Parcel
-public class Ride {
-  Location start;
-  Location end;
-  DateTime dateTime;
-  int cost;
-  int seats;
-  String note;
-  String userId;
-  String objectId;
+public class Ride implements Parcelable {
+  private Location start;
+  private Location end;
+  private DateTime dateTime;
+  private int cost;
+  private int seats;
+  private String note;
+  private String userId;
+  private String objectId;
+
+  protected Ride(Parcel in) {
+    start = in.readParcelable(Location.class.getClassLoader());
+    end = in.readParcelable(Location.class.getClassLoader());
+    dateTime = in.readParcelable(DateTime.class.getClassLoader());
+    cost = in.readInt();
+    seats = in.readInt();
+    note = in.readString();
+    userId = in.readString();
+    objectId = in.readString();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeParcelable(start, flags);
+    dest.writeParcelable(end, flags);
+    dest.writeParcelable(dateTime, flags);
+    dest.writeInt(cost);
+    dest.writeInt(seats);
+    dest.writeString(note);
+    dest.writeString(userId);
+    dest.writeString(objectId);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  public static final Creator<Ride> CREATOR = new Creator<Ride>() {
+    @Override
+    public Ride createFromParcel(Parcel in) {
+      return new Ride(in);
+    }
+
+    @Override
+    public Ride[] newArray(int size) {
+      return new Ride[size];
+    }
+  };
 
   public static Ride parseToRide(ParseObject object) {
     int cost = object.getInt("cost");
@@ -40,9 +81,6 @@ public class Ride {
     return new Ride(start, end, DateTime.dateToDateTime(date), cost, seats, notes, userId, objectId);
   }
 
-  public Ride() {
-  }
-
   public Ride(Location start, Location end, DateTime dateTime, int cost, int seats, String note, String userId, String objectId) {
     this.start = start;
     this.end = end;
@@ -52,6 +90,9 @@ public class Ride {
     this.note = note;
     this.userId = userId;
     this.objectId = objectId;
+  }
+
+  private Ride() {
   }
 
   public String getObjectId() {
