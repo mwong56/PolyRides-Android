@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.mwong56.polyrides.R;
@@ -30,7 +31,12 @@ public class MessageReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
 
     try {
-      String data = intent.getExtras().getString("com.parse.Data");
+      Bundle bundle = intent.getExtras();
+      if (bundle == null) {
+        return;
+      }
+
+      String data = bundle.getString("com.parse.Data");
       if (data == null || data.length() == 0) {
         return;
       }
