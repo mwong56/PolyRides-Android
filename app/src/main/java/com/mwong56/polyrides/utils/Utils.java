@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.mwong56.polyrides.models.User;
 
+import timber.log.Timber;
+
 /**
  * Created by micha on 10/21/2015.
  */
@@ -18,6 +20,7 @@ public class Utils {
   }
 
   public static String extractOtherUserId(String groupId) {
+    Timber.d("Current user: %s Group ID: %s ", User.getUserId(), groupId);
     return groupId.replace(User.getUserId(), "");
   }
 
