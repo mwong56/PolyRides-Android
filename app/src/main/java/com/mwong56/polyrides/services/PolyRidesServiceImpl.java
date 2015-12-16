@@ -19,7 +19,6 @@ import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 /**
  * Created by micha on 10/13/2015.
@@ -43,63 +42,38 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<Void> saveUserId(String userId) {
-    Observable toReturn = Observable.create(subscriber -> {
-      try {
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", userId);
-        installation.save();
-
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+    Observable toReturn = Observable.fromCallable(() -> {
+      ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+      installation.put("user", userId);
+      installation.save();
+      return null;
     });
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   public Observable<Void> removeRide(Ride ride) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       if (ride.getObjectId() == null) {
-        subscriber.onError(new Exception("Object is null"));
+        throw new Exception("Object is null");
       }
       ParseQuery query = new ParseQuery("Ride");
       query.whereEqualTo("objectId", ride.getObjectId());
-
-      try {
-        ParseObject object = query.getFirst();
-        object.delete();
-
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      ParseObject object = query.getFirst();
+      object.delete();
+      return null;
     });
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   public Observable<Void> saveMessage(Message message) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseObject toSave = new ParseObject("Message");
       toSave.put("groupId", message.getGroupId());
       toSave.put("userId", message.getUserId());
       toSave.put("text", message.getText());
       toSave.put("userName", message.getUserName());
-
-      try {
-        toSave.save();
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      toSave.save();
+      return null;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -107,7 +81,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<Void> createChat(Chat chat, String userId, String otherUserId, String otherUserName) {
-    Observable<Void> toReturn = Observable.create(subscriber -> {
+    Observable<Void> toReturn = Observable.fromCallable(() -> {
       ParseObject toSave = new ParseObject("Messages");
       toSave.put("counter", 1);
       toSave.put("groupId", chat.getGroupId());
@@ -117,17 +91,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       toSave.put("otherUserName", otherUserName);
       toSave.put("userId", userId);
       toSave.put("updatedAction", Calendar.getInstance().getTime());
-
-
-      try {
-        toSave.save();
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      toSave.save();
+      return null;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -135,16 +100,11 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<Void> updateChat(Chat chat, String userId) {
-    Observable<Void> toReturn = Observable.create(subscriber -> {
+    Observable<Void> toReturn = Observable.fromCallable(() -> {
       ParseQuery query = new ParseQuery("Messages");
       query.whereEqualTo("groupId", chat.getGroupId());
       query.whereEqualTo("userId", userId);
-      ParseObject object = null;
-      try {
-        object = query.getFirst();
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      ParseObject object = query.getFirst();
 
       if (!userId.equals(User.getUserId())) {
         object.put("counter", object.getInt("counter") + 1);
@@ -154,15 +114,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       object.put("lastUserId", chat.getLastUserId());
       object.put("updatedAction", Calendar.getInstance().getTime());
 
-      try {
-        object.save();
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      object.save();
+      return null;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -170,58 +123,34 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<Void> clearMessagesCounter(String groupId, String userId) {
-    Observable<Void> toReturn = Observable.create(subscriber -> {
+    Observable<Void> toReturn = Observable.fromCallable(() -> {
       ParseQuery query = new ParseQuery("Messages");
       query.whereEqualTo("groupId", groupId);
       query.whereEqualTo("userId", userId);
-      ParseObject object = null;
-      try {
-        object = query.getFirst();
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
-
+      ParseObject object = query.getFirst();
       object.put("counter", 0);
-
-      try {
-        object.save();
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      object.save();
+      return null;
     });
-
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
   public Observable<Void> sendPush(String userId, String userName, String groupId, String text) {
-    Observable<Void> toReturn = Observable.create(subscriber -> {
-
+    Observable<Void> toReturn = Observable.fromCallable(() -> {
       ParseQuery pushQuery = ParseInstallation.getQuery();
       pushQuery.whereEqualTo("user", userId);
 
       ParsePush push = new ParsePush();
       push.setQuery(pushQuery);
 
-      try {
-        JSONObject object = new JSONObject();
-        object.put("badge", "Increment");
-        object.put("alert", userName + "\n" + text);
-        object.put("groupId", groupId);
-        push.setData(object);
-        push.send();
-
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(null);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      JSONObject object = new JSONObject();
+      object.put("badge", "Increment");
+      object.put("alert", userName + "\n" + text);
+      object.put("groupId", groupId);
+      push.setData(object);
+      push.send();
+      return null;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -229,50 +158,26 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<List<Chat>> getChats() {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
       query.whereEqualTo("userId", User.getUserId());
-      try {
-        List<Chat> messages = new ArrayList<>();
-        for (ParseObject object : query.find()) {
-          messages.add(Chat.ParseToMessages(object));
-        }
-
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(messages);
-          subscriber.onCompleted();
-        }
-
-      } catch (Exception e) {
-        subscriber.onError(e);
+      List<Chat> messages = new ArrayList<>();
+      for (ParseObject object : query.find()) {
+        messages.add(Chat.ParseToMessages(object));
       }
-
+      return messages;
     });
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
   public Observable<Chat> getChat(String groupId) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Messages");
       query.whereEqualTo("userId", User.getUserId());
       query.whereEqualTo("groupId", groupId);
-      try {
-        ParseObject object = query.getFirst();
-        if (object == null) {
-          if (!subscriber.isUnsubscribed()) {
-            subscriber.onNext(null);
-            subscriber.onCompleted();
-          }
-        } else {
-          if (!subscriber.isUnsubscribed()) {
-            subscriber.onNext(Chat.ParseToMessages(object));
-            subscriber.onCompleted();
-          }
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
-      }
+      ParseObject object = query.getFirst();
+      return object == null ? null : Chat.ParseToMessages(object);
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -280,31 +185,24 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<List<Message>> getMessage(String groupId) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
       query.whereEqualTo("groupId", groupId);
       query.addAscendingOrder("createdAt");
 
-      try {
-        List<Message> messageList = new ArrayList<>();
-        for (ParseObject object : query.find()) {
-          messageList.add(Message.ParseToMessage(object));
-        }
-
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(messageList);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
+      List<Message> messageList = new ArrayList<>();
+      for (ParseObject object : query.find()) {
+        messageList.add(Message.ParseToMessage(object));
       }
+      return messageList;
+
     });
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 
   @Override
   public Observable<Void> saveNewRide(Ride ride) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
           ParseObject newRide = new ParseObject("Ride");
           newRide.put("startLat", ride.getStart().getLatLng().latitude);
           newRide.put("startLong", ride.getStart().getLatLng().longitude);
@@ -319,16 +217,8 @@ public class PolyRidesServiceImpl implements PolyRidesService {
           newRide.put("userId", ride.getUserId());
           newRide.put("name", User.getUserName());
           newRide.put("email", "\"\"");
-          newRide.saveInBackground(e -> {
-            if (e != null) {
-              subscriber.onError(e);
-            } else {
-              if (!subscriber.isUnsubscribed()) {
-                subscriber.onNext(null);
-                subscriber.onCompleted();
-              }
-            }
-          });
+          newRide.save();
+          return null;
         }
     );
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -336,7 +226,7 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<List<Ride>> getRides(Date date) {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
       Date newDate = new Date(date.getTime() + ONE_DAY_BEHIND);
@@ -350,19 +240,12 @@ public class PolyRidesServiceImpl implements PolyRidesService {
       }
       query.whereLessThanOrEqualTo("dateTime", new Date(date.getTime() + ONE_DAY_AHEAD));
 
-      try {
-        List<Ride> rides = new ArrayList<>();
+      List<Ride> rides = new ArrayList<>();
 
-        for (ParseObject object : query.find()) {
-          rides.add(Ride.parseToRide(object));
-        }
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(rides);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        subscriber.onError(e);
+      for (ParseObject object : query.find()) {
+        rides.add(Ride.parseToRide(object));
       }
+      return rides;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
@@ -370,26 +253,18 @@ public class PolyRidesServiceImpl implements PolyRidesService {
 
   @Override
   public Observable<List<Ride>> getMyRides() {
-    Observable toReturn = Observable.create(subscriber -> {
+    Observable toReturn = Observable.fromCallable(() -> {
       ParseQuery<ParseObject> query = ParseQuery.getQuery("Ride");
       Date currentDate = Calendar.getInstance().getTime();
       query.whereEqualTo("userId", User.getUserId());
       query.whereGreaterThanOrEqualTo("dateTime", currentDate);
 
-      try {
-        List<Ride> rides = new ArrayList<>();
+      List<Ride> rides = new ArrayList<>();
 
-        for (ParseObject object : query.find()) {
-          rides.add(Ride.parseToRide(object));
-        }
-        if (!subscriber.isUnsubscribed()) {
-          subscriber.onNext(rides);
-          subscriber.onCompleted();
-        }
-      } catch (Exception e) {
-        Timber.e(e, "Exception at getMyRides");
-        subscriber.onError(e);
+      for (ParseObject object : query.find()) {
+        rides.add(Ride.parseToRide(object));
       }
+      return rides;
     });
 
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
