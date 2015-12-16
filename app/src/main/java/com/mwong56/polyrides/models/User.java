@@ -22,4 +22,12 @@ public class User {
   public static void setUserName(String userName) {
     Remember.putString("userName", userName);
   }
+
+  public static void logout(Remember.Callback callback) {
+    Remember.clear(callback);
+  }
+
+  public static void logout() {
+    logout(null);
+  }
 }
