@@ -111,6 +111,7 @@ public class MessageActivity extends BaseRxActivity {
     setContentView(R.layout.activity_messages);
     ButterKnife.bind(this);
 
+    Timber.d(groupId);
     this.groupId = getIntent().getStringExtra("groupId");
     this.otherId = Utils.extractOtherUserId(this.groupId);
 

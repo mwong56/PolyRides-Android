@@ -65,8 +65,8 @@ public class NewRideActivity extends BaseRxActivity {
     toolbarTitle.setVisibility(View.GONE);
     setTitle("New Ride");
 
-    this.start = (Location) getIntent().getExtras().get("start");
-    this.end = (Location) getIntent().getExtras().get("end");
+    this.start = getIntent().getExtras().getParcelable("start");
+    this.end = getIntent().getExtras().getParcelable("end");
 
     if (savedInstanceState == null) {
       Fragment fragment = DateTimeFragment.newInstance();

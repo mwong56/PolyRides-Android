@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/10/2015.
@@ -141,10 +142,12 @@ public class StartEndView extends LinearLayout {
 
     if (locations[0] == null) {
       findAddress(getStartText(), true);
+      return;
     }
 
     if (locations[1] == null) {
       findAddress(getEndText(), false);
+      return;
     }
 
     if (locations[0] != null && locations[1] != null) {
@@ -167,15 +170,21 @@ public class StartEndView extends LinearLayout {
             placeResult.setResultCallback(places -> {
               if (!places.getStatus().isSuccess()) {
                 Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                showProgress(false);
                 showToast(places.getStatus().toString());
                 places.release();
                 return;
               }
               final Place place1 = places.get(0);
-              if (start) {
-                setStartLocation(new Location(place1, getContext()));
+              Location location = new Location(place1, getContext());
+              if (location == null) {
+                Timber.e("Location is null %s %s", place1.toString(), location.toString());
+                showProgress(false);
+                showToast("Error");
+              } else if (start) {
+                setStartLocation(location);
               } else {
-                setEndLocation(new Location(place1, getContext()));
+                setEndLocation(location);
               }
               onNextButton();
               places.release();
@@ -185,6 +194,7 @@ public class StartEndView extends LinearLayout {
             showToast("The address you entered is invalid.");
           }
         }, error -> {
+          Timber.e(error.toString());
           showToast(error.toString());
           showProgress(false);
         });

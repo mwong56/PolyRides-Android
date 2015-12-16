@@ -36,7 +36,9 @@ public class PassengerRideViewHolder extends ItemViewHolder<Ride> {
   public PassengerRideViewHolder(View view) {
     super(view);
     getView().setOnClickListener(v -> {
-      bus.post(new RideEvent(getItem()));
+      if (getItem() != null) {
+        bus.post(new RideEvent(getItem()));
+      }
     });
   }
 

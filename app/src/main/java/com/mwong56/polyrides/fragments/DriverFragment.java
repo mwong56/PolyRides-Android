@@ -68,7 +68,7 @@ public class DriverFragment extends BaseRxFragment implements StartEndView.Start
 
   @Override
   public void onNext(Location start, Location end) {
-    Intent i = new Intent(getActivity(), NewRideActivity.class);
+    Intent i = new Intent (getActivity(), NewRideActivity.class);
     i.putExtra("start", start);
     i.putExtra("end", end);
     startActivity(i);
