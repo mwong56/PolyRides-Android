@@ -44,7 +44,7 @@ import timber.log.Timber;
 /**
  * Created by micha on 10/25/2015.
  */
-public class MessageActivity extends BaseRxActivity {
+public class MessageActivity extends BaseSessionActivity {
 
   private static final DoNothingOnNextAction doNothingOnNextAction = new DoNothingOnNextAction();
   private static final String TAG = MessageActivity.TAG;

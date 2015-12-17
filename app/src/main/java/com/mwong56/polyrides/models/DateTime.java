@@ -81,4 +81,15 @@ public class DateTime implements Parcelable {
     cal.set(year, month, day, hour, minute);
     return cal.getTime();
   }
+
+  @Override
+  public String toString() {
+    return "DateTime{" +
+        "year=" + year +
+        ", month=" + month +
+        ", day=" + day +
+        ", hour=" + hour +
+        ", minute=" + minute +
+        '}';
+  }
 }

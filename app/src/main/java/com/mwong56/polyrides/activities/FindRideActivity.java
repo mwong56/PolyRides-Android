@@ -21,8 +21,9 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
-public class FindRideActivity extends BaseRxActivity {
+public class FindRideActivity extends BaseSessionActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -85,7 +86,7 @@ public class FindRideActivity extends BaseRxActivity {
     String groupId = rideDetailsEvent.ride.getUserId().compareTo(User.getUserId()) > 0 ?
         User.getUserId() + rideDetailsEvent.ride.getUserId()
         : rideDetailsEvent.ride.getUserId() + User.getUserId();
-
+    Timber.d(groupId);
     Intent i = new Intent(FindRideActivity.this, MessageActivity.class);
     i.putExtra("groupId", groupId);
     startActivity(i);

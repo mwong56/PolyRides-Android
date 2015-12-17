@@ -1,6 +1,5 @@
 package com.mwong56.polyrides.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.AccessToken;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -20,7 +18,7 @@ import com.mwong56.polyrides.models.User;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseSessionActivity implements GoogleApiClient.OnConnectionFailedListener {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -62,7 +60,6 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
     if (apiClient != null) {
       apiClient.connect();
     }
-    validateSession();
   }
 
   @Override
@@ -86,22 +83,5 @@ public class MainActivity extends BaseRxActivity implements GoogleApiClient.OnCo
 
   public GoogleApiClient getGoogleApiClient() {
     return this.apiClient;
-  }
-
-  private void validateSession() {
-    if (!validSession()) {
-      showToast("Invalid session.");
-      User.logout();
-      Intent i = new Intent(MainActivity.this, LoginActivity.class);
-      startActivity(i);
-      finish();
-    }
-  }
-
-  private boolean validSession() {
-    if (User.getUserId() == null || User.getUserId().length() == 0) {
-      return false;
-    }
-    return AccessToken.getCurrentAccessToken() != null;
   }
 }

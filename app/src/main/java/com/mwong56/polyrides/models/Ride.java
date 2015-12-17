@@ -134,9 +134,9 @@ public class Ride implements Parcelable {
   @Override
   public String toString() {
     return "Ride{" +
-        "start=" + start +
-        ", end=" + end +
-        ", dateTime=" + dateTime +
+        "start=" + start.toString() +
+        ", end=" + end.toString() +
+        ", dateTime=" + dateTime.toString() +
         ", cost=" + cost +
         ", seats=" + seats +
         ", note='" + note + '\'' +

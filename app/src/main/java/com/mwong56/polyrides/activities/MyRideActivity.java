@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.fragments.RideDetailsFragment;
 import com.mwong56.polyrides.models.Ride;
+import com.mwong56.polyrides.models.User;
 import com.mwong56.polyrides.services.PolyRidesService;
 import com.mwong56.polyrides.services.PolyRidesServiceImpl;
 import com.squareup.otto.Subscribe;
-
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +23,7 @@ import timber.log.Timber;
 /**
  * Created by micha on 10/22/2015.
  */
-public class MyRideActivity extends BaseRxActivity {
+public class MyRideActivity extends BaseSessionActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
@@ -46,7 +46,12 @@ public class MyRideActivity extends BaseRxActivity {
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     ride = getIntent().getExtras().getParcelable("ride");
-    Timber.d(ride.toString());
+    if (ride == null) {
+      Timber.e("Opened MyRideActivity with null ride %s", User.getUserId());
+      Intent i = new Intent(MyRideActivity.this, MainActivity.class);
+      startActivity(i);
+      finish();
+    }
 
     if (savedInstanceState != null) {
       fragment = getSupportFragmentManager().findFragmentByTag("content");

@@ -56,7 +56,7 @@ public class MyRidesFragment extends BaseRxFragment {
     super.onActivityCreated(savedInstanceState);
 
     this.rideList = new ArrayList<>();
-    this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList, this);
+    this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList);
     this.recyclerView.setAdapter(adapter);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

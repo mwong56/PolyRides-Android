@@ -20,7 +20,7 @@ public class Utils {
   }
 
   public static String extractOtherUserId(String groupId) {
-    Timber.d("Current user: %s Group ID: %s ", User.getUserId(), groupId);
+    Timber.d("Current user: %s Group ID: %s ", User.getUserId(), groupId.toString());
     return groupId.replace(User.getUserId(), "");
   }
 

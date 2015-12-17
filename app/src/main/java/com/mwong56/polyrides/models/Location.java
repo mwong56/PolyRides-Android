@@ -104,6 +104,16 @@ public class Location implements Parcelable {
     }
   }
 
+  @Override
+  public String toString() {
+    return "Location{" +
+        "latLng=" + latLng.toString() +
+        ", address='" + address + '\'' +
+        ", name='" + name + '\'' +
+        ", city='" + city + '\'' +
+        '}';
+  }
+
   protected Location(Parcel in) {
     latLng = in.readParcelable(LatLng.class.getClassLoader());
     address = in.readString();

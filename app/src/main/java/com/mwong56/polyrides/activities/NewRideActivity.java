@@ -26,7 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import icepick.State;
 
-public class NewRideActivity extends BaseRxActivity {
+public class NewRideActivity extends BaseSessionActivity {
 
   @Bind(R.id.toolbar)
   Toolbar toolbar;
