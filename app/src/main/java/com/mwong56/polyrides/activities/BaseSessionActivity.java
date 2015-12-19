@@ -1,6 +1,7 @@
 package com.mwong56.polyrides.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
@@ -12,6 +13,12 @@ import com.mwong56.polyrides.models.User;
 public class BaseSessionActivity extends BaseRxActivity {
 
   @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    validateSession();
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     validateSession();
@@ -19,7 +26,7 @@ public class BaseSessionActivity extends BaseRxActivity {
 
   private void validateSession() {
     if (!validSession()) {
-      showToast("Invalid session.");
+      showToast("Invalid session");
       LoginManager.getInstance().logOut();
       User.logout();
       Intent i = new Intent(getBaseContext(), LoginActivity.class);
