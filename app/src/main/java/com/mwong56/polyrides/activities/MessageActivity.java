@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -40,11 +39,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import timber.log.Timber;
 
 /**
  * Created by micha on 10/25/2015.
  */
-public class MessageActivity extends BaseRxActivity {
+public class MessageActivity extends BaseSessionActivity {
 
   private static final DoNothingOnNextAction doNothingOnNextAction = new DoNothingOnNextAction();
   private static final String TAG = MessageActivity.TAG;
@@ -78,19 +78,29 @@ public class MessageActivity extends BaseRxActivity {
     @Override
     public void onReceive(Context context, Intent intent) {
       try {
-        JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
-        String groupId = json.getString("groupId");
-
-        if (groupId == null) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) {
           return;
         }
+
+        String data = bundle.getString("com.parse.Data");
+        if (data == null || data.length() == 0) {
+          return;
+        }
+
+        JSONObject json = new JSONObject(data);
+        if (!json.has("groupId")) {
+          return;
+        }
+
+        String groupId = json.getString("groupId");
 
         if (MessageActivity.this.groupId.equals(groupId)) {
           refreshMessages();
         }
 
       } catch (Exception e) {
-        Log.e(TAG, e.toString());
+        Timber.e(e, e.toString());
       }
     }
   };
@@ -101,6 +111,7 @@ public class MessageActivity extends BaseRxActivity {
     setContentView(R.layout.activity_messages);
     ButterKnife.bind(this);
 
+    Timber.d(groupId);
     this.groupId = getIntent().getStringExtra("groupId");
     this.otherId = Utils.extractOtherUserId(this.groupId);
 

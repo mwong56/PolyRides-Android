@@ -10,11 +10,10 @@ import com.mwong56.polyrides.R;
 import com.mwong56.polyrides.models.Ride;
 import com.mwong56.polyrides.views.RideDetailsView;
 
-import org.parceler.Parcels;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,7 +37,7 @@ public class RideDetailsFragment extends BaseRxFragment {
 
   public static RideDetailsFragment newInstance(Ride ride, int type) {
     Bundle bundle = new Bundle();
-    bundle.putParcelable("ride", Parcels.wrap(ride));
+    bundle.putParcelable("ride", ride);
     bundle.putInt("type", type);
     RideDetailsFragment fragment = new RideDetailsFragment();
     fragment.setArguments(bundle);
@@ -53,8 +52,10 @@ public class RideDetailsFragment extends BaseRxFragment {
       getActivity().finish();
     }
 
-    this.ride = Parcels.unwrap(args.getParcelable("ride"));
+    this.ride = args.getParcelable("ride");
+    Timber.d(ride.toString());
     this.type = args.getInt("type");
+    Timber.d("Type : %s", this.type);
 
     switch (type) {
       case SUBMIT:
@@ -74,7 +75,7 @@ public class RideDetailsFragment extends BaseRxFragment {
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putParcelable("ride", Parcels.wrap(this.ride));
+    outState.putParcelable("ride", this.ride);
     outState.putInt("tye", this.type);
   }
 

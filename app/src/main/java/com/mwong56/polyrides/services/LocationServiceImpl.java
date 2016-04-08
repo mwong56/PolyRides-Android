@@ -24,11 +24,9 @@ public class LocationServiceImpl implements LocationService {
   }
 
   @Override
-  public Observable<Place> getCurrentLocation(Context context) {
+  public Observable<Place> getCurrentLocation(final Context context) {
     ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
     return locationProvider.getCurrentPlace(null)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.newThread())
         .flatMap(buffer -> {
           PlaceLikelihood placeLikelihood = buffer.get(0);
           if (placeLikelihood != null) {
@@ -36,7 +34,9 @@ public class LocationServiceImpl implements LocationService {
           } else {
             return Observable.error(new NoLocationException());
           }
-        });
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.newThread());
   }
 
   class NoLocationException extends Exception {

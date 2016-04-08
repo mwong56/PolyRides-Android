@@ -19,7 +19,6 @@ import com.mwong56.polyrides.views.DividerItemDecoration;
 import com.mwong56.polyrides.views.PassengerRideViewHolder;
 import com.squareup.otto.Subscribe;
 
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class MyRidesFragment extends BaseRxFragment {
     super.onActivityCreated(savedInstanceState);
 
     this.rideList = new ArrayList<>();
-    this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList, this);
+    this.adapter = new EasyRecyclerAdapter<>(getContext(), PassengerRideViewHolder.class, rideList);
     this.recyclerView.setAdapter(adapter);
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -106,7 +105,7 @@ public class MyRidesFragment extends BaseRxFragment {
   @Subscribe
   public void onEvent(PassengerRideViewHolder.RideEvent rideEvent) {
     Intent i = new Intent(getActivity(), MyRideActivity.class);
-    i.putExtra("ride", Parcels.wrap(rideEvent.ride));
+    i.putExtra("ride", rideEvent.ride);
     startActivity(i);
   }
 }

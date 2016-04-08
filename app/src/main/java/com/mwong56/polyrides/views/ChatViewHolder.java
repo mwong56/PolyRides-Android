@@ -50,9 +50,14 @@ public class ChatViewHolder extends ItemViewHolder<Chat> {
 
   public ChatViewHolder(View view) {
     super(view);
+  }
+
+  @Override
+  public void onSetListeners() {
     getView().setOnClickListener(v -> {
-      ChatListenerEvent event = new ChatListenerEvent(getItem());
-      bus.post(event);
+      if (getItem() != null) {
+        bus.post(new ChatListenerEvent(getItem()));
+      }
     });
   }
 

@@ -30,20 +30,20 @@ public class FacebookServiceImpl implements FacebookService {
   public Observable<String> getMyUserId(final AccessToken token) {
     Observable toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
+          if (subscriber.isUnsubscribed()) return;
+
           if (jsonObject == null) {
             subscriber.onError(new Exception("Error: " + graphResponse.toString()));
           } else {
-            if (!subscriber.isUnsubscribed()) {
-              String userId = null;
-              try {
-                userId = jsonObject.getString("id");
-              } catch (JSONException e) {
-                subscriber.onError(e);
-              }
-
-              subscriber.onNext(userId);
-              subscriber.onCompleted();
+            String userId = null;
+            try {
+              userId = jsonObject.getString("id");
+            } catch (JSONException e) {
+              subscriber.onError(e);
             }
+
+            subscriber.onNext(userId);
+            subscriber.onCompleted();
           }
         }).executeAndWait());
 
@@ -54,20 +54,20 @@ public class FacebookServiceImpl implements FacebookService {
   public Observable<String> getMyUserName(final AccessToken token) {
     Observable<String> toReturn = Observable.create(subscriber ->
         GraphRequest.newMeRequest(token, (jsonObject, graphResponse) -> {
+          if (subscriber.isUnsubscribed()) return;
+
           if (jsonObject == null) {
             subscriber.onError(new Exception("Error: " + graphResponse.toString()));
           } else {
-            if (!subscriber.isUnsubscribed()) {
-              String userName = null;
-              try {
-                userName = jsonObject.getString("name");
-              } catch (JSONException e) {
-                subscriber.onError(e);
-              }
-
-              subscriber.onNext(userName);
-              subscriber.onCompleted();
+            String userName = null;
+            try {
+              userName = jsonObject.getString("name");
+            } catch (JSONException e) {
+              subscriber.onError(e);
             }
+
+            subscriber.onNext(userName);
+            subscriber.onCompleted();
           }
         }).executeAndWait());
 
@@ -78,20 +78,20 @@ public class FacebookServiceImpl implements FacebookService {
   public Observable<String> getUserName(final AccessToken token, final String userId) {
     Observable<String> toReturn = Observable.create(subscriber ->
         GraphRequest.newGraphPathRequest(token, "/" + userId, graphResponse -> {
+          if (subscriber.isUnsubscribed()) return;
+
           if (graphResponse == null || graphResponse.getJSONObject() == null) {
             subscriber.onError(new Exception("Error: " + graphResponse.toString()));
           } else {
-            if (!subscriber.isUnsubscribed()) {
-              String userName = null;
-              try {
-                userName = graphResponse.getJSONObject().getString("name");
-              } catch (JSONException e) {
-                subscriber.onError(e);
-              }
-
-              subscriber.onNext(userName);
-              subscriber.onCompleted();
+            String userName = null;
+            try {
+              userName = graphResponse.getJSONObject().getString("name");
+            } catch (JSONException e) {
+              subscriber.onError(e);
             }
+
+            subscriber.onNext(userName);
+            subscriber.onCompleted();
           }
         }).executeAndWait());
     return toReturn.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());

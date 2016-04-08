@@ -68,7 +68,7 @@ public class GooglePlacesServiceImpl implements GooglePlacesService {
 
   @Override
   public Observable<ArrayList<AutoCompleteResult>> getAutoCompleteAsync(final String input) {
-    return Observable.defer(() -> Observable.just(getAutoComplete(input)))
+    return Observable.fromCallable(() -> getAutoComplete(input))
         .observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread());
   }
 }

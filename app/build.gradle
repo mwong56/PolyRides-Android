@@ -43,13 +43,16 @@ android {
         applicationId "com.mwong56.polyrides"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 11
-        versionName "1.0.11"
+        versionCode 17
+        versionName "1.0.17"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
         }
     }
 }
@@ -69,7 +72,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.1.0'
 
     //RxJava
-    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxjava:1.0.15'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
@@ -92,12 +95,10 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.wdullaer:materialdatetimepicker:1.5.3'
     compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile (group: 'com.tumblr', name: 'remember', version: '1.0.0', ext: 'aar')
+    compile(group: 'com.tumblr', name: 'remember', version: '1.0.0', ext: 'aar')
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile "frankiesardo:icepick:3.1.0-SNAPSHOT"
     provided "frankiesardo:icepick-processor:3.1.0-SNAPSHOT"
-    compile "org.parceler:parceler-api:1.0.3"
-    apt "org.parceler:parceler:1.0.3"
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }

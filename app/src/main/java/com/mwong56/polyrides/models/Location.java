@@ -12,6 +12,8 @@ import com.mwong56.polyrides.application.PolyRidesApp;
 
 import java.util.Locale;
 
+import timber.log.Timber;
+
 /**
  * Created by micha on 10/10/2015.
  */
@@ -21,6 +23,10 @@ public class Location implements Parcelable {
   private String name;
   private String city;
 
+  private Location() {
+
+  }
+  
   public Location(double lat, double lng, String city) {
     latLng = new LatLng(lat, lng);
     this.city = city;
@@ -35,7 +41,7 @@ public class Location implements Parcelable {
             this.city = address.getLocality();
           }
         } catch (Exception e) {
-          // do nothing.
+          Timber.e(e, "GeoCoding parse failed.");
         }
       }
     }
@@ -59,7 +65,7 @@ public class Location implements Parcelable {
           this.city = address.getLocality();
         }
       } catch (Exception e) {
-        // do nothing.
+        Timber.e(e, "Geocoding parse failed.");
       }
     }
   }
@@ -96,6 +102,16 @@ public class Location implements Parcelable {
     } else {
       return city;
     }
+  }
+
+  @Override
+  public String toString() {
+    return "Location{" +
+        "latLng=" + latLng.toString() +
+        ", address='" + address + '\'' +
+        ", name='" + name + '\'' +
+        ", city='" + city + '\'' +
+        '}';
   }
 
   protected Location(Parcel in) {

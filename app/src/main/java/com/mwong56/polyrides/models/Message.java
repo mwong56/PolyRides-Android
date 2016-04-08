@@ -1,10 +1,10 @@
 package com.mwong56.polyrides.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.DateUtils;
 
 import com.parse.ParseObject;
-
-import org.parceler.Parcel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,13 +13,44 @@ import java.util.Date;
  * Created by micha on 10/23/2015.
  */
 
-@Parcel
-public class Message {
+public class Message implements Parcelable {
   String groupId;
   String userId;
   String text;
   String userName;
   Date date;
+
+  protected Message(Parcel in) {
+    groupId = in.readString();
+    userId = in.readString();
+    text = in.readString();
+    userName = in.readString();
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(groupId);
+    dest.writeString(userId);
+    dest.writeString(text);
+    dest.writeString(userName);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  public static final Creator<Message> CREATOR = new Creator<Message>() {
+    @Override
+    public Message createFromParcel(Parcel in) {
+      return new Message(in);
+    }
+
+    @Override
+    public Message[] newArray(int size) {
+      return new Message[size];
+    }
+  };
 
   public static Message ParseToMessage(ParseObject object) {
     String groupId = object.getString("groupId");
@@ -30,7 +61,7 @@ public class Message {
     return new Message(groupId, userId, text, userName, date);
   }
 
-  public Message() {
+  private Message() {
   }
 
   public Message(String groupId, String userId, String text, String userName, Date date) {
