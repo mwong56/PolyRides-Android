@@ -1,5 +1,6 @@
 package com.mwong56.polyrides.views;
 
+import android.Manifest;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.mwong56.polyrides.services.GooglePlacesServiceImpl;
 import com.mwong56.polyrides.services.LocationService;
 import com.mwong56.polyrides.services.LocationServiceImpl;
 import com.mwong56.polyrides.utils.Utils;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -108,30 +110,45 @@ public class StartEndView extends LinearLayout {
 
   @OnClick(R.id.start_location)
   void setStart() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              Location newLocation = new Location(place, getContext());
-              setStartLocation(newLocation);
-              startEditText.setText(newLocation.getAddress());
-              Utils.hideKeyboard(this.activity);
-            }, error -> {
-              showToast("Could not find location");
-            }));
+    RxPermissions.getInstance(activity)
+        .request(Manifest.permission.ACCESS_FINE_LOCATION)
+        .subscribe(granted -> {
+          if (granted) {
+            compositeSubscription.add(
+                locationService.getCurrentLocation(getContext())
+                    .subscribe(place -> {
+                      Location newLocation = new Location(place, getContext());
+                      setStartLocation(newLocation);
+                      startEditText.setText(newLocation.getAddress());
+                      Utils.hideKeyboard(this.activity);
+                    }, error -> {
+                      showToast("Could not find location");
+                    }));
+          } else {
+            showToast("Could not find location");
+          }
+        });
   }
 
   @OnClick(R.id.end_location)
   void setEnd() {
-    compositeSubscription.add(
-        locationService.getCurrentLocation(getContext())
-            .subscribe(place -> {
-              Location newLocation = new Location(place, getContext());
-              setEndLocation(newLocation);
-              endEditText.setText(newLocation.getAddress());
-              Utils.hideKeyboard(this.activity);
-            }, error -> {
-              showToast("Could not find location");
-            }));
+    RxPermissions.getInstance(activity)
+        .request(Manifest.permission.ACCESS_FINE_LOCATION)
+        .subscribe(granted -> {
+          if (granted) {
+            compositeSubscription.add(
+                locationService.getCurrentLocation(getContext())
+                    .subscribe(place -> {
+                      Location newLocation = new Location(place, getContext());
+                      setEndLocation(newLocation);
+                      endEditText.setText(newLocation.getAddress());
+                      Utils.hideKeyboard(this.activity);
+                    }, error -> {
+                      showToast("Could not find location");
+                    }));
+          } else {
+            showToast("Could not find location");
+          }});
   }
 
   @OnClick(R.id.start_from_next_button)
