@@ -75,7 +75,10 @@ public class ChatFragment extends BaseRxFragment {
         .compose(bindToLifecycle())
         .subscribe(chats -> {
           chatList.clear();
-          chatList.addAll(chats);
+          for (Chat chat : chats) {
+            if (chat.getLastMessage() != null && chat.getLastMessage().length() > 0)
+              chatList.add(chat);
+          }
           adapter.notifyDataSetChanged();
           progressBar.setVisibility(View.GONE);
 
